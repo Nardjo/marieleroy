@@ -35,16 +35,16 @@ import { computed } from 'vue'
 // Pour l'instant, des données statiques - vous pourrez connecter à une API plus tard
 const testimonials = ref([
   {
-    title: 'Client 1',
-    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    title: 'Marie',
+    videoUrl: 'https://www.youtube.com/watch?v=KJNbhiD9YLg&embeds_referring_euri=https%3A%2F%2Fmarieleroy.netlify.app%2F&source_ve_path=MjM4NTE',
   },
   {
-    title: 'Client 2',
-    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    title: 'Jessica',
+    videoUrl: 'https://www.youtube.com/watch?v=3enzfMLVIbo&embeds_referring_euri=https%3A%2F%2Fmarieleroy.netlify.app%2F&source_ve_path=MjM4NTE',
   },
   {
-    title: 'Client 3',
-    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    title: 'Lilie',
+    videoUrl: 'https://www.youtube.com/watch?v=3Ah-CkKIKx8&embeds_referring_euri=https%3A%2F%2Fmarieleroy.netlify.app%2F&source_ve_path=MjM4NTE',
   },
 ])
 

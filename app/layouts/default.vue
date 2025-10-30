@@ -7,10 +7,9 @@ const { items } = useNavigation()
 
     <LayoutsAppHeader :items="items"/>
 
-
-    <div class="flex-1">
+    <UMain class="flex-1">
       <slot/>
-    </div>
+    </UMain>
 
     <LayoutsAppFooter :items="items"/>
   </div>

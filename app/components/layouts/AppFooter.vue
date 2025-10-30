@@ -54,17 +54,16 @@
           </div>
         </div>
 
-        <div
-          class="flex items-baseline justify-center md:justify-start group cursor-pointer gap-2"
-          @click="scrollToTop">
+        <div class="flex flex-col items-center md:items-start gap-4">
           <UButton
-            class="group-hover:-translate-y-1 transition-transform cursor-pointer"
+            class="hover:-translate-y-1 transition-transform cursor-pointer"
             variant="subtle"
             color="primary"
             icon="i-lucide-move-up"
             size="lg"
-            aria-label="Remonter en haut de la page" />
-          <Logo :size="50" :minimal="false" />
+            aria-label="Remonter en haut de la page"
+            @click="scrollToTop" />
+          <Logo :size="100" class="scale-50 sm:scale-75 md:scale-100 -mt-10" />
         </div>
       </div>
 

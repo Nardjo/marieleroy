@@ -17,7 +17,7 @@
         <UPageHero orientation="vertical">
           <template #title>
             <div class="flex flex-col items-center">
-              <Logo :size="100" class="mb-4" />
+              <Logo :size="100" class="mb-4 scale-50 sm:scale-75 md:scale-100" />
             </div>
           </template>
 

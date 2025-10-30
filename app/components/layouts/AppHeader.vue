@@ -9,7 +9,9 @@ const {scrollToSection} = useSmoothScroll()
 </script>
 
 <template>
-  <UHeader class="bg-primary-300 border-none" mode="slideover">
+  <UHeader
+      class="drop-shadow-xl backdrop-blur-lg border bg-primary-300/60 border-primary-200/30  md:px-3 md:py-1 lg:px-6"
+      mode="slideover">
     <template #left>
       <NuxtLink
           class="flex items-center gap-2 hover:text-primary-500 text-xl transition-all duration-200 cursor-pointer"

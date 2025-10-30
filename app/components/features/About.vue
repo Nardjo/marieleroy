@@ -16,7 +16,8 @@
         </p>
       </div>
 
-      <UCard class="shadow-lg bg-primary-100">
+      <UPageCard spotlight
+                 class="shadow-lg bg-primary-100 [--spotlight-color:#e0bc9a] [--spotlight-size:1000px]">
         <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-center p-6">
           <!-- Texte à gauche -->
           <div class="flex-1 space-y-6">
@@ -44,7 +45,7 @@
               class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl border-4 border-primary-200" />
           </div>
         </div>
-      </UCard>
+      </UPageCard>
     </div>
   </section>
 </template>

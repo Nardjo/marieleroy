@@ -2,6 +2,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 export const useCurvedAnimation = () => {
   const scrollY = ref(0)
+  const screenWidth = ref(0)
 
   const curveProgress = computed(() => {
     const maxScroll = 500
@@ -12,8 +13,13 @@ export const useCurvedAnimation = () => {
   const animatedCurvePath = computed(() => {
     const progress = curveProgress.value
 
-    // Interpoler la hauteur de la courbe de 0% à 150% pour une courbe plus prononcée
-    const curveHeight = progress * 150
+    // Ajuster la courbure selon la largeur d'écran
+    // Mobile: 60%, Tablette: 100%, Desktop: 150%
+    const isMobile = screenWidth.value < 768
+    const isTablet = screenWidth.value >= 768 && screenWidth.value < 1024
+    const maxCurveHeight = isMobile ? 60 : isTablet ? 100 : 150
+
+    const curveHeight = progress * maxCurveHeight
 
     const viewportWidth = 1440
     const viewportHeight = 400
@@ -50,13 +56,20 @@ export const useCurvedAnimation = () => {
     }
   }
 
+  const handleResize = () => {
+    screenWidth.value = window.innerWidth
+  }
+
   onMounted(() => {
+    screenWidth.value = window.innerWidth
     window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleResize, { passive: true })
     handleScroll() // Appel initial
   })
 
   onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll)
+    window.removeEventListener('resize', handleResize)
   })
 
   return {

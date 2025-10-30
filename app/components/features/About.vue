@@ -18,7 +18,7 @@
 
       <UPageCard spotlight
                  class="shadow-lg bg-primary-100 [--spotlight-color:#e0bc9a] [--spotlight-size:1000px]">
-        <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-center p-6">
+        <div class="flex flex-col-reverse md:flex-row gap-8 md:gap-12 items-center p-6">
           <!-- Texte à gauche -->
           <div class="flex-1 space-y-6">
             <p class="text-primary-700 leading-relaxed">

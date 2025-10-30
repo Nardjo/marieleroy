@@ -5,12 +5,15 @@ defineProps<{
   items: NavigationMenuItem[]
 }>()
 
+const {scrollToSection} = useSmoothScroll()
 </script>
 
 <template>
   <UHeader class="bg-primary-300 border-none" mode="slideover">
     <template #left>
-      <NuxtLink to="/" class="flex items-center gap-2 hover:text-primary-500 text-xl transition-all duration-200">
+      <NuxtLink
+          class="flex items-center gap-2 hover:text-primary-500 text-xl transition-all duration-200 cursor-pointer"
+          @click="scrollToSection('hero')">
         <Logo :size="32" :minimal="true" :compact="true"/>
       </NuxtLink>
     </template>

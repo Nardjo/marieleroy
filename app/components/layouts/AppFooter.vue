@@ -55,15 +55,13 @@
         </div>
 
         <div class="flex flex-col items-center md:items-start gap-4">
-          <UButton
-            class="hover:-translate-y-1 transition-transform cursor-pointer"
-            variant="subtle"
-            color="primary"
-            icon="i-lucide-move-up"
+          <button
+            class="cursor-pointer"
             size="lg"
             aria-label="Remonter en haut de la page"
-            @click="scrollToTop" />
-          <Logo :size="100" class="scale-50 sm:scale-75 md:scale-100 -mt-10" />
+            @click="scrollToTop">
+          <Logo :size="100" class="scale-50 -mt-10" />
+          </button>
         </div>
       </div>
 

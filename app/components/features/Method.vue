@@ -1,0 +1,156 @@
+<template>
+  <section id="method" ref="sectionRef" class="py-16 bg-primary-200">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <div class="text-center mb-16">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
+          <Icon name="i-lucide-workflow" class="w-4 h-4" />
+          Ma Méthode
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
+          Comment je travaille,
+          <span class="text-primary-600">étape par étape</span>
+        </h2>
+        <p class="text-primary-700 max-w-2xl mx-auto">
+          Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience
+        </p>
+      </div>
+
+      <!-- Timeline verticale -->
+      <div class="relative">
+        <!-- Ligne verticale -->
+        <div class="absolute left-8 top-0 bottom-0 w-1 bg-primary-300">
+          <!-- Ligne de progression -->
+          <div
+            class="absolute top-0 left-0 w-full bg-gradient-to-b from-primary-600 to-primary-800 transition-all duration-500 ease-out"
+            :style="{ height: lineProgress }"></div>
+        </div>
+
+        <!-- Étapes -->
+        <div class="space-y-12">
+          <div
+            v-for="(step, index) in steps"
+            :key="step.id"
+            class="relative pl-20 transition-all duration-500"
+            :class="{
+              'opacity-100 translate-x-0': index <= activeStep,
+              'opacity-0 translate-x-8': index > activeStep
+            }">
+            <!-- Point sur la ligne -->
+            <div
+              class="absolute left-4 top-4 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 shadow-lg"
+              :class="[
+                index <= activeStep
+                  ? 'bg-gradient-to-br from-primary-600 to-primary-800 text-white scale-110'
+                  : 'bg-white text-primary-400 scale-100'
+              ]">
+              <Icon v-if="index < activeStep" name="i-lucide-check" class="w-4 h-4" />
+              <span v-else>{{ index + 1 }}</span>
+            </div>
+
+            <!-- Card de l'étape -->
+            <UCard class="shadow-lg bg-primary-100">
+              <div class="p-6">
+                <h3 class="text-xl font-bold text-primary-900 mb-3">
+                  {{ step.title }}
+                </h3>
+                <p class="text-primary-700 leading-relaxed">
+                  {{ step.text }}
+                </p>
+              </div>
+            </UCard>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="mt-16">
+        <CTASection
+          title="Prêt à transformer votre contenu ?"
+          description="Découvrez comment ma méthode peut vous aider à atteindre vos objectifs de conversion et d'engagement."
+          button-text="Démarrer mon projet"
+          icon="i-lucide-rocket"
+          @cta-click="console.log('CTA clicked')" />
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup>
+  const activeStep = ref(0)
+  const sectionRef = ref(null)
+
+  const steps = [
+    {
+      id: 'step-1',
+      title: 'Consultation initiale',
+      text: 'Nous commençons par une discussion approfondie pour comprendre vos objectifs, votre audience cible et vos attentes.',
+    },
+    {
+      id: 'step-2',
+      title: 'Recherche et stratégie',
+      text: "J'analyse votre marché, votre concurrence et votre audience pour développer une stratégie de contenu efficace.",
+    },
+    {
+      id: 'step-3',
+      title: 'Rédaction et optimisation',
+      text: "Je rédige votre contenu en utilisant des techniques de copywriting éprouvées pour maximiser l'impact et les conversions.",
+    },
+    {
+      id: 'step-4',
+      title: 'Révisions et ajustements',
+      text: "Je travaille avec vous pour affiner le contenu jusqu'à ce qu'il corresponde parfaitement à vos attentes et objectifs.",
+    },
+    {
+      id: 'step-5',
+      title: 'Livraison et suivi',
+      text: 'Je vous livre le contenu final et reste disponible pour des ajustements mineurs et pour répondre à vos questions.',
+    },
+  ]
+
+  const lineProgress = computed(() => {
+    const progress = (activeStep.value / (steps.length - 1)) * 100
+    return `${progress}%`
+  })
+
+  // Détection du scroll pour faire apparaître les étapes progressivement
+  onMounted(() => {
+    const handleScroll = () => {
+      if (!sectionRef.value) return
+
+      const section = sectionRef.value
+      const rect = section.getBoundingClientRect()
+      const windowHeight = window.innerHeight
+
+      // Calculer la progression dans la section
+      // La section commence à apparaître quand son top est à 55% de la hauteur de l'écran
+      // Elle termine quand son bottom est à 45% de la hauteur de l'écran
+      const sectionStart = rect.top - windowHeight * 0.55
+      const sectionEnd = rect.bottom - windowHeight * 0.45
+      const sectionHeight = sectionEnd - sectionStart
+
+      // Position actuelle dans la section (de 0 à 1)
+      let progress = 0
+      if (sectionStart < 0 && sectionEnd > 0) {
+        progress = Math.abs(sectionStart) / sectionHeight
+        progress = Math.max(0, Math.min(1, progress))
+      } else if (sectionEnd < 0) {
+        progress = 1
+      }
+
+      // Déterminer l'étape active en fonction de la progression
+      const newStep = Math.min(Math.floor(progress * steps.length), steps.length - 1)
+
+      if (newStep !== activeStep.value) {
+        activeStep.value = newStep
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Appel initial
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll)
+    })
+  })
+</script>

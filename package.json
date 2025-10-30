@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fontsource/dancing-script": "^5.2.8",
     "@nuxt/eslint": "1.10.0",
     "@nuxt/eslint-config": "^1.10.0",
     "@nuxt/image": "1.11.0",
@@ -22,6 +23,7 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "@nuxtjs/device": "^3.2.4",
     "@tailwindcss/vite": "^4.1.16",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.16"

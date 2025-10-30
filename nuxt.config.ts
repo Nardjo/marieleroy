@@ -11,7 +11,8 @@ export default defineNuxtConfig({
         '@nuxt/eslint',
         '@nuxt/image',
         '@nuxt/ui',
-        '@nuxt/test-utils'
+        '@nuxt/test-utils',
+        '@nuxtjs/device'
     ],
 
     vite: {

@@ -34,10 +34,11 @@
         }
 
         // Toujours afficher le header si on est proche du haut de la page
-        if (currentScrollY < 200) {
+        // On utilise la hauteur du hero (environ 400-500px) comme seuil
+        if (currentScrollY < 400) {
           showHeader.value = true
-        } else if (currentScrollY > lastScrollY.value && currentScrollY > 200) {
-          // Scroll vers le bas - cacher le header (seulement si on est assez loin du haut)
+        } else if (currentScrollY > lastScrollY.value && currentScrollY > 400) {
+          // Scroll vers le bas - cacher le header (seulement si on a dépassé le hero)
           showHeader.value = false
         } else if (currentScrollY < lastScrollY.value) {
           // Scroll vers le haut - afficher le header

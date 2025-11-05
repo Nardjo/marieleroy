@@ -1,9 +1,5 @@
 export default defineAppConfig({
-    ui: {
-        colors: {
-            primary: 'primary',
-            secondary: 'slate',
-            neutral: 'neutral',
-        },
-    }
+  ui: {
+    // Laisse Nuxt UI utiliser les variables CSS définies dans vitrine.css et admin.css
+  },
 });

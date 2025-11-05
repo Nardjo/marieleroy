@@ -3,6 +3,7 @@
     v-for="(item, idx) in items"
     :key="item.id"
     class="group relative -mr-4"
+    :style="{ zIndex: items.length - idx }"
     @mouseenter="hoveredIndex = item.id"
     @mouseleave="hoveredIndex = null"
     @mousemove="handleMouseMove($event, idx)">
@@ -32,7 +33,7 @@
     <img
       :src="item.image"
       :alt="item.name"
-      class="relative !m-0 h-14 w-14 rounded-full border-2 border-white object-cover object-top !p-0 transition duration-500 group-hover:z-30 group-hover:scale-105 cursor-pointer"
+      class="relative !m-0 h-14 w-14 rounded-full border-2 border-white bg-white object-cover object-top !p-0 cursor-pointer"
       height="56"
       width="56" />
   </div>

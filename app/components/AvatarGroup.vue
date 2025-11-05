@@ -1,6 +1,14 @@
 <template>
-  <div class="flex flex-row items-center justify-center w-full">
-    <AnimatedTooltip :items="people" />
+  <div class="flex flex-row items-center justify-center w-full gap-4">
+    <div class="flex flex-row items-center">
+      <AnimatedTooltip :items="people" />
+      <div
+        class="group relative -mr-4 h-14 w-14 rounded-full border-2 border-white bg-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-md cursor-default"
+        style="z-index: 0">
+        +2
+      </div>
+    </div>
+    <p class="text-lg text-primary-700 font-medium ml-2">clients satisfaits</p>
   </div>
 </template>
 
@@ -35,12 +43,6 @@
       name: 'Camille Roux',
       designation: 'Business Owner',
       image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Camille',
-    },
-    {
-      id: 6,
-      name: 'Lucas Bernard',
-      designation: 'Entrepreneur',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas',
     },
   ]
 </script>

@@ -33,11 +33,11 @@
           return
         }
 
-        // Toujours afficher le header si on est en haut de la page
-        if (currentScrollY < 10) {
+        // Toujours afficher le header si on est proche du haut de la page
+        if (currentScrollY < 200) {
           showHeader.value = true
-        } else if (currentScrollY > lastScrollY.value && currentScrollY > 100) {
-          // Scroll vers le bas - cacher le header
+        } else if (currentScrollY > lastScrollY.value && currentScrollY > 200) {
+          // Scroll vers le bas - cacher le header (seulement si on est assez loin du haut)
           showHeader.value = false
         } else if (currentScrollY < lastScrollY.value) {
           // Scroll vers le haut - afficher le header

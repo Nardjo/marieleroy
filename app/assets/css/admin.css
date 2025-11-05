@@ -1,4 +1,4 @@
-@import './tailwind.css';
+@import 'tailwindcss';
 
 @theme inline {
   --color-background: var(--background);
@@ -213,3 +213,5 @@
     min-width: 4rem; /* 16 * 0.25rem = 4rem for collapsed state */
   }
 }
+
+@import '@nuxt/ui';

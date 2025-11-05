@@ -23,7 +23,7 @@
             :ui="{
             root: 'space-y-0',
             trigger:
-            'cursor-pointer hover:bg-primary-200 transition-all duration-200 !px-4 rounded-t-lg data-[state=open]:bg-primary-200',
+            'cursor-pointer hover:bg-primary-200c !px-4 rounded-t-lg data-[state=open]:bg-primary-200',
             content:'bg-primary-200 rounded-b-lg',
             item: 'border-0 text-base',
             trailingIcon:'!text-primary-600',
@@ -31,7 +31,7 @@
             multiple>
           <template #default="{ item }">
             <div
-                class="flex items-center justify-between w-full px-6 py-6 cursor-pointer  transition-colors duration-200">
+                class="flex items-center justify-between w-full px-6 py-6 cursor-pointer transition-colors duration-200">
               <div class="flex items-center gap-4">
                 <Icon :name="item.iconName" class="w-5 h-5 !text-primary-600 flex-shrink-0"/>
                 <span class="font-semibold !text-primary-900 text-lg">
@@ -75,8 +75,6 @@
 </template>
 
 <script setup lang="ts">
-import type {AccordionItem} from '@nuxt/ui'
-
 const faqItems = ref<any[]>([
   {
     label: 'Quel est votre processus de travail ?',

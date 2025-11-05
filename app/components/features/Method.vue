@@ -123,10 +123,10 @@
       const windowHeight = window.innerHeight
 
       // Calculer la progression dans la section
-      // La section commence à apparaître quand son top est à 55% de la hauteur de l'écran
-      // Elle termine quand son bottom est à 45% de la hauteur de l'écran
-      const sectionStart = rect.top - windowHeight * 0.55
-      const sectionEnd = rect.bottom - windowHeight * 0.45
+      // La section commence à apparaître quand son top est à 80% de la hauteur de l'écran
+      // Elle termine quand son bottom est à 20% de la hauteur de l'écran
+      const sectionStart = rect.top - windowHeight * 0.8
+      const sectionEnd = rect.bottom - windowHeight * 0.2
       const sectionHeight = sectionEnd - sectionStart
 
       // Position actuelle dans la section (de 0 à 1)
@@ -139,7 +139,9 @@
       }
 
       // Déterminer l'étape active en fonction de la progression
-      const newStep = Math.min(Math.floor(progress * steps.length), steps.length - 1)
+      // Utiliser une courbe très accélérée pour faire apparaître toutes les étapes rapidement
+      const acceleratedProgress = Math.pow(progress, 0.5)
+      const newStep = Math.min(Math.floor(acceleratedProgress * steps.length), steps.length - 1)
 
       if (newStep !== activeStep.value) {
         activeStep.value = newStep

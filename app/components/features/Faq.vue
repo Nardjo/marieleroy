@@ -16,9 +16,9 @@
         </p>
       </div>
 
-      <UCard class="shadow-lg !bg-primary-100">
+      <UCard class="shadow-lg !bg-primary-white">
         <UAccordion
-            class="bg-primary-100"
+            class="bg-primary-white"
             :items="faqItems"
             :ui="{
             root: 'space-y-0',

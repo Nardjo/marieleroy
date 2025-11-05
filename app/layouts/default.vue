@@ -6,13 +6,55 @@ const scrollToTop = () => {
   scrollToSection('hero', 0)
 }
 
+const showHeader = ref(true)
+const lastScrollY = ref(0)
+const scrollThreshold = 5 // Pixels à scroller avant de déclencher le changement
+let ticking = false
+
+const handleScroll = () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      const currentScrollY = window.scrollY
+      const scrollDifference = Math.abs(currentScrollY - lastScrollY.value)
+
+      // Ne rien faire si le scroll est trop petit
+      if (scrollDifference < scrollThreshold) {
+        ticking = false
+        return
+      }
+
+      // Toujours afficher le header si on est en haut de la page
+      if (currentScrollY < 10) {
+        showHeader.value = true
+      } else if (currentScrollY > lastScrollY.value && currentScrollY > 100) {
+        // Scroll vers le bas - cacher le header
+        showHeader.value = false
+      } else if (currentScrollY < lastScrollY.value) {
+        // Scroll vers le haut - afficher le header
+        showHeader.value = true
+      }
+
+      lastScrollY.value = currentScrollY
+      ticking = false
+    })
+    ticking = true
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col bg-primary-100/20 overflow-hidden">
-
     <UHeader
-        class="drop-shadow-xl backdrop-blur-lg border bg-primary-300/60 border-primary-200/30  md:px-3 md:py-1 lg:px-6"
+        class="fixed w-full z-50 backdrop-blur-lg border bg-primary-300 border-primary-200/30 md:px-3 md:py-1 lg:px-3 transition-all duration-500"
+        :style="{ transform: showHeader ? 'translateY(0)' : 'translateY(-100%)', opacity: showHeader ? 1 : 0 }"
         mode="slideover">
       <template #left>
         <NuxtLink
@@ -40,7 +82,7 @@ const scrollToTop = () => {
       </template>
     </UHeader>
 
-    <UMain class="flex-1">
+    <UMain class="flex-1 pt-16">
       <slot/>
     </UMain>
 

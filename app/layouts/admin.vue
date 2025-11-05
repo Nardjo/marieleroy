@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import '~/assets/css/admin.css'
 
 const colorMode = useColorMode()
 const route = useRoute()
 const siteName = ref('Marie Leroy')
 
-// Set theme preference
-colorMode.preference = 'system'
-
-// Configure page title
+// Set theme attribute on html element
 useHead({
+  htmlAttrs: {
+    'data-theme': 'admin',
+  },
   title: computed(() => `Admin ${siteName.value}`),
   titleTemplate: () => `Admin ${siteName.value}`,
 })
+
+// Set theme preference
+colorMode.preference = 'system'
 
 // Temporary user mock - will be replaced with better-auth
 const user = ref({

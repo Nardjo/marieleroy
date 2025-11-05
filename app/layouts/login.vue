@@ -1,6 +1,15 @@
 <script setup lang="ts">
+import '~/assets/css/admin.css'
+
 const colorMode = useColorMode()
 const siteName = ref('Marie Leroy')
+
+// Set theme attribute on html element
+useHead({
+  htmlAttrs: {
+    'data-theme': 'admin',
+  },
+})
 
 // Set theme preference
 colorMode.preference = 'system'

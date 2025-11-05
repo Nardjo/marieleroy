@@ -1,0 +1,134 @@
+@import './tailwind.css';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+[data-theme='vitrine'],
+:root:not([data-theme]),
+.vitrine-theme {
+  /* Couleurs principales - Palette Marie Leroy (tons chauds et beiges) */
+  --primary: #c79e7d; /* Beige/Terracotta clair - Couleur principale */
+  --primary-foreground: #ffffff; /* Texte sur primaire */
+
+  /* Teintes de primary */
+  --primary-50: #fdfcfb;
+  --primary-100: #f9f4ee;
+  --primary-200: #f1e6d9;
+  --primary-300: #e5d2be;
+  --primary-400: #d6b89a;
+  --primary-500: #c79e7d; /* Base = DEFAULT */
+  --primary-600: #b18563;
+  --primary-700: #8f6a4e;
+  --primary-800: #6e5240;
+  --primary-900: #4f3c31;
+  --primary-950: #372920;
+
+  --secondary: #faf6f2; /* Beige très clair - Couleur secondaire */
+  --secondary-foreground: #42301f; /* Texte foncé sur secondaire */
+
+  /* Teintes de secondary */
+  --secondary-50: #fefefe;
+  --secondary-100: #fdfcfb;
+  --secondary-200: #faf6f2; /* Base = DEFAULT */
+  --secondary-300: #f6ede5;
+  --secondary-400: #f0e0d4;
+  --secondary-500: #e8d1bf;
+  --secondary-600: #ddbda6;
+  --secondary-700: #cda689;
+  --secondary-800: #b98c6e;
+  --secondary-900: #9d7257;
+  --secondary-950: #7d5a45;
+
+  --accent: #e5d2be; /* Beige moyen - Couleur d'accent */
+  --accent-foreground: #42301f; /* Texte sur accent */
+
+  /* Couleurs de surface */
+  --background: #fdfcfb; /* Fond très clair */
+  --foreground: #2d2520; /* Texte principal */
+
+  --card: #ffffff; /* Fond des cartes */
+  --card-foreground: #3d3430; /* Texte des cartes */
+
+  --muted: #faf6f2; /* Fond atténué */
+  --muted-foreground: #6e5e56; /* Texte atténué */
+
+  /* Bordures et interfaces */
+  --border: #e8ddd2; /* Couleur des bordures */
+  --input: #faf6f2; /* Fond des inputs */
+  --ring: #c79e7d; /* Focus ring */
+
+  /* Rayons de bordure */
+  --radius: 0.75rem; /* Rayon de base (12px) */
+
+  /* Couleurs d'état */
+  --success: #7a8058;
+  --warning: #d0a660;
+  --error: #a45d3c;
+  --info: #c79e7d;
+
+  --destructive: #a45d3c;
+  --destructive-foreground: #ffffff;
+
+  --popover: #ffffff;
+  --popover-foreground: #2d2520;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply bg-background;
+    background-color: var(--background) !important;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    background-color: var(--background) !important;
+  }
+
+  #__nuxt {
+    @apply bg-background;
+    background-color: var(--background) !important;
+  }
+
+  .nuxt-layout,
+  .nuxt-page {
+    background-color: var(--background) !important;
+  }
+}
+
+@layer utilities {
+  /* Gradients pour la vitrine */
+  .gradient-primary {
+    background: linear-gradient(135deg, #c79e7d 0%, #b18563 100%);
+  }
+
+  .gradient-soft {
+    background: linear-gradient(180deg, #fdfcfb 0%, #faf6f2 100%);
+  }
+}

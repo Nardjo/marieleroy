@@ -1,10 +1,19 @@
 <script setup lang="ts">
+import '~/assets/css/vitrine.css'
+
 const { items } = useNavigation()
 const {scrollToSection} = useSmoothScroll()
 const currentYear = new Date().getFullYear()
 const scrollToTop = () => {
   scrollToSection('hero', 0)
 }
+
+// Set theme attribute on html element
+useHead({
+  htmlAttrs: {
+    'data-theme': 'vitrine',
+  },
+})
 
 const showHeader = ref(true)
 const lastScrollY = ref(0)

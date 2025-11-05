@@ -16,7 +16,7 @@
         </p>
       </div>
 
-      <UCard class="shadow-lg bg-primary-100">
+      <UCard class="shadow-lg !bg-primary-100">
         <UAccordion
             class="bg-primary-100"
             :items="faqItems"

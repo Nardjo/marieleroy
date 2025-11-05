@@ -10,7 +10,7 @@ export const useNavigation = () => {
   const initActiveSection = () => {
     if (import.meta.client) {
       const hash = window.location.hash.slice(1)
-      if (hash && ['about', 'method', 'testimonials', 'faq'].includes(hash)) {
+      if (hash && ['testimonials', 'method', 'about', 'faq'].includes(hash)) {
         activeSection.value = hash
       } else {
         activeSection.value = 'hero'
@@ -20,7 +20,7 @@ export const useNavigation = () => {
 
   const observeSection = () => {
     if (import.meta.client) {
-      const sections = ['hero', 'about', 'method', 'testimonials', 'faq']
+      const sections = ['hero', 'testimonials', 'method', 'about', 'faq']
       const observer = new IntersectionObserver(
         entries => {
           // Ignorer les changements pendant le scroll programmé
@@ -83,11 +83,13 @@ export const useNavigation = () => {
 
   const items = computed((): NavigationMenuItem[] => [
     {
-      label: 'À propos',
+      label: 'Témoignages',
       class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4  ${
-        activeSection.value === 'about' ? 'underline underline-offset-4 !font-extrabold' : '!hover:!text-primary-800'
+        activeSection.value === 'testimonials'
+          ? 'underline underline-offset-4 !font-extrabold'
+          : '!hover:!text-primary-800'
       }`,
-      onClick: () => scrollToSection('about'),
+      onClick: () => scrollToSection('testimonials'),
     },
     {
       label: 'Ma méthode',
@@ -97,13 +99,11 @@ export const useNavigation = () => {
       onClick: () => scrollToSection('method'),
     },
     {
-      label: 'Témoignages',
+      label: 'À propos',
       class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4  ${
-        activeSection.value === 'testimonials'
-          ? 'underline underline-offset-4 !font-extrabold'
-          : '!hover:!text-primary-800'
+        activeSection.value === 'about' ? 'underline underline-offset-4 !font-extrabold' : '!hover:!text-primary-800'
       }`,
-      onClick: () => scrollToSection('testimonials'),
+      onClick: () => scrollToSection('about'),
     },
     {
       label: 'FAQ',

@@ -33,6 +33,11 @@
                 <h2 class="text-2xl md:text-3xl text-primary-800">Copywriter Professionnelle</h2>
                 <span class="text-primary-400">Des mots qui convertissent, des messages qui résonnent.</span>
               </div>
+
+              <!-- Avatars clients -->
+              <div class="mt-6">
+                <AvatarGroup />
+              </div>
             </template>
 
             <template #links>

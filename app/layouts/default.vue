@@ -1,16 +1,24 @@
 <script setup lang="ts">
+  import '~/assets/css/vitrine.css'
+
   const { items } = useNavigation()
   const { scrollToSection } = useSmoothScroll()
   const currentYear = new Date().getFullYear()
   const scrollToTop = () => {
     scrollToSection('hero', 0)
   }
+  const colorMode = useColorMode()
 
-  // Set theme attribute on html element
+  // Set theme attribute on html element to prevent flicker
   useHead({
     htmlAttrs: {
       'data-theme': 'vitrine',
     },
+  })
+
+  onMounted(() => {
+    colorMode.preference = 'light'
+    document.documentElement.classList.remove('dark')
   })
 
   const showHeader = ref(true)

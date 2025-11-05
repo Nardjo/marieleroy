@@ -7,8 +7,6 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/ui', '@nuxt/test-utils', '@nuxtjs/device'],
 
-  css: ['~/assets/css/tailwind.css'],
-
   ui: {
     colorMode: true,
   },

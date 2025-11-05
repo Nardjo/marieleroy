@@ -64,7 +64,7 @@
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-primary-100/20 overflow-hidden">
+  <div class="min-h-screen flex flex-col bg-gradient-to-b from-primary-300/60 to-primary-200/80 overflow-hidden">
     <UHeader
       class="fixed w-full z-50 backdrop-blur-lg border bg-primary-300 border-primary-200/30 md:px-3 md:py-1 lg:px-3 transition-all duration-500"
       :style="{ transform: showHeader ? 'translateY(0)' : 'translateY(-100%)', opacity: showHeader ? 1 : 0 }"

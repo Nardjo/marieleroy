@@ -1,5 +1,5 @@
 <template>
-  <section id="testimonials" class="py-16 overflow-x-hidden">
+  <section id="testimonials" class="py-16">
     <div class="container mx-auto px-4 max-w-6xl">
       <div class="text-center mb-12">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
@@ -14,7 +14,34 @@
         </p>
       </div>
 
-      <FocusCard :cards="focusCardItems" />
+      <!-- Liste des témoignages vidéo -->
+      <div class="space-y-8 max-w-5xl mx-auto">
+        <UCard
+          v-for="(testimonial, index) in testimonials"
+          :key="index"
+          class="overflow-hidden shadow-xl bg-primary-100">
+          <!-- Vidéo -->
+          <div class="aspect-video rounded-lg overflow-hidden mb-6">
+            <iframe
+              :src="testimonial.embedUrl"
+              class="w-full h-full"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <!-- Contenu en dessous -->
+          <div class="px-2 pb-2">
+            <h3 class="text-3xl font-bold text-primary-900 mb-4">
+              {{ testimonial.title }}
+            </h3>
+            <p class="text-lg text-primary-700 italic leading-relaxed">
+              "{{ testimonial.quote }}"
+            </p>
+          </div>
+        </UCard>
+      </div>
 
       <!-- CTA Section -->
       <div class="mt-12">
@@ -30,41 +57,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
 // Pour l'instant, des données statiques - vous pourrez connecter à une API plus tard
 const testimonials = ref([
   {
     title: 'Marie',
-    videoUrl: 'https://www.youtube.com/watch?v=KJNbhiD9YLg&embeds_referring_euri=https%3A%2F%2Fmarieleroy.netlify.app%2F&source_ve_path=MjM4NTE',
+    quote: 'Grâce à Marie, j\'ai pu transformer ma communication et atteindre mes objectifs de manière efficace.',
+    embedUrl: 'https://www.youtube.com/embed/KJNbhiD9YLg?rel=0&modestbranding=1&showinfo=0&controls=1&fs=1',
   },
   {
     title: 'Jessica',
-    videoUrl: 'https://www.youtube.com/watch?v=3enzfMLVIbo&embeds_referring_euri=https%3A%2F%2Fmarieleroy.netlify.app%2F&source_ve_path=MjM4NTE',
+    quote: 'Un travail exceptionnel qui a dépassé toutes mes attentes. Ma marque a pris une toute nouvelle dimension.',
+    embedUrl: 'https://www.youtube.com/embed/3enzfMLVIbo?rel=0&modestbranding=1&showinfo=0&controls=1&fs=1',
   },
   {
     title: 'Lilie',
-    videoUrl: 'https://www.youtube.com/watch?v=3Ah-CkKIKx8&embeds_referring_euri=https%3A%2F%2Fmarieleroy.netlify.app%2F&source_ve_path=MjM4NTE',
+    quote: 'Marie a su capter l\'essence de mon message et créer un contenu qui résonne vraiment avec mon audience.',
+    embedUrl: 'https://www.youtube.com/embed/3Ah-CkKIKx8?rel=0&modestbranding=1&showinfo=0&controls=1&fs=1',
   },
 ])
-
-const focusCardItems = computed(() => {
-  return (testimonials.value ?? []).map((t: any) => {
-    let id = ''
-
-    if (t.videoUrl.includes('watch?v=')) {
-      id = t.videoUrl.split('watch?v=')[1].split('&')[0]
-    } else if (t.videoUrl.includes('/embed/')) {
-      id = t.videoUrl.split('/embed/')[1]
-    } else {
-      id = t.videoUrl.split('/').at(-1)
-    }
-
-    return {
-      title: t.title,
-      imageUrl: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
-      videoUrl: t.videoUrl.includes('/embed/') ? t.videoUrl : `https://www.youtube.com/embed/${id}`,
-    }
-  })
-})
 </script>

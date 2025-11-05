@@ -1,7 +1,11 @@
 <template>
   <section id="method" ref="sectionRef" class="py-16 bg-primary-200">
     <div class="container mx-auto px-4 max-w-4xl">
-      <div class="text-center mb-16">
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="text-center mb-16">
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
           <Icon name="i-lucide-workflow" class="w-4 h-4" />
@@ -64,7 +68,11 @@
       </div>
 
       <!-- CTA Section -->
-      <div class="mt-16">
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="mt-16">
         <CTASection
           title="Prêt à transformer votre contenu ?"
           description="Découvrez comment ma méthode peut vous aider à atteindre vos objectifs de conversion et d'engagement."

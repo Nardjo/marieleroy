@@ -1,7 +1,11 @@
 <template>
   <section id="faq" class="py-16 bg-primary-200">
     <div class="container mx-auto px-4 max-w-4xl">
-      <div class="text-center mb-12">
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="text-center mb-12">
         <div
             class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
           <Icon name="i-lucide-help-circle" class="w-4 h-4"/>
@@ -16,7 +20,11 @@
         </p>
       </div>
 
-      <UCard class="shadow-lg !bg-primary-white">
+      <UCard
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="shadow-lg !bg-primary-white">
         <UAccordion
             class="bg-primary-white"
             :items="faqItems"
@@ -58,7 +66,11 @@
       </UCard>
 
       <!-- CTA Section -->
-      <div class="mt-12">
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="mt-12">
         <CTASection
             title="Vous avez d'autres questions ?"
             description="N'hésitez pas à me contacter pour un échange personnalisé. Je suis là pour vous accompagner dans votre projet."

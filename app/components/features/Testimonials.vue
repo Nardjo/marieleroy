@@ -1,7 +1,11 @@
 <template>
   <section id="testimonials" class="py-16 bg-white">
     <div class="container mx-auto px-4 max-w-6xl">
-      <div class="text-center mb-12">
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="text-center mb-12">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
           <Icon name="i-lucide-quote" class="w-4 h-4" />
           Témoignages
@@ -19,6 +23,9 @@
         <UCard
           v-for="(testimonial, index) in testimonials"
           :key="index"
+          v-motion
+          :initial="{ opacity: 0, y: 50 }"
+          :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: index * 200 } }"
           class="overflow-hidden shadow-xl !bg-primary-200">
           <!-- Vidéo -->
           <div class="aspect-video rounded-lg overflow-hidden mb-6">
@@ -44,7 +51,11 @@
       </div>
 
       <!-- CTA Section -->
-      <div class="mt-12">
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="mt-12">
         <CTASection
           title="Prêt à transformer votre communication ?"
           description="Discutons ensemble de votre projet et voyons comment je peux vous aider à atteindre vos objectifs."

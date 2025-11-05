@@ -45,6 +45,11 @@
               <CTAButton icon="i-lucide-rocket" size="xl" text="On discute ?" />
             </template>
           </UPageHero>
+
+          <!-- Avatars clients -->
+          <div class="mt-8">
+            <AvatarGroup />
+          </div>
         </div>
       </div>
     </div>

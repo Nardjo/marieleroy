@@ -1,10 +1,10 @@
 <template>
   <div>
     <FeaturesHero/>
-    <FeaturesAbout/>
-    <FeaturesMethod/>
     <FeaturesTestimonials/>
     <ImageSeparator/>
+    <FeaturesMethod/>
+    <FeaturesAbout/>
     <FeaturesFaq/>
   </div>
 </template>

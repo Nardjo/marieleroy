@@ -1,7 +1,8 @@
 @import './tailwind.css';
 
 @theme inline {
-  --font-family-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-family-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-dancing-script: 'Dancing Script', cursive;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -159,6 +160,11 @@
 }
 
 @layer utilities {
+  /* Font utilitaires */
+  .font-calligraphie {
+    font-family: var(--font-dancing-script);
+  }
+
   /* Gradients pour la vitrine */
   .gradient-primary {
     background: linear-gradient(135deg, #c79e7d 0%, #b18563 100%);

@@ -23,7 +23,7 @@
             :ui="{
             root: 'space-y-0',
             trigger:
-            'cursor-pointer hover:bg-primary-200c !px-4 rounded-t-lg data-[state=open]:bg-primary-200',
+            'cursor-pointer group hover:bg-primary-200 transition-colors duration-200 !px-4 rounded-t-lg data-[state=open]:bg-primary-200',
             content:'bg-primary-200 rounded-b-lg',
             item: 'border-0 text-base',
             trailingIcon:'!text-primary-600',

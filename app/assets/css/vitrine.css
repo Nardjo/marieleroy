@@ -1,6 +1,7 @@
 @import './tailwind.css';
 
 @theme inline {
+  --font-family-sans: ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -20,6 +21,11 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -94,6 +100,13 @@
 
   --popover: #ffffff;
   --popover-foreground: #2d2520;
+
+  /* Variables pour les graphiques */
+  --chart-1: #c79e7d; /* Primary */
+  --chart-2: #e5d2be; /* Accent */
+  --chart-3: #faf6f2; /* Secondary */
+  --chart-4: #7a8058; /* Success */
+  --chart-5: #d0a660; /* Warning */
 }
 
 @layer base {
@@ -107,8 +120,9 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
     background-color: var(--background) !important;
+    font-family: var(--font-family-sans);
   }
 
   #__nuxt {

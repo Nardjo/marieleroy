@@ -16,11 +16,6 @@
     },
   })
 
-  onMounted(() => {
-    colorMode.preference = 'light'
-    document.documentElement.classList.remove('dark')
-  })
-
   const showHeader = ref(true)
   const lastScrollY = ref(0)
   const scrollThreshold = 5 // Pixels à scroller avant de déclencher le changement
@@ -57,6 +52,8 @@
   }
 
   onMounted(() => {
+    colorMode.preference = 'light'
+    document.documentElement.classList.remove('dark')
     window.addEventListener('scroll', handleScroll, { passive: true })
   })
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row items-center justify-center w-full gap-4">
+  <div class="flex flex-col md:flex-row items-center justify-center w-full gap-3 md:gap-4">
     <div class="flex flex-row items-center">
       <AnimatedTooltip :items="people" />
       <div
@@ -8,7 +8,7 @@
         +2
       </div>
     </div>
-    <p class="text-lg text-primary-700 font-medium ml-2">clients satisfaits</p>
+    <p class="text-lg text-primary-700 font-medium md:ml-2">clients satisfaits</p>
   </div>
 </template>
 

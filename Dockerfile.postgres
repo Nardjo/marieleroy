@@ -1,0 +1,9 @@
+FROM postgres:17-alpine
+
+# Set timezone
+ENV TZ=Europe/Paris
+
+# Copy initialization scripts if needed
+COPY docker/init-scripts/*.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 5432

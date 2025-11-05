@@ -19,7 +19,7 @@
         <UCard
           v-for="(testimonial, index) in testimonials"
           :key="index"
-          class="overflow-hidden shadow-xl !bg-primary-100">
+          class="overflow-hidden shadow-xl !bg-primary-200">
           <!-- Vidéo -->
           <div class="aspect-video rounded-lg overflow-hidden mb-6">
             <iframe
@@ -50,6 +50,7 @@
           description="Discutons ensemble de votre projet et voyons comment je peux vous aider à atteindre vos objectifs."
           button-text="Démarrer un projet"
           icon="i-lucide-rocket"
+          card-bg-class="!bg-primary-200"
           @cta-click="console.log('CTA clicked')" />
       </div>
     </div>

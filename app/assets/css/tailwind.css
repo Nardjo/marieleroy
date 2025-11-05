@@ -1,2 +1,2 @@
 @import 'tailwindcss';
-@import './vitrine.css';
+@import '@nuxt/ui';

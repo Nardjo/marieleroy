@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import '~/assets/css/vitrine.css'
-
   const { items } = useNavigation()
   const { scrollToSection } = useSmoothScroll()
   const currentYear = new Date().getFullYear()

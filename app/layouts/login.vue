@@ -1,24 +1,25 @@
 <script setup lang="ts">
-import '~/assets/css/admin.css'
+  import '~/assets/css/admin.css'
+  const colorMode = useColorMode()
+  const siteName = ref('Marie Leroy')
 
-const colorMode = useColorMode()
-const siteName = ref('Marie Leroy')
+  // Set theme attribute on html element
+  useHead({
+    htmlAttrs: {
+      'data-theme': 'admin',
+    },
+  })
 
-// Set theme attribute on html element
-useHead({
-  htmlAttrs: {
-    'data-theme': 'admin',
-  },
-})
+  onMounted(() => {
+    colorMode.preference = 'light'
+    document.documentElement.classList.remove('dark')
+  })
 
-// Set theme preference
-colorMode.preference = 'system'
-
-useSeoMeta({
-  title: `Connexion - ${siteName.value} Administration`,
-  description: `Interface de connexion pour l'administration du site ${siteName.value}`,
-  robots: 'noindex, nofollow',
-})
+  useSeoMeta({
+    title: `Connexion - ${siteName.value} Administration`,
+    description: `Interface de connexion pour l'administration du site ${siteName.value}`,
+    robots: 'noindex, nofollow',
+  })
 </script>
 
 <template>

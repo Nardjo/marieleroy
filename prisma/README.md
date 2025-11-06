@@ -5,8 +5,8 @@
 Le schéma Prisma est configuré avec un modèle `User` contenant:
 - `id`: Identifiant unique (CUID)
 - `email`: Email unique
-- `nom`: Nom de famille
-- `prenom`: Prénom
+- `firstName`: Prénom
+- `lastName`: Nom de famille
 - `createdAt`: Date de création
 - `updatedAt`: Date de dernière modification
 
@@ -52,7 +52,7 @@ curl -X POST http://localhost:3000/api/users \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
-    "nom": "Doe",
-    "prenom": "John"
+    "firstName": "John",
+    "lastName": "Doe"
   }'
 ```

@@ -16,8 +16,8 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  nom       String
-  prenom    String
+  firstName String
+  lastName  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

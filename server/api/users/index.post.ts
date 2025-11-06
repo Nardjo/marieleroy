@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
   const user = await prisma.user.create({
     data: {
       email: body.email,
-      nom: body.nom,
-      prenom: body.prenom,
+      firstName: body.firstName,
+      lastName: body.lastName,
     },
   })
 

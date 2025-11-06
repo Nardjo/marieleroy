@@ -1,6 +1,7 @@
 <template>
   <section id="hero" class="relative overflow-hidden">
-    <div class="hero-section bg-gradient-to-b from-primary-300/60 to-primary-200/80">
+    <div
+        class="hero-section bg-gradient-to-br from-primary-300 via-primary-200 to-emerald-600/30 backdrop-blur-sm">
       <div class="container mx-auto pt-16 md:pt-24">
         <div class="space-y-4">
           <!-- Video placeholder -->

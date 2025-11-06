@@ -24,22 +24,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // Get password from Account table
-    const account = await prisma.account.findFirst({
-      where: {
-        userId: user.id,
-        providerId: 'credential',
-      },
-    })
-
-    if (!account || !account.password) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Invalid credentials',
-      })
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, account.password)
+    const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
       throw createError({
         statusCode: 401,
@@ -47,28 +32,19 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    const { password: _password, ...userWithoutPassword } = user
+
     await setUserSession(event, {
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
+      user: userWithoutPassword,
       loggedInAt: new Date(),
     })
 
     return {
       success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
+      user: userWithoutPassword,
     }
-  } catch (error) {
+  }
+  catch (error) {
     if (error instanceof z.ZodError) {
       throw createError({
         statusCode: 400,

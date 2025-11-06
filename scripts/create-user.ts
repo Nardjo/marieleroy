@@ -2,6 +2,7 @@
 import { PrismaClient } from '@prisma/client'
 import { createInterface } from 'readline'
 import { promisify } from 'util'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -31,14 +32,11 @@ async function createUser() {
       throw new Error(`Un utilisateur avec l'email ${email} existe déjà`)
     }
 
-    // Nom complet
-    const name = (await question('👤 Nom complet: ')) as string
-    if (!name) {
-      throw new Error('Le nom est requis')
+    // Prénom
+    const firstName = (await question('👤 Prénom: ')) as string
+    if (!firstName) {
+      throw new Error('Le prénom est requis')
     }
-
-    // Prénom (optionnel)
-    const firstName = (await question('👤 Prénom (optionnel): ')) as string
 
     // Nom de famille (optionnel)
     const lastName = (await question('👤 Nom de famille (optionnel): ')) as string
@@ -52,43 +50,35 @@ async function createUser() {
     // Créer l'utilisateur
     console.log('\n⏳ Création en cours...')
 
-    // Better Auth hash le mot de passe avec bcrypt automatiquement
-    // On doit créer l'utilisateur ET son account
+    const hashedPassword = await bcrypt.hash(password, 10)
+    const name = `${firstName} ${lastName || ''}`.trim()
+
     const user = await prisma.user.create({
       data: {
         email,
-        name,
-        firstName: firstName || null,
-        lastName: lastName || null,
-        emailVerified: true,
-      },
-    })
-
-    // Créer le compte avec mot de passe pour Better Auth
-    const bcrypt = await import('bcryptjs')
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    await prisma.account.create({
-      data: {
-        userId: user.id,
-        accountId: user.id,
-        providerId: 'credential',
         password: hashedPassword,
+        firstName,
+        lastName: lastName || null,
+        name,
+        role: 'ADMIN',
       },
     })
 
     console.log('\n✅ Utilisateur créé avec succès!\n')
     console.log('📋 Détails:')
     console.log(`   Nom: ${user.name}`)
-    console.log(`   Prénom: ${user.firstName || 'Non renseigné'}`)
+    console.log(`   Prénom: ${user.firstName}`)
     console.log(`   Nom de famille: ${user.lastName || 'Non renseigné'}`)
     console.log(`   Email: ${user.email}`)
+    console.log(`   Rôle: ${user.role}`)
     console.log(`   ID: ${user.id}`)
     console.log('\n🎉 Vous pouvez maintenant vous connecter avec ces identifiants!')
-  } catch (error: any) {
+  }
+  catch (error: any) {
     console.error('\n❌ Erreur:', error.message)
     process.exit(1)
-  } finally {
+  }
+  finally {
     await prisma.$disconnect()
     rl.close()
   }

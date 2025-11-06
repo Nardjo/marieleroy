@@ -7,7 +7,11 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@nuxt/eslint": "1.10.0",
@@ -16,7 +20,9 @@
     "@nuxt/image": "1.11.0",
     "@nuxt/test-utils": "3.20.1",
     "@nuxt/ui": "4.1.0",
+    "@prisma/client": "^6.19.0",
     "@vueuse/motion": "^3.0.3",
+    "dotenv": "^17.2.3",
     "eslint": "^9.38.0",
     "nuxt": "^4.2.0",
     "typescript": "^5.9.3",
@@ -27,6 +33,7 @@
     "@nuxtjs/device": "^3.2.4",
     "@tailwindcss/vite": "^4.1.16",
     "prettier": "^3.6.2",
+    "prisma": "^6.19.0",
     "tailwindcss": "^4.1.16"
   }
 }

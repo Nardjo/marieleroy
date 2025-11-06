@@ -1,11 +1,7 @@
 <template>
-  <section id="about" class="py-16 bg-white">
+  <section id="about" class="py-16">
     <div class="container mx-auto px-4 max-w-6xl">
-      <div
-        v-motion
-        :initial="{ opacity: 0, y: 50 }"
-        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
-        class="text-center mb-12">
+      <div class="text-center mb-12">
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
           <Icon name="i-lucide-user" class="w-4 h-4" />
@@ -21,11 +17,8 @@
       </div>
 
       <UPageCard
-        v-motion
-        :initial="{ opacity: 0, y: 50 }"
-        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
-        spotlight
-        class="shadow-lg bg-primary-100 [--spotlight-color:#daa870] [--spotlight-size:1200px]">
+          spotlight
+          class="shadow-lg bg-primary-100 [--spotlight-color:#e0bc9a] [--spotlight-size:1000px]">
         <div class="flex flex-col-reverse md:flex-row gap-8 md:gap-12 items-center p-6">
           <!-- Texte à gauche -->
           <div class="flex-1 space-y-6">

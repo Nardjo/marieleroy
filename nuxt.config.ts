@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxt/image', '@nuxt/ui', '@nuxt/test-utils', '@nuxtjs/device', '@vueuse/motion/nuxt'],
+  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxt/image', '@nuxt/ui', '@nuxt/test-utils', '@nuxtjs/device', '@vueuse/motion/nuxt', 'nuxt-auth-utils'],
 
   ui: {
     colorMode: true,

@@ -1,6 +1,6 @@
 <template>
-  <section id="about" class="py-16">
-    <div class="container mx-auto px-4 max-w-6xl">
+  <section id="about" class="py-16 bg-white ">
+    <div class="mx-auto px-4 max-w-6xl">
       <div
         v-motion
         :initial="{ opacity: 0, y: 50 }"

@@ -23,6 +23,7 @@
     "@nuxt/ui": "4.1.0",
     "@prisma/client": "^6.19.0",
     "@vueuse/motion": "^3.0.3",
+    "apexcharts": "^5.3.6",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "eslint": "^9.38.0",
@@ -31,6 +32,7 @@
     "typescript": "^5.9.3",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3",
+    "vue3-apexcharts": "^1.10.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

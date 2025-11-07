@@ -6,12 +6,12 @@ definePageMeta({
   layout: 'login',
 })
 
-const { login, loggedIn } = useAuth()
+const { login, loggedIn } = useUserSession()
 
 const siteName = ref('Marie Leroy')
 
 if (loggedIn.value) {
-  await navigateTo('/')
+  await navigateTo('/admin')
 }
 
 const schema = z.object({
@@ -39,15 +39,20 @@ const handleSubmit = async (event: FormSubmitEvent<Schema>) => {
   error.value = ''
 
   try {
-    await login({
-      email: event.data.email,
-      password: event.data.password,
+    const response = await $fetch('/api/auth/login', {
+      method: 'POST',
+      body: {
+        email: event.data.email,
+        password: event.data.password,
+      },
     })
 
-    await navigateTo('/')
+    if (response.success) {
+      await navigateTo('/admin', { replace: true, external: true })
+    }
   }
-  catch (err: unknown) {
-    error.value = (err as Error)?.message || 'Erreur de connexion. Vérifiez vos identifiants.'
+  catch (err: any) {
+    error.value = err.data?.statusMessage || 'Erreur de connexion. Vérifiez vos identifiants.'
   }
   finally {
     isLoading.value = false

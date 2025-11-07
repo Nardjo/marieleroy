@@ -15,9 +15,6 @@ useHead({
   titleTemplate: () => `Admin ${siteName.value}`,
 })
 
-// Set theme preference
-colorMode.preference = 'system'
-
 // Temporary user mock - will be replaced with better-auth
 const user = ref({
   firstname: 'Marie',

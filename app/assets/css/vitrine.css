@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import './tailwind.css';
 
 @theme inline {
   --font-family-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
@@ -174,5 +174,3 @@
     background: linear-gradient(180deg, #fdfcfb 0%, #faf6f2 100%);
   }
 }
-
-@import '@nuxt/ui';

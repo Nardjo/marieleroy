@@ -24,14 +24,14 @@
         v-motion
         :initial="{ opacity: 0, y: 50 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
-        class="shadow-lg !bg-primary-white">
+        class="shadow-lg !bg-primary-100">
         <UAccordion
             class="bg-primary-white"
             :items="faqItems"
             :ui="{
             root: 'space-y-0',
             trigger:
-            'cursor-pointer group hover:bg-primary-200 transition-colors duration-200 !px-4 rounded-t-lg data-[state=open]:bg-primary-200',
+            'cursor-pointer group hover:bg-primary-200 transition-all duration-200 !px-4 rounded-t-lg data-[state=open]:bg-primary-200',
             content:'bg-primary-200 rounded-b-lg',
             item: 'border-0 text-base',
             trailingIcon:'!text-primary-600',

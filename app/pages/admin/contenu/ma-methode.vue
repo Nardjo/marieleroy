@@ -3,69 +3,98 @@
     layout: 'admin',
   })
 
-  const loading = ref(false)
-  const saved = ref(false)
+  const { loading, fetchSteps, deleteStep, reorderSteps } = useMethod()
+  const toast = useToast()
 
-  const form = reactive({
-    title: 'Comment je travaille',
-    subtitle: 'étape par étape',
-    description: 'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
-    steps: [
-      {
-        id: 1,
-        title: 'Consultation initiale',
-        text: 'Nous commençons par une discussion approfondie pour comprendre vos objectifs, votre audience cible et vos attentes.',
-      },
-      {
-        id: 2,
-        title: 'Recherche et stratégie',
-        text: "J'analyse votre marché, votre concurrence et votre audience pour développer une stratégie de contenu efficace.",
-      },
-      {
-        id: 3,
-        title: 'Rédaction et optimisation',
-        text: "Je rédige votre contenu en utilisant des techniques de copywriting éprouvées pour maximiser l'impact et les conversions.",
-      },
-      {
-        id: 4,
-        title: 'Révisions et ajustements',
-        text: "Je travaille avec vous pour affiner le contenu jusqu'à ce qu'il corresponde parfaitement à vos attentes et objectifs.",
-      },
-      {
-        id: 5,
-        title: 'Livraison et suivi',
-        text: 'Je vous livre le contenu final et reste disponible pour des ajustements mineurs et pour répondre à vos questions.',
-      },
-    ],
+  const steps = ref([])
+  const isDragging = ref(false)
+
+  const loadSteps = async () => {
+    try {
+      steps.value = await fetchSteps()
+    } catch (err: any) {
+      toast.add({
+        title: 'Erreur de chargement',
+        description: err?.message || 'Impossible de charger les étapes',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
+    }
+  }
+
+  onMounted(() => {
+    loadSteps()
   })
 
+  const editHeader = () => {
+    navigateTo('/admin/contenu/ma-methode/header')
+  }
+
   const addStep = () => {
-    form.steps.push({
-      id: form.steps.length + 1,
-      title: '',
-      text: '',
-    })
+    navigateTo('/admin/contenu/ma-methode/ajouter')
   }
 
-  const removeStep = (index: number) => {
-    form.steps.splice(index, 1)
-    // Renumber steps
-    form.steps.forEach((step, i) => {
-      step.id = i + 1
-    })
+  const editStep = (step: any) => {
+    navigateTo(`/admin/contenu/ma-methode/${step.id}`)
   }
 
-  const saveContent = async () => {
-    loading.value = true
+  const handleDelete = async (id: string) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette étape ?')) return
+
     try {
-      // TODO: API call to save content
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      saved.value = true
-      setTimeout(() => (saved.value = false), 3000)
-    } catch (error) {
-      console.error('Error saving content:', error)
-    } finally {
-      loading.value = false
+      await deleteStep(id)
+      toast.add({
+        title: 'Étape supprimée',
+        description: "L'étape a été supprimée avec succès",
+        color: 'success',
+        icon: 'i-lucide-trash-2',
+        duration: 3000,
+      })
+      await loadSteps()
+    } catch (error: any) {
+      toast.add({
+        title: 'Erreur de suppression',
+        description: error?.message || "Impossible de supprimer l'étape",
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
+    }
+  }
+
+  // Gestion du drag & drop pour réordonner
+  const onDragStart = () => {
+    isDragging.value = true
+  }
+
+  const onDragEnd = async (event: any) => {
+    isDragging.value = false
+
+    if (event.moved) {
+      const reorderedSteps = steps.value.map((step, index) => ({
+        id: step.id,
+        stepOrder: index + 1,
+      }))
+
+      try {
+        await reorderSteps(reorderedSteps)
+        toast.add({
+          title: 'Ordre mis à jour',
+          description: "L'ordre des étapes a été sauvegardé",
+          color: 'success',
+          icon: 'i-lucide-check',
+          duration: 2000,
+        })
+      } catch (error: any) {
+        toast.add({
+          title: 'Erreur',
+          description: "Impossible de sauvegarder l'ordre",
+          color: 'error',
+          duration: 3000,
+        })
+        await loadSteps() // Recharger l'ordre original
+      }
     }
   }
 </script>
@@ -73,84 +102,71 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Ma méthode</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Gérer le processus de travail étape par étape</p>
-      </div>
-      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveContent">
-        Enregistrer
-      </UButton>
-    </div>
-
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="Le contenu a été mis à jour avec succès" />
-
-    <!-- Header Section -->
-    <UCard>
-      <template #header>
-        <h3 class="text-lg font-semibold">En-tête de la section</h3>
+    <AdminPageHeader title="Ma méthode" description="Gérer votre processus de travail étape par étape">
+      <template #actions>
+        <UButton color="gray" variant="outline" size="lg" icon="i-lucide-settings" @click="editHeader">
+          Modifier l'en-tête
+        </UButton>
+        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addStep">Ajouter une étape</UButton>
       </template>
-      <div class="space-y-4">
-        <UFormField label="Titre principal" required>
-          <UInput v-model="form.title" size="lg" placeholder="Comment je travaille" />
-        </UFormField>
+    </AdminPageHeader>
 
-        <UFormField label="Sous-titre">
-          <UInput v-model="form.subtitle" size="lg" placeholder="étape par étape" />
-        </UFormField>
-
-        <UFormField label="Description">
-          <UTextarea v-model="form.description" :rows="3" placeholder="Description de votre méthode de travail" />
-        </UFormField>
-      </div>
-    </UCard>
-
-    <!-- Steps Section -->
-    <div class="space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Étapes du processus</h3>
-        <UButton color="primary" variant="outline" icon="i-lucide-plus" @click="addStep">Ajouter une étape</UButton>
-      </div>
-
-      <div class="space-y-4">
-        <UCard v-for="(step, index) in form.steps" :key="step.id">
-          <div class="space-y-4">
-            <div class="flex items-start justify-between gap-4">
-              <div class="flex-1 space-y-4">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
-                    <span class="text-sm font-bold text-primary-600 dark:text-primary-400">
-                      {{ step.id }}
-                    </span>
-                  </div>
-                  <UFormField label="Titre de l'étape" class="flex-1">
-                    <UInput v-model="step.title" size="lg" placeholder="Titre de l'étape" />
-                  </UFormField>
+    <!-- Steps List -->
+    <div v-if="!loading" class="space-y-4">
+      <draggable
+        v-model="steps"
+        item-key="id"
+        handle=".drag-handle"
+        animation="200"
+        @start="onDragStart"
+        @end="onDragEnd">
+        <template #item="{ element: step, index }">
+          <UCard class="shadow-sm" :class="{ 'opacity-50': isDragging }">
+            <div class="flex items-start gap-4">
+              <!-- Drag Handle & Number -->
+              <div class="flex items-center gap-3">
+                <UIcon
+                  name="i-lucide-grip-vertical"
+                  class="drag-handle cursor-move text-gray-400 hover:text-gray-600 transition-colors" />
+                <div
+                  class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                  <span class="text-sm font-bold text-primary-600 dark:text-primary-400">
+                    {{ index + 1 }}
+                  </span>
                 </div>
-
-                <UFormField label="Description">
-                  <UTextarea v-model="step.text" :rows="3" placeholder="Description détaillée de cette étape" />
-                </UFormField>
               </div>
 
-              <UButton
-                v-if="form.steps.length > 1"
-                color="error"
-                variant="ghost"
-                icon="i-lucide-trash-2"
-                size="sm"
-                @click="removeStep(index)" />
+              <!-- Content -->
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                  {{ step.title }}
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">
+                  {{ step.description }}
+                </p>
+              </div>
+
+              <!-- Actions -->
+              <AdminCrudActions @edit="editStep(step)" @delete="handleDelete(step.id)" />
             </div>
-          </div>
-        </UCard>
-      </div>
+          </UCard>
+        </template>
+      </draggable>
+
+      <!-- Empty State -->
+      <AdminEmptyState
+        v-if="steps.length === 0"
+        icon="i-lucide-list-ordered"
+        title="Aucune étape"
+        description="Commencez par ajouter votre première étape"
+        button-label="Ajouter une étape"
+        button-icon="i-lucide-plus"
+        @action="addStep" />
+    </div>
+
+    <!-- Loading State -->
+    <div v-else class="flex justify-center py-12">
+      <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-gray-400" />
     </div>
   </div>
 </template>

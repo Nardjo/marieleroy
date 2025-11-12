@@ -3,8 +3,7 @@
     layout: 'admin',
   })
 
-  const loading = ref(false)
-  const saved = ref(false)
+  const { loading, saved, showSuccess } = useAdminCrud()
 
   const testimonials = ref([
     {
@@ -55,13 +54,11 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Témoignages</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Gérer les témoignages vidéo de vos clients</p>
-      </div>
-      <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addTestimonial">Ajouter un témoignage</UButton>
-    </div>
+    <AdminPageHeader title="Témoignages" description="Gérer les témoignages vidéo de vos clients">
+      <template #actions>
+        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addTestimonial">Ajouter un témoignage</UButton>
+      </template>
+    </AdminPageHeader>
 
     <!-- Success Alert -->
     <UAlert
@@ -97,69 +94,24 @@
             </div>
 
             <div class="flex items-center gap-2 pt-2">
-              <UButton color="neutral" variant="outline" icon="i-lucide-edit" @click="editTestimonial(testimonial)">
-                Modifier
-              </UButton>
-              <UButton color="error" variant="ghost" icon="i-lucide-trash-2" @click="deleteTestimonial(testimonial.id)">
-                Supprimer
-              </UButton>
+              <AdminCrudActions
+                @edit="editTestimonial(testimonial)"
+                @delete="deleteTestimonial(testimonial.id)"
+                confirm-message="Êtes-vous sûr de vouloir supprimer ce témoignage ?" />
             </div>
           </div>
         </div>
       </UCard>
 
       <!-- Empty State -->
-      <UCard v-if="testimonials.length === 0" class="shadow-sm">
-        <div class="text-center py-12">
-          <UIcon name="i-lucide-message-circle" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Aucun témoignage</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Commencez par ajouter votre premier témoignage</p>
-          <UButton color="primary" icon="i-lucide-plus" @click="addTestimonial">Ajouter un témoignage</UButton>
-        </div>
-      </UCard>
+      <AdminEmptyState
+        v-if="testimonials.length === 0"
+        icon="i-lucide-message-circle"
+        title="Aucun témoignage"
+        description="Commencez par ajouter votre premier témoignage"
+        button-label="Ajouter un témoignage"
+        button-icon="i-lucide-plus"
+        @action="addTestimonial" />
     </div>
-
-    <!-- Edit Modal -->
-    <UModal v-model:open="isModalOpen" :ui="{ content: 'max-w-2xl' }">
-      <template #content>
-        <div class="p-6 space-y-6">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-            {{ editingTestimonial?.id ? 'Modifier' : 'Ajouter' }} un témoignage
-          </h2>
-
-          <div v-if="editingTestimonial" class="space-y-4">
-            <UFormField label="Nom du client" required>
-              <UInput v-model="editingTestimonial.title" size="lg" placeholder="Marie" />
-            </UFormField>
-
-            <UFormField label="Citation" required>
-              <UTextarea v-model="editingTestimonial.quote" :rows="4" placeholder="Une phrase clé du témoignage..." />
-            </UFormField>
-
-            <UFormField label="URL d'embed YouTube" required>
-              <UInput v-model="editingTestimonial.embedUrl" size="lg" placeholder="https://www.youtube.com/embed/..." />
-              <template #hint>
-                <span class="text-xs text-gray-500">Utilisez le format: https://www.youtube.com/embed/VIDEO_ID</span>
-              </template>
-            </UFormField>
-
-            <!-- Preview -->
-            <div v-if="editingTestimonial.embedUrl" class="aspect-video rounded-lg overflow-hidden bg-gray-100">
-              <iframe
-                :src="editingTestimonial.embedUrl"
-                class="w-full h-full"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-            </div>
-          </div>
-
-          <div class="flex justify-end gap-3">
-            <UButton color="neutral" variant="outline" @click="closeModal">Annuler</UButton>
-            <UButton color="primary" :loading="loading" @click="saveTestimonial">Enregistrer</UButton>
-          </div>
-        </div>
-      </template>
-    </UModal>
   </div>
 </template>

@@ -3,8 +3,7 @@
     layout: 'admin',
   })
 
-  const loading = ref(false)
-  const saved = ref(false)
+  const { loading, saved, showSuccess } = useAdminCrud()
 
   const faqItems = ref([
     {
@@ -54,13 +53,11 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">FAQ</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Gérer les questions fréquemment posées</p>
-      </div>
-      <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addFaqItem">Ajouter une question</UButton>
-    </div>
+    <AdminPageHeader title="FAQ" description="Gérer les questions fréquemment posées">
+      <template #actions>
+        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addFaqItem">Ajouter une question</UButton>
+      </template>
+    </AdminPageHeader>
 
     <!-- Success Alert -->
     <UAlert
@@ -84,25 +81,23 @@
           </div>
 
           <div class="flex items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700 mt-auto">
-            <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-edit" @click="editFaqItem(item)">
-              Modifier
-            </UButton>
-            <UButton color="error" variant="ghost" size="sm" icon="i-lucide-trash-2" @click="deleteFaqItem(item.id)">
-              Supprimer
-            </UButton>
+            <AdminCrudActions
+              @edit="editFaqItem(item)"
+              @delete="deleteFaqItem(item.id)"
+              confirm-message="Êtes-vous sûr de vouloir supprimer cette question ?" />
           </div>
         </div>
       </UCard>
 
       <!-- Empty State -->
-      <UCard v-if="faqItems.length === 0" class="shadow-sm">
-        <div class="text-center py-12">
-          <UIcon name="i-lucide-help-circle" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Aucune question</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Commencez par ajouter votre première question</p>
-          <UButton color="primary" icon="i-lucide-plus" @click="addFaqItem">Ajouter une question</UButton>
-        </div>
-      </UCard>
+      <AdminEmptyState
+        v-if="faqItems.length === 0"
+        icon="i-lucide-help-circle"
+        title="Aucune question"
+        description="Commencez par ajouter votre première question"
+        button-label="Ajouter une question"
+        button-icon="i-lucide-plus"
+        @action="addFaqItem" />
     </div>
   </div>
 </template>

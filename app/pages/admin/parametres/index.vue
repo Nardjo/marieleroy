@@ -3,8 +3,7 @@
     layout: 'admin',
   })
 
-  const loading = ref(false)
-  const saved = ref(false)
+  const { loading, saved, showSuccess } = useAdminCrud()
 
   const form = reactive({
     siteName: 'Marie Leroy',
@@ -32,15 +31,13 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Paramètres généraux</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Configurer les informations principales du site</p>
-      </div>
-      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
-        Enregistrer
-      </UButton>
-    </div>
+    <AdminPageHeader title="Paramètres généraux" description="Configurer les informations principales du site">
+      <template #actions>
+        <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
+          Enregistrer
+        </UButton>
+      </template>
+    </AdminPageHeader>
 
     <!-- Success Alert -->
     <UAlert

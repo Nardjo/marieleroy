@@ -1,73 +1,73 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'admin',
-})
-
-const loading = ref(false)
-const saved = ref(false)
-
-const form = reactive({
-  title: 'Comment je travaille',
-  subtitle: 'étape par étape',
-  description: 'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
-  steps: [
-    {
-      id: 1,
-      title: 'Consultation initiale',
-      text: 'Nous commençons par une discussion approfondie pour comprendre vos objectifs, votre audience cible et vos attentes.',
-    },
-    {
-      id: 2,
-      title: 'Recherche et stratégie',
-      text: "J'analyse votre marché, votre concurrence et votre audience pour développer une stratégie de contenu efficace.",
-    },
-    {
-      id: 3,
-      title: 'Rédaction et optimisation',
-      text: "Je rédige votre contenu en utilisant des techniques de copywriting éprouvées pour maximiser l'impact et les conversions.",
-    },
-    {
-      id: 4,
-      title: 'Révisions et ajustements',
-      text: "Je travaille avec vous pour affiner le contenu jusqu'à ce qu'il corresponde parfaitement à vos attentes et objectifs.",
-    },
-    {
-      id: 5,
-      title: 'Livraison et suivi',
-      text: 'Je vous livre le contenu final et reste disponible pour des ajustements mineurs et pour répondre à vos questions.',
-    },
-  ],
-})
-
-const addStep = () => {
-  form.steps.push({
-    id: form.steps.length + 1,
-    title: '',
-    text: '',
+  definePageMeta({
+    layout: 'admin',
   })
-}
 
-const removeStep = (index: number) => {
-  form.steps.splice(index, 1)
-  // Renumber steps
-  form.steps.forEach((step, i) => {
-    step.id = i + 1
+  const loading = ref(false)
+  const saved = ref(false)
+
+  const form = reactive({
+    title: 'Comment je travaille',
+    subtitle: 'étape par étape',
+    description: 'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
+    steps: [
+      {
+        id: 1,
+        title: 'Consultation initiale',
+        text: 'Nous commençons par une discussion approfondie pour comprendre vos objectifs, votre audience cible et vos attentes.',
+      },
+      {
+        id: 2,
+        title: 'Recherche et stratégie',
+        text: "J'analyse votre marché, votre concurrence et votre audience pour développer une stratégie de contenu efficace.",
+      },
+      {
+        id: 3,
+        title: 'Rédaction et optimisation',
+        text: "Je rédige votre contenu en utilisant des techniques de copywriting éprouvées pour maximiser l'impact et les conversions.",
+      },
+      {
+        id: 4,
+        title: 'Révisions et ajustements',
+        text: "Je travaille avec vous pour affiner le contenu jusqu'à ce qu'il corresponde parfaitement à vos attentes et objectifs.",
+      },
+      {
+        id: 5,
+        title: 'Livraison et suivi',
+        text: 'Je vous livre le contenu final et reste disponible pour des ajustements mineurs et pour répondre à vos questions.',
+      },
+    ],
   })
-}
 
-const saveContent = async () => {
-  loading.value = true
-  try {
-    // TODO: API call to save content
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    saved.value = true
-    setTimeout(() => (saved.value = false), 3000)
-  } catch (error) {
-    console.error('Error saving content:', error)
-  } finally {
-    loading.value = false
+  const addStep = () => {
+    form.steps.push({
+      id: form.steps.length + 1,
+      title: '',
+      text: '',
+    })
   }
-}
+
+  const removeStep = (index: number) => {
+    form.steps.splice(index, 1)
+    // Renumber steps
+    form.steps.forEach((step, i) => {
+      step.id = i + 1
+    })
+  }
+
+  const saveContent = async () => {
+    loading.value = true
+    try {
+      // TODO: API call to save content
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      saved.value = true
+      setTimeout(() => (saved.value = false), 3000)
+    } catch (error) {
+      console.error('Error saving content:', error)
+    } finally {
+      loading.value = false
+    }
+  }
 </script>
 
 <template>
@@ -75,19 +75,10 @@ const saveContent = async () => {
     <!-- Page Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          Ma méthode
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">
-          Gérer le processus de travail étape par étape
-        </p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Ma méthode</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Gérer le processus de travail étape par étape</p>
       </div>
-      <UButton
-        color="primary"
-        size="lg"
-        icon="i-lucide-save"
-        :loading="loading"
-        @click="saveContent">
+      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveContent">
         Enregistrer
       </UButton>
     </div>
@@ -115,10 +106,7 @@ const saveContent = async () => {
         </UFormField>
 
         <UFormField label="Description">
-          <UTextarea
-            v-model="form.description"
-            :rows="3"
-            placeholder="Description de votre méthode de travail" />
+          <UTextarea v-model="form.description" :rows="3" placeholder="Description de votre méthode de travail" />
         </UFormField>
       </div>
     </UCard>
@@ -126,16 +114,8 @@ const saveContent = async () => {
     <!-- Steps Section -->
     <div class="space-y-4">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          Étapes du processus
-        </h3>
-        <UButton
-          color="primary"
-          variant="outline"
-          icon="i-lucide-plus"
-          @click="addStep">
-          Ajouter une étape
-        </UButton>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Étapes du processus</h3>
+        <UButton color="primary" variant="outline" icon="i-lucide-plus" @click="addStep">Ajouter une étape</UButton>
       </div>
 
       <div class="space-y-4">
@@ -144,7 +124,8 @@ const saveContent = async () => {
             <div class="flex items-start justify-between gap-4">
               <div class="flex-1 space-y-4">
                 <div class="flex items-center gap-3">
-                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                  <div
+                    class="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
                     <span class="text-sm font-bold text-primary-600 dark:text-primary-400">
                       {{ step.id }}
                     </span>
@@ -155,10 +136,7 @@ const saveContent = async () => {
                 </div>
 
                 <UFormField label="Description">
-                  <UTextarea
-                    v-model="step.text"
-                    :rows="3"
-                    placeholder="Description détaillée de cette étape" />
+                  <UTextarea v-model="step.text" :rows="3" placeholder="Description détaillée de cette étape" />
                 </UFormField>
               </div>
 
@@ -174,23 +152,5 @@ const saveContent = async () => {
         </UCard>
       </div>
     </div>
-
-    <!-- Preview -->
-    <UCard>
-      <template #header>
-        <h3 class="text-lg font-semibold">Aperçu</h3>
-      </template>
-      <div class="space-y-2">
-        <UButton
-          to="/#method"
-          target="_blank"
-          color="neutral"
-          variant="outline"
-          block
-          icon="i-lucide-external-link">
-          Voir sur le site
-        </UButton>
-      </div>
-    </UCard>
   </div>
 </template>

@@ -1,32 +1,32 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'admin',
-})
+  definePageMeta({
+    layout: 'admin',
+  })
 
-const loading = ref(false)
-const saved = ref(false)
+  const loading = ref(false)
+  const saved = ref(false)
 
-const form = reactive({
-  title: 'Qui suis-je?',
-  subtitle: 'Votre copywriter professionnelle',
-  description: '',
-  imageUrl: '',
-  skills: [] as string[],
-})
+  const form = reactive({
+    title: 'Qui suis-je?',
+    subtitle: 'Votre copywriter professionnelle',
+    description: '',
+    imageUrl: '',
+    skills: [] as string[],
+  })
 
-const saveContent = async () => {
-  loading.value = true
-  try {
-    // TODO: API call to save content
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    saved.value = true
-    setTimeout(() => (saved.value = false), 3000)
-  } catch (error) {
-    console.error('Error saving content:', error)
-  } finally {
-    loading.value = false
+  const saveContent = async () => {
+    loading.value = true
+    try {
+      // TODO: API call to save content
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      saved.value = true
+      setTimeout(() => (saved.value = false), 3000)
+    } catch (error) {
+      console.error('Error saving content:', error)
+    } finally {
+      loading.value = false
+    }
   }
-}
 </script>
 
 <template>
@@ -34,19 +34,10 @@ const saveContent = async () => {
     <!-- Page Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          À propos
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">
-          Gérer le contenu de la section "À propos"
-        </p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">À propos</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Gérer le contenu de la section "À propos"</p>
       </div>
-      <UButton
-        color="primary"
-        size="lg"
-        icon="i-lucide-save"
-        :loading="loading"
-        @click="saveContent">
+      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveContent">
         Enregistrer
       </UButton>
     </div>
@@ -74,10 +65,7 @@ const saveContent = async () => {
             </UFormField>
 
             <UFormField label="Description" required>
-              <UTextarea
-                v-model="form.description"
-                :rows="8"
-                placeholder="Votre présentation..." />
+              <UTextarea v-model="form.description" :rows="8" placeholder="Votre présentation..." />
             </UFormField>
           </div>
         </UCard>
@@ -88,9 +76,7 @@ const saveContent = async () => {
             <h3 class="text-lg font-semibold">Compétences</h3>
           </template>
           <div class="space-y-4">
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-              Ajoutez vos compétences principales (une par ligne)
-            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Ajoutez vos compétences principales (une par ligne)</p>
             <UTextarea
               :model-value="form.skills.join('\n')"
               @update:model-value="form.skills = ($event as string).split('\n').filter(Boolean)"
@@ -114,27 +100,7 @@ const saveContent = async () => {
             <div v-else class="aspect-square rounded-lg bg-gray-100 flex items-center justify-center">
               <UIcon name="i-lucide-image" class="w-12 h-12 text-gray-400" />
             </div>
-            <UButton color="neutral" block>
-              Télécharger une image
-            </UButton>
-          </div>
-        </UCard>
-
-        <!-- Preview -->
-        <UCard>
-          <template #header>
-            <h3 class="text-lg font-semibold">Aperçu</h3>
-          </template>
-          <div class="space-y-2">
-            <UButton
-              to="/#about"
-              target="_blank"
-              color="neutral"
-              variant="outline"
-              block
-              icon="i-lucide-external-link">
-              Voir sur le site
-            </UButton>
+            <UButton color="neutral" block>Télécharger une image</UButton>
           </div>
         </UCard>
       </div>

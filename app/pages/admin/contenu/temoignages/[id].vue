@@ -5,43 +5,29 @@
 
   const route = useRoute()
   const router = useRouter()
-  const id = computed(() => Number(route.params.id))
+  const id = computed(() => route.params.id as string)
 
-  const loading = ref(false)
-  const saved = ref(false)
-
-  const testimonials = ref([
-    {
-      id: 1,
-      title: 'Marie',
-      quote: "Grâce à Marie, j'ai pu transformer ma communication et atteindre mes objectifs de manière efficace.",
-      embedUrl: 'https://www.youtube.com/embed/KJNbhiD9YLg',
-      order: 1,
-    },
-    {
-      id: 2,
-      title: 'Jessica',
-      quote:
-        'Un travail exceptionnel qui a dépassé toutes mes attentes. Ma marque a pris une toute nouvelle dimension.',
-      embedUrl: 'https://www.youtube.com/embed/3enzfMLVIbo',
-      order: 2,
-    },
-    {
-      id: 3,
-      title: 'Lilie',
-      quote: "Marie a su capter l'essence de mon message et créer un contenu qui résonne vraiment avec mon audience.",
-      embedUrl: 'https://www.youtube.com/embed/3Ah-CkKIKx8',
-      order: 3,
-    },
-  ])
+  const { fetchTestimonial, updateTestimonial, loading } = useTestimonials()
+  const toast = useToast()
 
   const form = ref<any>(null)
 
-  onMounted(() => {
-    const testimonial = testimonials.value.find(t => t.id === id.value)
-    if (testimonial) {
-      form.value = { ...testimonial }
-    } else {
+  // Charger le témoignage
+  onMounted(async () => {
+    try {
+      const testimonial = await fetchTestimonial(id.value)
+      if (testimonial) {
+        form.value = {
+          title: testimonial.title,
+          quote: testimonial.quote,
+          embedUrl: testimonial.embedUrl,
+          displayOrder: testimonial.displayOrder,
+        }
+      } else {
+        router.push('/admin/contenu/temoignages')
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement:', error)
       router.push('/admin/contenu/temoignages')
     }
   })
@@ -51,24 +37,35 @@
   }
 
   const saveTestimonial = async () => {
-    loading.value = true
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      const index = testimonials.value.findIndex(t => t.id === form.value.id)
-      if (index !== -1) {
-        testimonials.value[index] = { ...form.value }
+      // Only send the fields that can be updated
+      const updateData = {
+        title: form.value.title,
+        quote: form.value.quote,
+        embedUrl: form.value.embedUrl,
+        displayOrder: form.value.displayOrder,
       }
+      await updateTestimonial(id.value, updateData)
 
-      saved.value = true
+      toast.add({
+        title: 'Modifications enregistrées',
+        description: 'Le témoignage a été mis à jour avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
       setTimeout(() => {
-        saved.value = false
         goBack()
       }, 1500)
-    } catch (error) {
-      console.error('Error saving testimonial:', error)
-    } finally {
-      loading.value = false
+    } catch (error: any) {
+      console.error('Erreur lors de la mise à jour:', error)
+      toast.add({
+        title: 'Erreur de mise à jour',
+        description: error?.data?.message || 'Impossible de mettre à jour le témoignage',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -87,8 +84,6 @@
         Enregistrer
       </UButton>
     </div>
-
-    <UAlert v-if="saved" color="success" variant="soft" title="Modifications enregistrées" />
 
     <AdminTestimonialForm v-if="form" v-model:testimonial="form" :loading="loading" />
   </div>

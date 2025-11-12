@@ -1,13 +1,13 @@
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
-import prisma from '../../utils/prisma'
+import { prisma } from '../../utils/prisma'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email format'),
   password: z.string().min(1, 'Password is required'),
 })
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const body = await readBody(event)
 
@@ -43,8 +43,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       user: userWithoutPassword,
     }
-  }
-  catch (error) {
+  } catch (error) {
     if (error instanceof z.ZodError) {
       throw createError({
         statusCode: 400,

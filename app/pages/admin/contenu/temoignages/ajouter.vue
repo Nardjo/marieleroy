@@ -4,15 +4,14 @@
   })
 
   const router = useRouter()
-  const loading = ref(false)
-  const saved = ref(false)
+  const { createTestimonial, loading } = useTestimonials()
+  const toast = useToast()
 
   const form = ref({
-    id: null,
     title: '',
     quote: '',
     embedUrl: '',
-    order: 1,
+    displayOrder: 0,
   })
 
   const goBack = () => {
@@ -20,19 +19,28 @@
   }
 
   const saveTestimonial = async () => {
-    loading.value = true
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await createTestimonial(form.value)
 
-      saved.value = true
+      toast.add({
+        title: 'Témoignage créé',
+        description: 'Le nouveau témoignage a été ajouté avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
       setTimeout(() => {
-        saved.value = false
         goBack()
       }, 1500)
-    } catch (error) {
-      console.error('Error saving testimonial:', error)
-    } finally {
-      loading.value = false
+    } catch (error: any) {
+      console.error('Erreur lors de la création:', error)
+      toast.add({
+        title: 'Erreur de création',
+        description: error?.data?.message || 'Impossible de créer le témoignage',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -51,8 +59,6 @@
         Enregistrer
       </UButton>
     </div>
-
-    <UAlert v-if="saved" color="success" variant="soft" title="Témoignage créé avec succès" />
 
     <AdminTestimonialForm v-model:testimonial="form" :loading="loading" />
   </div>

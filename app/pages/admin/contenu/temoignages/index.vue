@@ -3,32 +3,30 @@
     layout: 'admin',
   })
 
-  const { loading, saved, showSuccess } = useAdminCrud()
+  const { loading, error, fetchTestimonials, deleteTestimonial } = useTestimonials()
+  const toast = useToast()
 
-  const testimonials = ref([
-    {
-      id: 1,
-      title: 'Marie',
-      quote: "Grâce à Marie, j'ai pu transformer ma communication et atteindre mes objectifs de manière efficace.",
-      embedUrl: 'https://www.youtube.com/embed/KJNbhiD9YLg',
-      order: 1,
-    },
-    {
-      id: 2,
-      title: 'Jessica',
-      quote:
-        'Un travail exceptionnel qui a dépassé toutes mes attentes. Ma marque a pris une toute nouvelle dimension.',
-      embedUrl: 'https://www.youtube.com/embed/3enzfMLVIbo',
-      order: 2,
-    },
-    {
-      id: 3,
-      title: 'Lilie',
-      quote: "Marie a su capter l'essence de mon message et créer un contenu qui résonne vraiment avec mon audience.",
-      embedUrl: 'https://www.youtube.com/embed/3Ah-CkKIKx8',
-      order: 3,
-    },
-  ])
+  const testimonials = ref([])
+
+  // Charger les témoignages
+  const loadTestimonials = async () => {
+    try {
+      testimonials.value = await fetchTestimonials()
+    } catch (err: any) {
+      console.error('Erreur lors du chargement:', err)
+      toast.add({
+        title: 'Erreur de chargement',
+        description: err?.message || 'Impossible de charger les témoignages',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
+    }
+  }
+
+  onMounted(() => {
+    loadTestimonials()
+  })
 
   const addTestimonial = () => {
     navigateTo('/admin/contenu/temoignages/ajouter')
@@ -38,15 +36,28 @@
     navigateTo(`/admin/contenu/temoignages/${testimonial.id}`)
   }
 
-  const deleteTestimonial = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce témoignage ?')) return
 
     try {
-      // TODO: API call to delete testimonial
-      await new Promise(resolve => setTimeout(resolve, 500))
-      testimonials.value = testimonials.value.filter(t => t.id !== id)
-    } catch (error) {
-      console.error('Error deleting testimonial:', error)
+      await deleteTestimonial(id)
+      toast.add({
+        title: 'Témoignage supprimé',
+        description: 'Le témoignage a été supprimé définitivement',
+        color: 'success',
+        icon: 'i-lucide-trash-2',
+        duration: 3000,
+      })
+      await loadTestimonials() // Recharger la liste
+    } catch (error: any) {
+      console.error('Erreur lors de la suppression:', error)
+      toast.add({
+        title: 'Erreur de suppression',
+        description: error?.data?.message || 'Impossible de supprimer le témoignage',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -59,14 +70,6 @@
         <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addTestimonial">Ajouter un témoignage</UButton>
       </template>
     </AdminPageHeader>
-
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="Le témoignage a été mis à jour avec succès" />
 
     <!-- Testimonials List -->
     <div class="grid grid-cols-1 gap-6">
@@ -96,7 +99,7 @@
             <div class="flex items-center gap-2 pt-2">
               <AdminCrudActions
                 @edit="editTestimonial(testimonial)"
-                @delete="deleteTestimonial(testimonial.id)"
+                @delete="handleDelete(testimonial.id)"
                 confirm-message="Êtes-vous sûr de vouloir supprimer ce témoignage ?" />
             </div>
           </div>
@@ -105,13 +108,18 @@
 
       <!-- Empty State -->
       <AdminEmptyState
-        v-if="testimonials.length === 0"
+        v-if="testimonials.length === 0 && !loading"
         icon="i-lucide-message-circle"
         title="Aucun témoignage"
         description="Commencez par ajouter votre premier témoignage"
         button-label="Ajouter un témoignage"
         button-icon="i-lucide-plus"
         @action="addTestimonial" />
+
+      <!-- Loading State -->
+      <div v-if="loading" class="flex justify-center py-12">
+        <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-gray-400" />
+      </div>
     </div>
   </div>
 </template>

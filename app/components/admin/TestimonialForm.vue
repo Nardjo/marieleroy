@@ -1,10 +1,10 @@
 <script setup lang="ts">
   interface Testimonial {
-    id: number | null
+    id?: string
     title: string
     quote: string
     embedUrl: string
-    order: number
+    displayOrder: number
   }
 
   interface Props {
@@ -68,8 +68,8 @@
 
           <UFormField label="Ordre d'affichage" required>
             <UInput
-              :model-value="localForm.order"
-              @update:model-value="updateField('order', Number($event))"
+              :model-value="localForm.displayOrder"
+              @update:model-value="updateField('displayOrder', Number($event))"
               type="number"
               size="lg"
               placeholder="1" />

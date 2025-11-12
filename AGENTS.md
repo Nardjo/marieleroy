@@ -2,11 +2,15 @@
 
 ## Build/Lint/Test Commands
 
+**IMPORTANT: Always use `pnpm` instead of `npm` for this project**
+
 ```bash
-npm run dev        # Start dev server on http://localhost:3000
-npm run build      # Build for production
-npm run preview    # Preview production build
-npx nuxt typecheck # Type checking (no script defined)
+pnpm dev           # Start dev server on http://localhost:3000
+pnpm build         # Build for production
+pnpm preview       # Preview production build
+pnpm nuxt typecheck # Type checking (no script defined)
+pnpm exec prettier --write . # Format code
+pnpm exec eslint . --fix     # Fix linting issues
 ```
 
 No test suite currently configured. Prettier/ESLint configured but no lint script in package.json.

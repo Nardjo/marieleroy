@@ -1,15 +1,20 @@
 <script setup lang="ts">
-  import { VueDraggableNext as draggable } from 'vuedraggable'
+  import draggable from 'vuedraggable'
 
   definePageMeta({
     layout: 'admin',
   })
 
-  const { loading, fetchSteps, deleteStep, reorderSteps } = useMethod()
+  const { loading, fetchSteps, deleteStep, reorderSteps, fetchHeader, updateHeader } = useMethod()
   const toast = useToast()
 
   const steps = ref([])
   const isDragging = ref(false)
+  const headerForm = reactive({
+    title: '',
+    subtitle: '',
+    description: '',
+  })
 
   const loadSteps = async () => {
     try {
@@ -25,7 +30,37 @@
     }
   }
 
+  const loadHeader = async () => {
+    try {
+      const header = await fetchHeader()
+      Object.assign(headerForm, header)
+    } catch (error) {
+      console.error("Erreur lors du chargement de l'en-tête:", error)
+    }
+  }
+
+  const saveHeader = async () => {
+    try {
+      await updateHeader(headerForm)
+      toast.add({
+        title: 'En-tête enregistré',
+        description: "L'en-tête a été mis à jour avec succès",
+        color: 'success',
+        icon: 'i-lucide-check',
+        duration: 3000,
+      })
+    } catch (error: any) {
+      toast.add({
+        title: 'Erreur',
+        description: error?.message || "Impossible de sauvegarder l'en-tête",
+        color: 'error',
+        duration: 5000,
+      })
+    }
+  }
+
   onMounted(() => {
+    loadHeader()
     loadSteps()
   })
 
@@ -70,33 +105,32 @@
     isDragging.value = true
   }
 
-  const onDragEnd = async (event: any) => {
+  const onDragEnd = async () => {
     isDragging.value = false
 
-    if (event.moved) {
-      const reorderedSteps = steps.value.map((step, index) => ({
-        id: step.id,
-        stepOrder: index + 1,
-      }))
+    // Toujours sauvegarder l'ordre après un drag, car vuedraggable a déjà mis à jour le tableau
+    const reorderedSteps = steps.value.map((step, index) => ({
+      id: step.id,
+      stepOrder: index + 1,
+    }))
 
-      try {
-        await reorderSteps(reorderedSteps)
-        toast.add({
-          title: 'Ordre mis à jour',
-          description: "L'ordre des étapes a été sauvegardé",
-          color: 'success',
-          icon: 'i-lucide-check',
-          duration: 2000,
-        })
-      } catch (error: any) {
-        toast.add({
-          title: 'Erreur',
-          description: "Impossible de sauvegarder l'ordre",
-          color: 'error',
-          duration: 3000,
-        })
-        await loadSteps() // Recharger l'ordre original
-      }
+    try {
+      await reorderSteps(reorderedSteps)
+      toast.add({
+        title: 'Ordre mis à jour',
+        description: "L'ordre des étapes a été sauvegardé",
+        color: 'success',
+        icon: 'i-lucide-check',
+        duration: 2000,
+      })
+    } catch (error: any) {
+      toast.add({
+        title: 'Erreur',
+        description: "Impossible de sauvegarder l'ordre",
+        color: 'error',
+        duration: 3000,
+      })
+      await loadSteps() // Recharger l'ordre original
     }
   }
 </script>
@@ -106,15 +140,42 @@
     <!-- Page Header -->
     <AdminPageHeader title="Ma méthode" description="Gérer votre processus de travail étape par étape">
       <template #actions>
-        <UButton color="gray" variant="outline" size="lg" icon="i-lucide-settings" @click="editHeader">
-          Modifier l'en-tête
+        <UButton color="primary" size="lg" icon="i-lucide-save" @click="saveHeader" :loading="loading">
+          Enregistrer
         </UButton>
-        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addStep">Ajouter une étape</UButton>
       </template>
     </AdminPageHeader>
+    <UCard>
+      <div class="space-y-6">
+        <UFormField label="Titre principal" required>
+          <UInput v-model="headerForm.title" size="lg" placeholder="Ex: Comment je travaille" :disabled="loading" />
+        </UFormField>
+
+        <UFormField label="Sous-titre" description="Optionnel - Affiché sous le titre principal">
+          <UInput v-model="headerForm.subtitle" size="lg" placeholder="Ex: étape par étape" :disabled="loading" />
+        </UFormField>
+
+        <UFormField label="Description" description="Optionnel - Texte d'introduction">
+          <UTextarea
+            v-model="headerForm.description"
+            :rows="4"
+            placeholder="Décrivez votre approche et méthode de travail..."
+            :disabled="loading" />
+        </UFormField>
+      </div>
+    </UCard>
 
     <!-- Steps List -->
     <div v-if="!loading" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Les étapes</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Personnalisez Les étapes de votre méthode de travail
+          </p>
+        </div>
+        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addStep">Ajouter une étape</UButton>
+      </div>
       <draggable
         v-model="steps"
         item-key="id"
@@ -123,7 +184,7 @@
         @start="onDragStart"
         @end="onDragEnd">
         <template #item="{ element: step, index }">
-          <UCard class="shadow-sm" :class="{ 'opacity-50': isDragging }">
+          <UCard class="shadow-sm mb-4" :class="{ 'opacity-50': isDragging }">
             <div class="flex items-start gap-4">
               <!-- Drag Handle & Number -->
               <div class="flex items-center gap-3">

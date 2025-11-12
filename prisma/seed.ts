@@ -2,7 +2,38 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-async function main() {
+async function seedTestimonials() {
+  console.log('🌱 Seeding testimonials...')
+  await prisma.testimonial.createMany({
+    data: [
+      {
+        title: 'Marie',
+        quote: "Grâce à Marie, j'ai pu transformer ma communication et atteindre mes objectifs de manière efficace.",
+        embedUrl: 'https://www.youtube.com/embed/KJNbhiD9YLg',
+        displayOrder: 1,
+      },
+      {
+        title: 'Jessica',
+        quote:
+          'Un travail exceptionnel qui a dépassé toutes mes attentes. Ma marque a pris une toute nouvelle dimension.',
+        embedUrl: 'https://www.youtube.com/embed/3enzfMLVIbo',
+        displayOrder: 2,
+      },
+      {
+        title: 'Lilie',
+        quote: "Marie a su capter l'essence de mon message et créer un contenu qui résonne vraiment avec mon audience.",
+        embedUrl: 'https://www.youtube.com/embed/3Ah-CkKIKx8',
+        displayOrder: 3,
+      },
+    ],
+    skipDuplicates: true,
+  })
+  console.log('✅ Testimonials seeded')
+}
+
+async function seedMethod() {
+  console.log('🌱 Seeding method...')
+
   // Créer l'en-tête de la méthode
   const header = await prisma.methodHeader.upsert({
     where: { id: 'method-header' },
@@ -33,7 +64,7 @@ async function main() {
       {
         title: 'Rédaction et optimisation',
         description:
-          "Je rédis votre contenu en utilisant des techniques de copywriting éprouvées pour maximiser l'impact et les conversions.",
+          "Je rédige votre contenu en utilisant des techniques de copywriting éprouvées pour maximiser l'impact et les conversions.",
         stepOrder: 3,
       },
       {
@@ -52,9 +83,23 @@ async function main() {
     skipDuplicates: true,
   })
 
-  console.log('Données de méthode insérées avec succès')
-  console.log(`- En-tête: ${header.title}`)
-  console.log(`- 5 étapes créées`)
+  console.log('✅ Method seeded')
+  console.log(`   - Header: ${header.title}`)
+  console.log(`   - 5 steps created`)
+}
+
+async function main() {
+  console.log('🚀 Starting database seed...\n')
+
+  try {
+    await seedTestimonials()
+    await seedMethod()
+
+    console.log('\n✨ Database seeded successfully!')
+  } catch (error) {
+    console.error('❌ Error seeding database:', error)
+    throw error
+  }
 }
 
 main()

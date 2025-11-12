@@ -277,8 +277,5 @@
         </template>
       </UDrawer>
     </div>
-
-    <!-- Toast Notifications -->
-    <UNotifications />
   </div>
 </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { VueDraggableNext as draggable } from 'vuedraggable'
+
   definePageMeta({
     layout: 'admin',
   })

@@ -1,32 +1,32 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'admin',
-})
+  definePageMeta({
+    layout: 'admin',
+  })
 
-const loading = ref(false)
-const saved = ref(false)
+  const loading = ref(false)
+  const saved = ref(false)
 
-const form = reactive({
-  siteName: 'Marie Leroy',
-  siteDescription: 'Copywriter professionnelle - Des mots qui convertissent, des messages qui résonnent',
-  email: 'contact@marieleroy.fr',
-  phone: '+33 6 12 34 56 78',
-  address: 'Paris, France',
-})
+  const form = reactive({
+    siteName: 'Marie Leroy',
+    siteDescription: 'Copywriter professionnelle - Des mots qui convertissent, des messages qui résonnent',
+    email: 'contact@marieleroy.fr',
+    phone: '+33 6 12 34 56 78',
+    address: 'Paris, France',
+  })
 
-const saveSettings = async () => {
-  loading.value = true
-  try {
-    // TODO: API call to save settings
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    saved.value = true
-    setTimeout(() => (saved.value = false), 3000)
-  } catch (error) {
-    console.error('Error saving settings:', error)
-  } finally {
-    loading.value = false
+  const saveSettings = async () => {
+    loading.value = true
+    try {
+      // TODO: API call to save settings
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      saved.value = true
+      setTimeout(() => (saved.value = false), 3000)
+    } catch (error) {
+      console.error('Error saving settings:', error)
+    } finally {
+      loading.value = false
+    }
   }
-}
 </script>
 
 <template>
@@ -34,19 +34,10 @@ const saveSettings = async () => {
     <!-- Page Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          Paramètres généraux
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">
-          Configurer les informations principales du site
-        </p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Paramètres généraux</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Configurer les informations principales du site</p>
       </div>
-      <UButton
-        color="primary"
-        size="lg"
-        icon="i-lucide-save"
-        :loading="loading"
-        @click="saveSettings">
+      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
         Enregistrer
       </UButton>
     </div>
@@ -98,20 +89,11 @@ const saveSettings = async () => {
             </UFormField>
 
             <UFormField label="Téléphone">
-              <UInput
-                v-model="form.phone"
-                type="tel"
-                size="lg"
-                placeholder="+33 6 12 34 56 78"
-                icon="i-lucide-phone" />
+              <UInput v-model="form.phone" type="tel" size="lg" placeholder="+33 6 12 34 56 78" icon="i-lucide-phone" />
             </UFormField>
 
             <UFormField label="Adresse">
-              <UInput
-                v-model="form.address"
-                size="lg"
-                placeholder="Paris, France"
-                icon="i-lucide-map-pin" />
+              <UInput v-model="form.address" size="lg" placeholder="Paris, France" icon="i-lucide-map-pin" />
             </UFormField>
           </div>
         </UCard>
@@ -119,31 +101,6 @@ const saveSettings = async () => {
 
       <!-- Sidebar -->
       <div class="space-y-6">
-        <!-- Quick Links -->
-        <UCard>
-          <template #header>
-            <h3 class="text-lg font-semibold">Liens rapides</h3>
-          </template>
-          <div class="space-y-2">
-            <UButton
-              to="/admin/parametres/reseaux-sociaux"
-              color="neutral"
-              variant="outline"
-              block
-              icon="i-lucide-share-2">
-              Réseaux sociaux
-            </UButton>
-            <UButton
-              to="/admin/parametres/seo"
-              color="neutral"
-              variant="outline"
-              block
-              icon="i-lucide-search">
-              SEO
-            </UButton>
-          </div>
-        </UCard>
-
         <!-- Info -->
         <UCard>
           <template #header>
@@ -151,7 +108,8 @@ const saveSettings = async () => {
           </template>
           <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <p>
-              Ces paramètres sont utilisés dans différentes parties du site, notamment dans le footer et les métadonnées.
+              Ces paramètres sont utilisés dans différentes parties du site, notamment dans le footer et les
+              métadonnées.
             </p>
           </div>
         </UCard>

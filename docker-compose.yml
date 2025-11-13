@@ -29,8 +29,7 @@ services:
       - '3000:3000'
     environment:
       DATABASE_URL: postgresql://admin:${POSTGRES_PASSWORD:-changeme_production_password}@postgres:5432/marieleroy
-      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
-      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
+      NUXT_SESSION_PASSWORD: ${NUXT_SESSION_PASSWORD:-dev-secret-at-least-32-characters-long}
       NODE_ENV: ${NODE_ENV:-development}
       UPLOAD_DIR: ${UPLOAD_DIR:-/app/uploads}
     depends_on:

@@ -72,7 +72,20 @@
     </AdminPageHeader>
 
     <!-- Testimonials List -->
-    <div class="grid grid-cols-1 gap-6">
+    <AdminSkeletonCardList v-if="loading" :count="3" />
+
+    <!-- Empty State -->
+    <AdminEmptyState
+      v-else-if="testimonials.length === 0"
+      icon="i-lucide-message-circle"
+      title="Aucun témoignage"
+      description="Commencez par ajouter votre premier témoignage"
+      button-label="Ajouter un témoignage"
+      button-icon="i-lucide-plus"
+      @action="addTestimonial" />
+
+    <!-- Testimonials Cards -->
+    <div v-else class="grid grid-cols-1 gap-6">
       <UCard v-for="testimonial in testimonials" :key="testimonial.id" class="shadow-sm">
         <div class="flex flex-col md:flex-row gap-6">
           <!-- Video Preview -->
@@ -105,21 +118,6 @@
           </div>
         </div>
       </UCard>
-
-      <!-- Empty State -->
-      <AdminEmptyState
-        v-if="testimonials.length === 0 && !loading"
-        icon="i-lucide-message-circle"
-        title="Aucun témoignage"
-        description="Commencez par ajouter votre premier témoignage"
-        button-label="Ajouter un témoignage"
-        button-icon="i-lucide-plus"
-        @action="addTestimonial" />
-
-      <!-- Loading State -->
-      <div v-if="loading" class="flex justify-center py-12">
-        <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-gray-400" />
-      </div>
     </div>
   </div>
 </template>

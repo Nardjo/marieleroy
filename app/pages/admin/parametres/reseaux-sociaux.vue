@@ -3,11 +3,11 @@
     layout: 'admin',
   })
 
-  const loading = ref(false)
-  const saved = ref(false)
+  const { loading, fetchSocialLinks, updateSocialLinks } = useSettings()
+  const toast = useToast()
 
   const form = reactive({
-    instagram: 'https://www.instagram.com/mari.eleroy94/',
+    instagram: '',
     facebook: '',
     twitter: '',
     linkedin: '',
@@ -24,17 +24,51 @@
     { key: 'tiktok', label: 'TikTok', icon: 'i-lucide-music', color: 'slate' },
   ]
 
-  const saveSettings = async () => {
-    loading.value = true
+  // Charger les liens sociaux au montage
+  const loadSocialLinks = async () => {
     try {
-      // TODO: API call to save settings
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      saved.value = true
-      setTimeout(() => (saved.value = false), 3000)
-    } catch (error) {
-      console.error('Error saving settings:', error)
-    } finally {
-      loading.value = false
+      const links = await fetchSocialLinks()
+      form.instagram = links.instagram || ''
+      form.facebook = links.facebook || ''
+      form.twitter = links.twitter || ''
+      form.linkedin = links.linkedin || ''
+      form.youtube = links.youtube || ''
+      form.tiktok = links.tiktok || ''
+    } catch (err: any) {
+      console.error('Erreur lors du chargement:', err)
+      toast.add({
+        title: 'Erreur de chargement',
+        description: err?.message || 'Impossible de charger les réseaux sociaux',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
+    }
+  }
+
+  onMounted(() => {
+    loadSocialLinks()
+  })
+
+  const saveSettings = async () => {
+    try {
+      await updateSocialLinks(form)
+      toast.add({
+        title: 'Liens enregistrés',
+        description: 'Les liens ont été mis à jour avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
+    } catch (error: any) {
+      console.error('Erreur lors de la sauvegarde:', error)
+      toast.add({
+        title: 'Erreur de sauvegarde',
+        description: error?.data?.message || 'Impossible de sauvegarder les liens',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -52,16 +86,10 @@
       </UButton>
     </div>
 
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="Les liens ont été mis à jour avec succès" />
-
     <!-- Form -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <AdminSkeletonForm v-if="loading" :fields="6" />
+
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Content -->
       <div class="lg:col-span-2">
         <UCard>

@@ -181,6 +181,91 @@ async function seedFaq() {
   console.log('   - 5 questions created')
 }
 
+async function seedSettings() {
+  console.log('🌱 Seeding site settings...')
+
+  const count = await prisma.siteSetting.count()
+
+  if (count > 0) {
+    console.log('⏭️  Site settings déjà présents, seeding ignoré')
+    return
+  }
+
+  const settings = [
+    { key: 'siteName', value: 'Marie Leroy', type: 'string' },
+    {
+      key: 'siteDescription',
+      value: 'Copywriter professionnelle - Des mots qui convertissent, des messages qui résonnent',
+      type: 'string',
+    },
+    { key: 'email', value: 'contact@marieleroy.fr', type: 'string' },
+    { key: 'phone', value: '+33 6 12 34 56 78', type: 'string' },
+    { key: 'address', value: 'Paris, France', type: 'string' },
+  ]
+
+  await prisma.siteSetting.createMany({
+    data: settings,
+    skipDuplicates: true,
+  })
+
+  console.log('✅ Site settings seeded')
+  console.log(`   - ${settings.length} settings created`)
+}
+
+async function seedSocialLinks() {
+  console.log('🌱 Seeding social links...')
+
+  const count = await prisma.socialLink.count()
+
+  if (count > 0) {
+    console.log('⏭️  Social links déjà présents, seeding ignoré')
+    return
+  }
+
+  const socialLinks = [
+    { platform: 'instagram', url: 'https://www.instagram.com/mari.eleroy94/' },
+    { platform: 'facebook', url: null },
+    { platform: 'twitter', url: null },
+    { platform: 'linkedin', url: null },
+    { platform: 'youtube', url: null },
+    { platform: 'tiktok', url: null },
+  ]
+
+  await prisma.socialLink.createMany({
+    data: socialLinks,
+    skipDuplicates: true,
+  })
+
+  console.log('✅ Social links seeded')
+  console.log('   - 6 platforms configured')
+}
+
+async function seedSeo() {
+  console.log('🌱 Seeding SEO settings...')
+
+  const count = await prisma.sEOSettings.count()
+
+  if (count > 0) {
+    console.log('⏭️  SEO settings déjà présents, seeding ignoré')
+    return
+  }
+
+  const seo = await prisma.sEOSettings.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      metaTitle: 'Marie Leroy - Copywriter Professionnelle',
+      metaDescription:
+        'Copywriter professionnelle spécialisée en storytelling et marketing de contenu. Des mots qui convertissent, des messages qui résonnent.',
+      ogImage: '/images/og-image.jpg',
+    },
+  })
+
+  console.log('✅ SEO settings seeded')
+  console.log(`   - Title: ${seo.metaTitle}`)
+}
+
 async function main() {
   console.log('🚀 Starting database seed...\n')
 
@@ -189,6 +274,9 @@ async function main() {
     await seedAbout()
     await seedMethod()
     await seedFaq()
+    await seedSettings()
+    await seedSocialLinks()
+    await seedSeo()
 
     console.log('\n✨ Database seeded successfully!')
   } catch (error) {

@@ -79,9 +79,37 @@ export const seoSettingsSchema = z.object({
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   metaKeywords: z.string().optional(),
-  ogImage: urlOrPath.optional(),
+  ogImage: z.union([z.string(), z.any()]).optional().transform(val => {
+    // Si c'est un objet vide ou null, retourner une chaîne vide
+    if (!val || (typeof val === 'object' && Object.keys(val).length === 0)) {
+      return undefined
+    }
+    // Si c'est déjà une string, la retourner
+    if (typeof val === 'string') {
+      return val
+    }
+    return undefined
+  }),
   twitterCard: z.string().optional(),
   robotsTxt: z.string().optional(),
   googleAnalyticsId: z.string().optional(),
   googleTagManagerId: z.string().optional(),
 })
+
+// User Profile Schemas
+export const userProfileUpdateSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().optional().nullable(),
+  email: z.string().email('Invalid email format'),
+})
+
+export const passwordChangeSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string().min(1, 'Password confirmation is required'),
+  })
+  .refine(data => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  })

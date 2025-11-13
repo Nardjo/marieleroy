@@ -58,6 +58,22 @@ export const useAuth = () => {
     return await fetchSession()
   }
 
+  const updateProfile = async (data: { firstName: string; lastName?: string | null; email: string }) => {
+    const response = await $fetch('/api/user/profile', {
+      method: 'PUT',
+      body: data,
+    })
+    await fetchUser() // Refresh user data
+    return response
+  }
+
+  const changePassword = async (data: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
+    return await $fetch('/api/user/password', {
+      method: 'PUT',
+      body: data,
+    })
+  }
+
   return {
     user,
     loggedIn,
@@ -67,6 +83,8 @@ export const useAuth = () => {
     logout,
     init,
     fetchUser,
+    updateProfile,
+    changePassword,
     isAuthenticated: loggedIn,
     clear,
   }

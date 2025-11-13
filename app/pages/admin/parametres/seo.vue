@@ -3,27 +3,93 @@
     layout: 'admin',
   })
 
-  const loading = ref(false)
-  const saved = ref(false)
+  const { loading, fetchSeoSettings, updateSeoSettings } = useSeo()
+  const { uploadImage } = useImageUpload()
+  const toast = useToast()
 
   const form = reactive({
-    metaTitle: 'Marie Leroy - Copywriter Professionnelle',
-    metaDescription:
-      'Copywriter professionnelle spécialisée en storytelling et marketing de contenu. Des mots qui convertissent, des messages qui résonnent.',
-    ogImage: [] as File[],
+    metaTitle: '',
+    metaDescription: '',
+    ogImage: '',
+  })
+
+  const selectedFiles = ref<File[]>([])
+  const uploading = ref(false)
+
+  // Charger les paramètres SEO au montage
+  const loadSeoSettings = async () => {
+    try {
+      const settings = await fetchSeoSettings()
+      if (settings) {
+        form.metaTitle = settings.metaTitle || ''
+        form.metaDescription = settings.metaDescription || ''
+        form.ogImage = settings.ogImage || ''
+      }
+    } catch (err: any) {
+      console.error('Erreur lors du chargement:', err)
+      toast.add({
+        title: 'Erreur de chargement',
+        description: err?.message || 'Impossible de charger les paramètres SEO',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
+    }
+  }
+
+  onMounted(() => {
+    loadSeoSettings()
+  })
+
+  // Watcher pour uploader l'image dès qu'elle est sélectionnée
+  watch(selectedFiles, async (newFiles) => {
+    if (newFiles && newFiles.length > 0) {
+      uploading.value = true
+      try {
+        const result = (await uploadImage(newFiles[0])) as { url: string }
+        form.ogImage = result.url
+        selectedFiles.value = [] // Clear selection
+
+        toast.add({
+          title: 'Image téléchargée',
+          description: "L'image a été uploadée avec succès",
+          color: 'success',
+          icon: 'i-lucide-check',
+          duration: 3000,
+        })
+      } catch (error: any) {
+        toast.add({
+          title: 'Erreur',
+          description: error.message || "Impossible de télécharger l'image",
+          color: 'error',
+          icon: 'i-lucide-alert-circle',
+          duration: 5000,
+        })
+      } finally {
+        uploading.value = false
+      }
+    }
   })
 
   const saveSettings = async () => {
-    loading.value = true
     try {
-      // TODO: API call to save settings
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      saved.value = true
-      setTimeout(() => (saved.value = false), 3000)
-    } catch (error) {
-      console.error('Error saving settings:', error)
-    } finally {
-      loading.value = false
+      await updateSeoSettings(form)
+      toast.add({
+        title: 'Paramètres SEO enregistrés',
+        description: 'Les paramètres SEO ont été mis à jour avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
+    } catch (error: any) {
+      console.error('Erreur lors de la sauvegarde:', error)
+      toast.add({
+        title: 'Erreur de sauvegarde',
+        description: error?.data?.message || 'Impossible de sauvegarder les paramètres SEO',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -41,16 +107,10 @@
       </UButton>
     </div>
 
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="Les paramètres SEO ont été mis à jour avec succès" />
-
     <!-- Form -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <AdminSkeletonForm v-if="loading" :fields="3" />
+
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-6">
         <!-- Meta Tags -->
@@ -89,8 +149,20 @@
             <h3 class="text-lg font-semibold">Image de partage</h3>
           </template>
           <div class="space-y-4">
-            <UFormField label="Image de partage">
-              <UFileUpload v-model="form.ogImage" accept="image/*" />
+            <UFormField label="Sélectionner une image">
+              <div class="flex gap-4 items-center">
+                <div class="flex-shrink-0">
+                  <div v-if="form.ogImage" class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+                    <img :src="form.ogImage" alt="Image OG" class="w-full h-full object-cover" />
+                  </div>
+                  <div v-else class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <UIcon name="i-lucide-image" class="w-6 h-6 text-gray-400" />
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <UFileUpload v-model="selectedFiles" accept="image/*" :loading="uploading" />
+                </div>
+              </div>
               <template #hint>
                 <span class="text-xs text-gray-500">
                   Image affichée lors du partage sur les réseaux sociaux (1200x630px recommandé)
@@ -131,13 +203,12 @@
               <div class="flex gap-3">
                 <div class="flex-shrink-0">
                   <div
-                    v-if="form.ogImage && form.ogImage.length > 0"
+                    v-if="form.ogImage"
                     class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
                     <img
-                      :src="URL.createObjectURL(form.ogImage[0])"
+                      :src="form.ogImage"
                       alt="Image de partage"
-                      class="w-full h-full object-cover"
-                      @error="form.ogImage = []" />
+                      class="w-full h-full object-cover" />
                   </div>
                   <div
                     v-else

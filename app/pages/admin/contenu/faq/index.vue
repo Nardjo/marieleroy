@@ -72,11 +72,19 @@
     </AdminPageHeader>
 
     <!-- FAQ List -->
-    <div v-if="loading" class="text-center py-12">
-      <UIcon name="i-lucide-loader-2" class="animate-spin h-8 w-8 mx-auto text-primary" />
-      <p class="mt-4 text-gray-600 dark:text-gray-400">Chargement des questions...</p>
-    </div>
+    <AdminSkeletonCardList v-if="loading" :count="5" />
 
+    <!-- Empty State -->
+    <AdminEmptyState
+      v-else-if="faqItems.length === 0"
+      icon="i-lucide-help-circle"
+      title="Aucune question"
+      description="Commencez par ajouter votre première question"
+      button-label="Ajouter une question"
+      button-icon="i-lucide-plus"
+      @action="addFaqItem" />
+
+    <!-- FAQ Cards -->
     <div v-else class="space-y-4">
       <UCard v-for="item in faqItems" :key="item.id" class="shadow-sm h-full flex flex-col">
         <div class="flex-1 space-y-3">
@@ -97,16 +105,6 @@
           </div>
         </div>
       </UCard>
-
-      <!-- Empty State -->
-      <AdminEmptyState
-        v-if="faqItems.length === 0 && !loading"
-        icon="i-lucide-help-circle"
-        title="Aucune question"
-        description="Commencez par ajouter votre première question"
-        button-label="Ajouter une question"
-        button-icon="i-lucide-plus"
-        @action="addFaqItem" />
     </div>
   </div>
 </template>

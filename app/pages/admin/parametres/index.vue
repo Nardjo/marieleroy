@@ -3,27 +3,61 @@
     layout: 'admin',
   })
 
-  const { loading, saved, showSuccess } = useAdminCrud()
+  const { loading, fetchSettings, updateSettings } = useSettings()
+  const toast = useToast()
 
   const form = reactive({
-    siteName: 'Marie Leroy',
-    siteDescription: 'Copywriter professionnelle - Des mots qui convertissent, des messages qui résonnent',
-    email: 'contact@marieleroy.fr',
-    phone: '+33 6 12 34 56 78',
-    address: 'Paris, France',
+    siteName: '',
+    siteDescription: '',
+    email: '',
+    phone: '',
+    address: '',
+  })
+
+  // Charger les paramètres au montage
+  const loadSettings = async () => {
+    try {
+      const settings = await fetchSettings()
+      form.siteName = settings.siteName || ''
+      form.siteDescription = settings.siteDescription || ''
+      form.email = settings.email || ''
+      form.phone = settings.phone || ''
+      form.address = settings.address || ''
+    } catch (err: any) {
+      console.error('Erreur lors du chargement:', err)
+      toast.add({
+        title: 'Erreur de chargement',
+        description: err?.message || 'Impossible de charger les paramètres',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
+    }
+  }
+
+  onMounted(() => {
+    loadSettings()
   })
 
   const saveSettings = async () => {
-    loading.value = true
     try {
-      // TODO: API call to save settings
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      saved.value = true
-      setTimeout(() => (saved.value = false), 3000)
-    } catch (error) {
-      console.error('Error saving settings:', error)
-    } finally {
-      loading.value = false
+      await updateSettings(form)
+      toast.add({
+        title: 'Paramètres enregistrés',
+        description: 'Les paramètres ont été mis à jour avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
+    } catch (error: any) {
+      console.error('Erreur lors de la sauvegarde:', error)
+      toast.add({
+        title: 'Erreur de sauvegarde',
+        description: error?.data?.message || 'Impossible de sauvegarder les paramètres',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -39,16 +73,10 @@
       </template>
     </AdminPageHeader>
 
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="Les paramètres ont été mis à jour avec succès" />
-
     <!-- Form -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <AdminSkeletonForm v-if="loading" :fields="5" />
+
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-6">
         <!-- Site Info -->

@@ -113,7 +113,9 @@
     </AdminPageHeader>
 
     <!-- Form -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <AdminSkeletonForm v-if="loading" :fields="3" />
+
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-6">
         <UCard>

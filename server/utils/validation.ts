@@ -32,7 +32,6 @@ export const aboutSectionSchema = z.object({
   subtitle: z.string().optional(),
   description: z.string().min(1),
   imageUrl: z.string().url().optional(),
-  skills: z.array(z.string()).optional(),
 })
 
 // Method Schemas

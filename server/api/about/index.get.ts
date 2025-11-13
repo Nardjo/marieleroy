@@ -11,6 +11,8 @@ export default defineEventHandler(async () => {
       })
     }
 
+    console.log('📤 GET About Section:', JSON.stringify(aboutSection, null, 2))
+
     return aboutSection
   } catch (error) {
     if (error.statusCode === 404) throw error

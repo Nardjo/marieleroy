@@ -60,7 +60,6 @@ model AboutSection {
   subtitle    String?
   description String   @db.Text
   imageUrl    String?
-  skills      String[]
   updatedAt   DateTime @updatedAt
 
   @@map("about_section")

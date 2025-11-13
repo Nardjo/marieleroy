@@ -31,6 +31,26 @@ async function seedTestimonials() {
   console.log('✅ Testimonials seeded')
 }
 
+async function seedAbout() {
+  console.log('🌱 Seeding about section...')
+
+  const about = await prisma.aboutSection.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      title: 'Qui suis-je?',
+      subtitle: 'Votre copywriter professionnelle',
+      description:
+        "Passionnée par l'art de raconter des histoires, je suis une copywriter spécialisée dans la création de contenus qui captivent, engagent et convertissent. Avec plusieurs années d'expérience dans le marketing digital et le copywriting, j'aide les entrepreneurs et les marques à trouver leur voix authentique et à communiquer efficacement avec leur audience.\n\nMa approche combine la stratégie, la psychologie du consommateur et l'art de la narration pour créer des contenus qui résonnent vraiment avec vos clients.",
+      imageUrl: '/images/hero.jpg',
+    },
+  })
+
+  console.log('✅ About section seeded')
+  console.log(`   - Title: ${about.title}`)
+}
+
 async function seedMethod() {
   console.log('🌱 Seeding method...')
 
@@ -93,6 +113,7 @@ async function main() {
 
   try {
     await seedTestimonials()
+    await seedAbout()
     await seedMethod()
 
     console.log('\n✨ Database seeded successfully!')

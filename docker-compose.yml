@@ -6,7 +6,7 @@ services:
     container_name: marieleroy_postgres
     restart: unless-stopped
     ports:
-      - "5433:5432"
+      - '5433:5432'
     environment:
       POSTGRES_DB: marieleroy
       POSTGRES_USER: admin
@@ -14,7 +14,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d marieleroy"]
+      test: ['CMD-SHELL', 'pg_isready -U admin -d marieleroy']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,12 +26,13 @@ services:
     container_name: marieleroy_app
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       DATABASE_URL: postgresql://admin:${POSTGRES_PASSWORD:-changeme_production_password}@postgres:5432/marieleroy
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
       NODE_ENV: ${NODE_ENV:-development}
+      UPLOAD_DIR: ${UPLOAD_DIR:-/app/uploads}
     depends_on:
       postgres:
         condition: service_healthy
@@ -39,6 +40,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/.nuxt
+      - ./uploads:/app/uploads
     working_dir: /app
 
 volumes:

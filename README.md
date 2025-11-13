@@ -30,7 +30,7 @@ Site web professionnel pour Marie Leroy, coach et professionnelle.
 - Node.js 20+
 - pnpm (recommandé)
 - Docker & Docker Compose (pour le développement)
-- PostgreSQL 16
+- PostgreSQL 17
 
 ## Installation Locale
 

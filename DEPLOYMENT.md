@@ -9,7 +9,7 @@
 
 ### 2. Ajouter PostgreSQL
 
-**+ Add Database** → PostgreSQL 16
+**+ Add Database** → PostgreSQL 17
 
 Coolify génère automatiquement `DATABASE_URL`
 

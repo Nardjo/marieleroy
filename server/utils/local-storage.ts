@@ -5,7 +5,7 @@ import type { Readable } from 'stream'
 import { pipeline } from 'stream/promises'
 
 const getUploadDir = (): string => {
-  return process.env.UPLOAD_DIR || '/app/uploads'
+  return process.env.UPLOAD_DIR || join(process.cwd(), 'uploads')
 }
 
 /**

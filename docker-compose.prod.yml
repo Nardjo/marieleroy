@@ -1,0 +1,63 @@
+version: '3.9'
+
+# Production Docker Compose Configuration
+# This is for self-hosting without Coolify
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: marieleroy_postgres_prod
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-marieleroy}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-marieleroy}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - marieleroy_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: marieleroy_app_prod
+    restart: always
+    ports:
+      - '${PORT:-3000}:3000'
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-marieleroy}
+      NUXT_SESSION_PASSWORD: ${NUXT_SESSION_PASSWORD}
+      SITE_NAME: ${SITE_NAME:-Marie Leroy}
+      SITE_URL: ${SITE_URL}
+      UPLOAD_DIR: /app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - uploads_data:/app/uploads
+    networks:
+      - marieleroy_network
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3000/api/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data_prod:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  marieleroy_network:
+    driver: bridge

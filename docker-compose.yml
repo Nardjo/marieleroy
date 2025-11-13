@@ -2,26 +2,45 @@ version: '3.9'
 
 services:
   postgres:
-    build:
-      context: .
-      dockerfile: Dockerfile.postgres
+    image: postgres:16-alpine
     container_name: marieleroy_postgres
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - '5433:5432'
     environment:
       POSTGRES_DB: marieleroy
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_production_password}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./docker/init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d marieleroy"]
+      test: ['CMD-SHELL', 'pg_isready -U admin -d marieleroy']
       interval: 10s
       timeout: 5s
       retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: marieleroy_app
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://admin:${POSTGRES_PASSWORD:-changeme_production_password}@postgres:5432/marieleroy
+      NUXT_SESSION_PASSWORD: ${NUXT_SESSION_PASSWORD:-dev-secret-at-least-32-characters-long}
+      NODE_ENV: ${NODE_ENV:-development}
+      UPLOAD_DIR: ${UPLOAD_DIR:-/app/uploads}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.nuxt
+      - ./uploads:/app/uploads
+    working_dir: /app
 
 volumes:
   postgres_data:

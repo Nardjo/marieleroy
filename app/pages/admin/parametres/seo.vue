@@ -1,35 +1,97 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'admin',
-})
+  definePageMeta({
+    layout: 'admin',
+  })
 
-const loading = ref(false)
-const saved = ref(false)
+  const { loading, fetchSeoSettings, updateSeoSettings } = useSeo()
+  const { uploadImage } = useImageUpload()
+  const toast = useToast()
 
-const form = reactive({
-  metaTitle: 'Marie Leroy - Copywriter Professionnelle',
-  metaDescription: 'Copywriter professionnelle spécialisée en storytelling et marketing de contenu. Des mots qui convertissent, des messages qui résonnent.',
-  metaKeywords: 'copywriter, rédaction web, storytelling, marketing de contenu, copywriting, freelance',
-  ogImage: '',
-  twitterCard: 'summary_large_image',
-  robotsTxt: 'index, follow',
-  googleAnalyticsId: '',
-  googleTagManagerId: '',
-})
+  const form = reactive({
+    metaTitle: '',
+    metaDescription: '',
+    ogImage: '',
+  })
 
-const saveSettings = async () => {
-  loading.value = true
-  try {
-    // TODO: API call to save settings
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    saved.value = true
-    setTimeout(() => (saved.value = false), 3000)
-  } catch (error) {
-    console.error('Error saving settings:', error)
-  } finally {
-    loading.value = false
+  const selectedFiles = ref<File[]>([])
+  const uploading = ref(false)
+
+  // Charger les paramètres SEO au montage
+  const loadSeoSettings = async () => {
+    try {
+      const settings = await fetchSeoSettings()
+      if (settings) {
+        form.metaTitle = settings.metaTitle || ''
+        form.metaDescription = settings.metaDescription || ''
+        form.ogImage = settings.ogImage || ''
+      }
+    } catch (err: any) {
+      console.error('Erreur lors du chargement:', err)
+      toast.add({
+        title: 'Erreur de chargement',
+        description: err?.message || 'Impossible de charger les paramètres SEO',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
+    }
   }
-}
+
+  onMounted(() => {
+    loadSeoSettings()
+  })
+
+  // Watcher pour uploader l'image dès qu'elle est sélectionnée
+  watch(selectedFiles, async (newFiles) => {
+    if (newFiles && newFiles.length > 0) {
+      uploading.value = true
+      try {
+        const result = (await uploadImage(newFiles[0])) as { url: string }
+        form.ogImage = result.url
+        selectedFiles.value = [] // Clear selection
+
+        toast.add({
+          title: 'Image téléchargée',
+          description: "L'image a été uploadée avec succès",
+          color: 'success',
+          icon: 'i-lucide-check',
+          duration: 3000,
+        })
+      } catch (error: any) {
+        toast.add({
+          title: 'Erreur',
+          description: error.message || "Impossible de télécharger l'image",
+          color: 'error',
+          icon: 'i-lucide-alert-circle',
+          duration: 5000,
+        })
+      } finally {
+        uploading.value = false
+      }
+    }
+  })
+
+  const saveSettings = async () => {
+    try {
+      await updateSeoSettings(form)
+      toast.add({
+        title: 'Paramètres SEO enregistrés',
+        description: 'Les paramètres SEO ont été mis à jour avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
+    } catch (error: any) {
+      console.error('Erreur lors de la sauvegarde:', error)
+      toast.add({
+        title: 'Erreur de sauvegarde',
+        description: error?.data?.message || 'Impossible de sauvegarder les paramètres SEO',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
+    }
+  }
 </script>
 
 <template>
@@ -37,33 +99,18 @@ const saveSettings = async () => {
     <!-- Page Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          SEO
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">
-          Optimiser le référencement de votre site
-        </p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">SEO</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Optimiser le référencement de votre site</p>
       </div>
-      <UButton
-        color="primary"
-        size="lg"
-        icon="i-lucide-save"
-        :loading="loading"
-        @click="saveSettings">
+      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
         Enregistrer
       </UButton>
     </div>
 
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="Les paramètres SEO ont été mis à jour avec succès" />
-
     <!-- Form -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <AdminSkeletonForm v-if="loading" :fields="3" />
+
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-6">
         <!-- Meta Tags -->
@@ -93,90 +140,34 @@ const saveSettings = async () => {
                 <span class="text-xs">{{ form.metaDescription.length }}/160 caractères</span>
               </template>
             </UFormField>
-
-            <UFormField label="Mots-clés">
-              <UInput
-                v-model="form.metaKeywords"
-                size="lg"
-                placeholder="mot1, mot2, mot3..." />
-              <template #hint>
-                <span class="text-xs text-gray-500">Séparez les mots-clés par des virgules</span>
-              </template>
-            </UFormField>
           </div>
         </UCard>
 
         <!-- Open Graph -->
         <UCard>
           <template #header>
-            <h3 class="text-lg font-semibold">Open Graph & Réseaux sociaux</h3>
+            <h3 class="text-lg font-semibold">Image de partage</h3>
           </template>
           <div class="space-y-4">
-            <UFormField label="Image OG (URL)">
-              <UInput
-                v-model="form.ogImage"
-                size="lg"
-                placeholder="https://example.com/image.jpg"
-                icon="i-lucide-image" />
+            <UFormField label="Sélectionner une image">
+              <div class="flex gap-4 items-center">
+                <div class="flex-shrink-0">
+                  <div v-if="form.ogImage" class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+                    <img :src="form.ogImage" alt="Image OG" class="w-full h-full object-cover" />
+                  </div>
+                  <div v-else class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <UIcon name="i-lucide-image" class="w-6 h-6 text-gray-400" />
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <UFileUpload v-model="selectedFiles" accept="image/*" :loading="uploading" />
+                </div>
+              </div>
               <template #hint>
                 <span class="text-xs text-gray-500">
                   Image affichée lors du partage sur les réseaux sociaux (1200x630px recommandé)
                 </span>
               </template>
-            </UFormField>
-
-            <UFormField label="Type de carte Twitter">
-              <USelect
-                v-model="form.twitterCard"
-                size="lg"
-                :options="[
-                  { label: 'Summary (petite image)', value: 'summary' },
-                  { label: 'Summary Large Image (grande image)', value: 'summary_large_image' },
-                ]" />
-            </UFormField>
-          </div>
-        </UCard>
-
-        <!-- Indexation -->
-        <UCard>
-          <template #header>
-            <h3 class="text-lg font-semibold">Indexation</h3>
-          </template>
-          <div class="space-y-4">
-            <UFormField label="Directives Robots">
-              <USelect
-                v-model="form.robotsTxt"
-                size="lg"
-                :options="[
-                  { label: 'Index, Follow (recommandé)', value: 'index, follow' },
-                  { label: 'No Index, No Follow', value: 'noindex, nofollow' },
-                  { label: 'Index, No Follow', value: 'index, nofollow' },
-                  { label: 'No Index, Follow', value: 'noindex, follow' },
-                ]" />
-            </UFormField>
-          </div>
-        </UCard>
-
-        <!-- Analytics -->
-        <UCard>
-          <template #header>
-            <h3 class="text-lg font-semibold">Analytics & Tracking</h3>
-          </template>
-          <div class="space-y-4">
-            <UFormField label="Google Analytics ID">
-              <UInput
-                v-model="form.googleAnalyticsId"
-                size="lg"
-                placeholder="G-XXXXXXXXXX"
-                icon="i-lucide-bar-chart" />
-            </UFormField>
-
-            <UFormField label="Google Tag Manager ID">
-              <UInput
-                v-model="form.googleTagManagerId"
-                size="lg"
-                placeholder="GTM-XXXXXXX"
-                icon="i-lucide-tag" />
             </UFormField>
           </div>
         </UCard>
@@ -194,13 +185,49 @@ const saveSettings = async () => {
               <p class="text-blue-600 dark:text-blue-400 text-sm font-medium truncate">
                 {{ form.metaTitle || 'Titre du site' }}
               </p>
-              <p class="text-green-700 dark:text-green-500 text-xs mt-1">
-                www.marieleroy.fr
-              </p>
+              <p class="text-green-700 dark:text-green-500 text-xs mt-1">www.marieleroy.fr</p>
               <p class="text-gray-600 dark:text-gray-400 text-xs mt-2 line-clamp-2">
                 {{ form.metaDescription || 'Description du site' }}
               </p>
             </div>
+          </div>
+        </UCard>
+
+        <!-- Social Preview -->
+        <UCard>
+          <template #header>
+            <h3 class="text-lg font-semibold">Aperçu du partage</h3>
+          </template>
+          <div class="space-y-3">
+            <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <div class="flex gap-3">
+                <div class="flex-shrink-0">
+                  <div
+                    v-if="form.ogImage"
+                    class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                    <img
+                      :src="form.ogImage"
+                      alt="Image de partage"
+                      class="w-full h-full object-cover" />
+                  </div>
+                  <div
+                    v-else
+                    class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                    <UIcon name="i-lucide-image" class="w-6 h-6 text-gray-400" />
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                    {{ form.metaTitle || 'Titre du site' }}
+                  </p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    {{ form.metaDescription || 'Description du site' }}
+                  </p>
+                  <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">www.marieleroy.fr</p>
+                </div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 text-center">Aperçu du partage sur les réseaux sociaux</p>
           </div>
         </UCard>
 

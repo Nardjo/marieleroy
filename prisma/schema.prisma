@@ -1,0 +1,126 @@
+// Prisma schema for Marie Leroy website
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for admin authentication
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed password
+  firstName String
+  lastName  String?
+  name      String   // Full name
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+// FAQ model
+model Faq {
+  id           String   @id @default(cuid())
+  question     String
+  answer       String   @db.Text
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("faq_items")
+}
+
+// Testimonial model
+model Testimonial {
+  id           String   @id @default(cuid())
+  title        String
+  quote        String   @db.Text
+  embedUrl     String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+// About Section model
+model AboutSection {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  description String   @db.Text
+  imageUrl    String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("about_section")
+}
+
+// Method Header model
+model MethodHeader {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  description String?  @db.Text
+  updatedAt   DateTime @updatedAt
+
+  @@map("method_header")
+}
+
+// Method Step model
+model MethodStep {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  stepOrder   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("method_steps")
+}
+
+// Site Settings model
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String?  @db.Text
+  type      String   @default("string")
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// Social Link model
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String   @unique
+  url       String?
+  updatedAt DateTime @updatedAt
+
+  @@map("social_links")
+}
+
+// SEO Settings model
+model SEOSettings {
+  id                  String   @id @default(cuid())
+  metaTitle          String?
+  metaDescription    String?  @db.Text
+  metaKeywords       String?  @db.Text
+  ogImage            String?
+  twitterCard        String?
+  robotsTxt          String?
+  googleAnalyticsId  String?
+  googleTagManagerId String?
+  updatedAt          DateTime @updatedAt
+
+  @@map("seo_settings")
+}

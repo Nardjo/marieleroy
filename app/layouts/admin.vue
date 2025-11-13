@@ -1,132 +1,122 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui'
-import '~/assets/css/admin.css'
+  import type { NavigationMenuItem } from '@nuxt/ui'
+  import '~/assets/css/admin.css'
 
-const colorMode = useColorMode()
-const route = useRoute()
-const siteName = ref('Marie Leroy')
+  const colorMode = useColorMode()
+  const route = useRoute()
+  const siteName = ref('Administation')
 
-// Set theme attribute on html element
-useHead({
-  htmlAttrs: {
-    'data-theme': 'admin',
-  },
-  title: computed(() => `Admin ${siteName.value}`),
-  titleTemplate: () => `Admin ${siteName.value}`,
-})
+  // Set theme attribute on html element
+  useHead({
+    htmlAttrs: {
+      'data-theme': 'admin',
+    },
+    title: computed(() => `Admin ${siteName.value}`),
+    titleTemplate: () => `Admin ${siteName.value}`,
+  })
 
-// Set theme preference
-colorMode.preference = 'system'
+  const { user } = useAuth()
 
-// Temporary user mock - will be replaced with better-auth
-const user = ref({
-  firstname: 'Marie',
-  lastname: 'Leroy',
-})
+  // Mobile drawer state
+  const isOpen = ref(false)
+  const toggleDrawer = () => (isOpen.value = !isOpen.value)
+  const closeDrawer = () => (isOpen.value = false)
 
-// Mobile drawer state
-const isOpen = ref(false)
-const toggleDrawer = () => (isOpen.value = !isOpen.value)
-const closeDrawer = () => (isOpen.value = false)
+  // Navigation items
+  const navigationItems = computed((): NavigationMenuItem[] => [
+    {
+      label: 'Tableau de bord',
+      icon: 'i-lucide-layout-dashboard',
+      to: '/admin',
+      active: route.path === '/admin',
+    },
+    {
+      label: 'Contenu du site',
+      icon: 'i-lucide-book-open',
+      children: [
+        {
+          label: 'Témoignages',
+          icon: 'i-lucide-message-circle',
+          to: '/admin/contenu/temoignages',
+          active: route.path === '/admin/contenu/temoignages',
+        },
+        {
+          label: 'Ma méthode',
+          icon: 'i-lucide-workflow',
+          to: '/admin/contenu/ma-methode',
+          active: route.path === '/admin/contenu/ma-methode',
+        },
 
-// Navigation items
-const navigationItems = computed((): NavigationMenuItem[] => [
-  {
-    label: 'Tableau de bord',
-    icon: 'i-lucide-layout-dashboard',
-    to: '/admin',
-    active: route.path === '/admin',
-  },
-  {
-    label: 'Contenu du site',
-    icon: 'i-lucide-book-open',
-    children: [
+        {
+          label: 'À propos',
+          icon: 'i-lucide-user',
+          to: '/admin/contenu/a-propos',
+          active: route.path === '/admin/contenu/a-propos',
+        },
+        {
+          label: 'FAQ',
+          icon: 'i-lucide-help-circle',
+          to: '/admin/contenu/faq',
+          active: route.path === '/admin/contenu/faq',
+        },
+      ],
+    },
+    {
+      label: 'Voir le site',
+      icon: 'i-lucide-external-link',
+      to: '/',
+      target: '_blank',
+    },
+    {
+      label: 'Paramètres',
+      icon: 'i-lucide-settings',
+      children: [
+        {
+          label: 'Général',
+          icon: 'i-lucide-settings-2',
+          to: '/admin/parametres',
+          active: route.path === '/admin/parametres',
+        },
+        {
+          label: 'Réseaux sociaux',
+          icon: 'i-lucide-share-2',
+          to: '/admin/parametres/reseaux-sociaux',
+          active: route.path === '/admin/parametres/reseaux-sociaux',
+        },
+        {
+          label: 'SEO',
+          icon: 'i-lucide-search',
+          to: '/admin/parametres/seo',
+          active: route.path === '/admin/parametres/seo',
+        },
+      ],
+    },
+  ])
+
+  // User menu items
+  const userMenuItems = [
+    [
       {
-        label: 'À propos',
-        icon: 'i-lucide-user',
-        to: '/admin/contenu/a-propos',
-        active: route.path === '/admin/contenu/a-propos',
+        label: 'Mode sombre',
+        icon: 'i-lucide-palette',
+        slot: 'color-mode' as const,
       },
       {
-        label: 'Ma méthode',
-        icon: 'i-lucide-workflow',
-        to: '/admin/contenu/ma-methode',
-        active: route.path === '/admin/contenu/ma-methode',
-      },
-      {
-        label: 'Témoignages',
-        icon: 'i-lucide-message-circle',
-        to: '/admin/contenu/temoignages',
-        active: route.path === '/admin/contenu/temoignages',
-      },
-      {
-        label: 'FAQ',
-        icon: 'i-lucide-help-circle',
-        to: '/admin/contenu/faq',
-        active: route.path === '/admin/contenu/faq',
+        label: 'Mon compte',
+        icon: 'i-lucide-user-circle',
+        slot: 'mon-compte' as const,
       },
     ],
-  },
-  {
-    label: 'Voir le site',
-    icon: 'i-lucide-external-link',
-    to: '/',
-    target: '_blank',
-  },
-  {
-    label: 'Paramètres',
-    icon: 'i-lucide-settings',
-    children: [
+    [
       {
-        label: 'Général',
-        icon: 'i-lucide-settings-2',
-        to: '/admin/parametres',
-        active: route.path === '/admin/parametres',
-      },
-      {
-        label: 'Réseaux sociaux',
-        icon: 'i-lucide-share-2',
-        to: '/admin/parametres/reseaux-sociaux',
-        active: route.path === '/admin/parametres/reseaux-sociaux',
-      },
-      {
-        label: 'SEO',
-        icon: 'i-lucide-search',
-        to: '/admin/parametres/seo',
-        active: route.path === '/admin/parametres/seo',
+        label: 'Se déconnecter',
+        icon: 'i-lucide-log-out',
+        slot: 'logout' as const,
       },
     ],
-  },
-])
+  ]
 
-// User menu items
-const userMenuItems = [
-  [
-    {
-      label: 'Mode sombre',
-      icon: 'i-lucide-palette',
-      slot: 'color-mode' as const,
-    },
-    {
-      label: 'Mon compte',
-      icon: 'i-lucide-user-circle',
-      slot: 'mon-compte' as const,
-    },
-  ],
-  [
-    {
-      label: 'Se déconnecter',
-      icon: 'i-lucide-log-out',
-      slot: 'logout' as const,
-    },
-  ],
-]
-
-// Logout function - will be replaced with better-auth
-const logout = async () => {
-  // TODO: Implement better-auth logout
-  await navigateTo('/admin/login')
-}
+  const { logout } = useAuth()
 </script>
 
 <template>
@@ -166,7 +156,7 @@ const logout = async () => {
                   class="cursor-pointer w-full justify-start group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-auto"
                   icon="i-lucide-user">
                   <span class="group-data-[collapsible=icon]:hidden">
-                    {{ user.firstname }} {{ user.lastname || '' }}
+                    {{ user?.firstName }} {{ user?.lastName || '' }}
                   </span>
                   <UIcon name="i-lucide-chevron-up" class="ml-auto group-data-[collapsible=icon]:hidden" />
                 </UButton>
@@ -237,7 +227,7 @@ const logout = async () => {
                 to="/admin/profile"
                 class="flex items-center justify-center gap-2 w-full px-2 py-1.5 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                 <UIcon name="i-lucide-user-circle" class="w-4 h-4" />
-                <span>Mon compte</span>
+                <span>{{ user?.firstName }} {{ user?.lastName || '' }}</span>
               </NuxtLink>
             </template>
 

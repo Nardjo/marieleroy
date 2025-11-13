@@ -1,66 +1,82 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'admin',
-})
+  definePageMeta({
+    layout: 'admin',
+  })
 
-const loading = ref(false)
-const saved = ref(false)
+  const { loading, fetchSettings, updateSettings } = useSettings()
+  const toast = useToast()
 
-const form = reactive({
-  siteName: 'Marie Leroy',
-  siteDescription: 'Copywriter professionnelle - Des mots qui convertissent, des messages qui résonnent',
-  email: 'contact@marieleroy.fr',
-  phone: '+33 6 12 34 56 78',
-  address: 'Paris, France',
-})
+  const form = reactive({
+    siteName: '',
+    siteDescription: '',
+    email: '',
+    phone: '',
+    address: '',
+  })
 
-const saveSettings = async () => {
-  loading.value = true
-  try {
-    // TODO: API call to save settings
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    saved.value = true
-    setTimeout(() => (saved.value = false), 3000)
-  } catch (error) {
-    console.error('Error saving settings:', error)
-  } finally {
-    loading.value = false
+  // Charger les paramètres au montage
+  const loadSettings = async () => {
+    try {
+      const settings = await fetchSettings()
+      form.siteName = settings.siteName || ''
+      form.siteDescription = settings.siteDescription || ''
+      form.email = settings.email || ''
+      form.phone = settings.phone || ''
+      form.address = settings.address || ''
+    } catch (err: any) {
+      console.error('Erreur lors du chargement:', err)
+      toast.add({
+        title: 'Erreur de chargement',
+        description: err?.message || 'Impossible de charger les paramètres',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
+    }
   }
-}
+
+  onMounted(() => {
+    loadSettings()
+  })
+
+  const saveSettings = async () => {
+    try {
+      await updateSettings(form)
+      toast.add({
+        title: 'Paramètres enregistrés',
+        description: 'Les paramètres ont été mis à jour avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
+    } catch (error: any) {
+      console.error('Erreur lors de la sauvegarde:', error)
+      toast.add({
+        title: 'Erreur de sauvegarde',
+        description: error?.data?.message || 'Impossible de sauvegarder les paramètres',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
+    }
+  }
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          Paramètres généraux
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">
-          Configurer les informations principales du site
-        </p>
-      </div>
-      <UButton
-        color="primary"
-        size="lg"
-        icon="i-lucide-save"
-        :loading="loading"
-        @click="saveSettings">
-        Enregistrer
-      </UButton>
-    </div>
-
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="Les paramètres ont été mis à jour avec succès" />
+    <AdminPageHeader title="Paramètres généraux" description="Configurer les informations principales du site">
+      <template #actions>
+        <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
+          Enregistrer
+        </UButton>
+      </template>
+    </AdminPageHeader>
 
     <!-- Form -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <AdminSkeletonForm v-if="loading" :fields="5" />
+
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-6">
         <!-- Site Info -->
@@ -98,20 +114,11 @@ const saveSettings = async () => {
             </UFormField>
 
             <UFormField label="Téléphone">
-              <UInput
-                v-model="form.phone"
-                type="tel"
-                size="lg"
-                placeholder="+33 6 12 34 56 78"
-                icon="i-lucide-phone" />
+              <UInput v-model="form.phone" type="tel" size="lg" placeholder="+33 6 12 34 56 78" icon="i-lucide-phone" />
             </UFormField>
 
             <UFormField label="Adresse">
-              <UInput
-                v-model="form.address"
-                size="lg"
-                placeholder="Paris, France"
-                icon="i-lucide-map-pin" />
+              <UInput v-model="form.address" size="lg" placeholder="Paris, France" icon="i-lucide-map-pin" />
             </UFormField>
           </div>
         </UCard>
@@ -119,31 +126,6 @@ const saveSettings = async () => {
 
       <!-- Sidebar -->
       <div class="space-y-6">
-        <!-- Quick Links -->
-        <UCard>
-          <template #header>
-            <h3 class="text-lg font-semibold">Liens rapides</h3>
-          </template>
-          <div class="space-y-2">
-            <UButton
-              to="/admin/parametres/reseaux-sociaux"
-              color="neutral"
-              variant="outline"
-              block
-              icon="i-lucide-share-2">
-              Réseaux sociaux
-            </UButton>
-            <UButton
-              to="/admin/parametres/seo"
-              color="neutral"
-              variant="outline"
-              block
-              icon="i-lucide-search">
-              SEO
-            </UButton>
-          </div>
-        </UCard>
-
         <!-- Info -->
         <UCard>
           <template #header>
@@ -151,7 +133,8 @@ const saveSettings = async () => {
           </template>
           <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <p>
-              Ces paramètres sont utilisés dans différentes parties du site, notamment dans le footer et les métadonnées.
+              Ces paramètres sont utilisés dans différentes parties du site, notamment dans le footer et les
+              métadonnées.
             </p>
           </div>
         </UCard>

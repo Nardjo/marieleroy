@@ -3,51 +3,103 @@ definePageMeta({
   layout: 'admin',
 })
 
-const loading = ref(false)
-const saved = ref(false)
+const { user, updateProfile, changePassword } = useAuth()
+const toast = useToast()
 
-const form = reactive({
-  firstname: 'Marie',
-  lastname: 'Leroy',
-  email: 'marie@marieleroy.fr',
+const loadingProfile = ref(false)
+const loadingPassword = ref(false)
+
+const profileForm = reactive({
+  firstName: '',
+  lastName: '',
+  email: '',
+})
+
+const passwordForm = reactive({
   currentPassword: '',
   newPassword: '',
   confirmPassword: '',
 })
 
+// Charger les données utilisateur au montage
+onMounted(() => {
+  if (user.value) {
+    profileForm.firstName = user.value.firstName || ''
+    profileForm.lastName = user.value.lastName || ''
+    profileForm.email = user.value.email || ''
+  }
+})
+
+// Mettre à jour le formulaire quand l'utilisateur change
+watch(user, (newUser) => {
+  if (newUser) {
+    profileForm.firstName = newUser.firstName || ''
+    profileForm.lastName = newUser.lastName || ''
+    profileForm.email = newUser.email || ''
+  }
+})
+
 const saveProfile = async () => {
-  loading.value = true
+  loadingProfile.value = true
   try {
-    // TODO: API call to save profile
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    saved.value = true
-    setTimeout(() => (saved.value = false), 3000)
-  } catch (error) {
+    await updateProfile(profileForm)
+    toast.add({
+      title: 'Profil mis à jour',
+      description: 'Vos informations ont été mises à jour avec succès',
+      color: 'success',
+      icon: 'i-lucide-check-circle',
+      duration: 3000,
+    })
+  } catch (error: any) {
     console.error('Error saving profile:', error)
+    toast.add({
+      title: 'Erreur de mise à jour',
+      description: error?.data?.message || error?.statusMessage || 'Impossible de mettre à jour le profil',
+      color: 'error',
+      icon: 'i-lucide-x-circle',
+      duration: 5000,
+    })
   } finally {
-    loading.value = false
+    loadingProfile.value = false
   }
 }
 
-const changePassword = async () => {
-  if (form.newPassword !== form.confirmPassword) {
-    alert('Les mots de passe ne correspondent pas')
+const handlePasswordChange = async () => {
+  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+    toast.add({
+      title: 'Erreur de validation',
+      description: 'Les mots de passe ne correspondent pas',
+      color: 'error',
+      icon: 'i-lucide-alert-circle',
+      duration: 5000,
+    })
     return
   }
 
-  loading.value = true
+  loadingPassword.value = true
   try {
-    // TODO: API call to change password
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    form.currentPassword = ''
-    form.newPassword = ''
-    form.confirmPassword = ''
-    saved.value = true
-    setTimeout(() => (saved.value = false), 3000)
-  } catch (error) {
+    await changePassword(passwordForm)
+    passwordForm.currentPassword = ''
+    passwordForm.newPassword = ''
+    passwordForm.confirmPassword = ''
+    toast.add({
+      title: 'Mot de passe changé',
+      description: 'Votre mot de passe a été mis à jour avec succès',
+      color: 'success',
+      icon: 'i-lucide-check-circle',
+      duration: 3000,
+    })
+  } catch (error: any) {
     console.error('Error changing password:', error)
+    toast.add({
+      title: 'Erreur de changement',
+      description: error?.data?.message || error?.statusMessage || 'Impossible de changer le mot de passe',
+      color: 'error',
+      icon: 'i-lucide-x-circle',
+      duration: 5000,
+    })
   } finally {
-    loading.value = false
+    loadingPassword.value = false
   }
 }
 </script>
@@ -64,14 +116,6 @@ const changePassword = async () => {
       </p>
     </div>
 
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="Vos informations ont été mises à jour avec succès" />
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-6">
@@ -84,7 +128,7 @@ const changePassword = async () => {
                 color="primary"
                 size="sm"
                 icon="i-lucide-save"
-                :loading="loading"
+                :loading="loadingProfile"
                 @click="saveProfile">
                 Enregistrer
               </UButton>
@@ -93,17 +137,17 @@ const changePassword = async () => {
           <div class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
               <UFormField label="Prénom" required>
-                <UInput v-model="form.firstname" size="lg" placeholder="Marie" />
+                <UInput v-model="profileForm.firstName" size="lg" placeholder="Marie" />
               </UFormField>
 
-              <UFormField label="Nom" required>
-                <UInput v-model="form.lastname" size="lg" placeholder="Leroy" />
+              <UFormField label="Nom">
+                <UInput v-model="profileForm.lastName" size="lg" placeholder="Leroy" />
               </UFormField>
             </div>
 
             <UFormField label="Email" required>
               <UInput
-                v-model="form.email"
+                v-model="profileForm.email"
                 type="email"
                 size="lg"
                 placeholder="marie@marieleroy.fr"
@@ -121,8 +165,8 @@ const changePassword = async () => {
                 color="primary"
                 size="sm"
                 icon="i-lucide-save"
-                :loading="loading"
-                @click="changePassword">
+                :loading="loadingPassword"
+                @click="handlePasswordChange">
                 Mettre à jour
               </UButton>
             </div>
@@ -130,7 +174,7 @@ const changePassword = async () => {
           <div class="space-y-4">
             <UFormField label="Mot de passe actuel" required>
               <UInput
-                v-model="form.currentPassword"
+                v-model="passwordForm.currentPassword"
                 type="password"
                 size="lg"
                 placeholder="••••••••"
@@ -139,16 +183,19 @@ const changePassword = async () => {
 
             <UFormField label="Nouveau mot de passe" required>
               <UInput
-                v-model="form.newPassword"
+                v-model="passwordForm.newPassword"
                 type="password"
                 size="lg"
                 placeholder="••••••••"
                 icon="i-lucide-lock" />
+              <template #hint>
+                <span class="text-xs text-gray-500">Au moins 8 caractères</span>
+              </template>
             </UFormField>
 
             <UFormField label="Confirmer le nouveau mot de passe" required>
               <UInput
-                v-model="form.confirmPassword"
+                v-model="passwordForm.confirmPassword"
                 type="password"
                 size="lg"
                 placeholder="••••••••"

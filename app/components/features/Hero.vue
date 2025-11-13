@@ -44,10 +44,10 @@
             <template #links>
               <CTAButton
                 variant="outline"
-                to="#testimonials"
                 size="xl"
                 icon="i-lucide-arrow-down"
-                text="Témoignages" />
+                text="Témoignages"
+                @click="scrollToSection('testimonials')" />
               <CTAButton icon="i-lucide-rocket" size="xl" text="On discute ?" />
             </template>
           </UPageHero>
@@ -66,6 +66,7 @@
 
 <script setup lang="ts">
   const { animatedCurvePath } = useCurvedAnimation()
+  const { scrollToSection } = useSmoothScroll()
 </script>
 
 <style scoped>

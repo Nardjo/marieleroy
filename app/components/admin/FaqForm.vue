@@ -1,9 +1,9 @@
 <script setup lang="ts">
   interface FaqItem {
-    id: number | null
+    id: string | null
     question: string
     answer: string
-    order: number
+    displayOrder: number
   }
 
   interface Props {
@@ -55,8 +55,8 @@
 
         <UFormField label="Ordre d'affichage" required>
           <UInput
-            :model-value="localForm.order"
-            @update:model-value="updateField('order', Number($event))"
+            :model-value="localForm.displayOrder"
+            @update:model-value="updateField('displayOrder', Number($event))"
             type="number"
             size="lg"
             placeholder="1" />

@@ -4,14 +4,14 @@
   })
 
   const router = useRouter()
-  const loading = ref(false)
-  const saved = ref(false)
+  const { createFaq, loading } = useFaq()
+  const toast = useToast()
 
   const form = ref({
     id: null,
     question: '',
     answer: '',
-    order: 1,
+    displayOrder: 1,
   })
 
   const goBack = () => {
@@ -19,19 +19,28 @@
   }
 
   const saveFaqItem = async () => {
-    loading.value = true
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await createFaq(form.value)
 
-      saved.value = true
+      toast.add({
+        title: 'Question créée',
+        description: 'La nouvelle question a été ajoutée avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
       setTimeout(() => {
-        saved.value = false
         goBack()
       }, 1500)
-    } catch (error) {
-      console.error('Error saving FAQ item:', error)
-    } finally {
-      loading.value = false
+    } catch (error: any) {
+      console.error('Erreur lors de la création:', error)
+      toast.add({
+        title: 'Erreur de création',
+        description: error?.data?.message || 'Impossible de créer la question',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -50,8 +59,6 @@
         Enregistrer
       </UButton>
     </div>
-
-    <UAlert v-if="saved" color="success" variant="soft" title="Question créée avec succès" />
 
     <AdminFaqForm v-model:faq-item="form" :loading="loading" />
   </div>

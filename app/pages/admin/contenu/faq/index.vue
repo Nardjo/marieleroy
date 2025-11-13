@@ -3,31 +3,30 @@
     layout: 'admin',
   })
 
-  const { loading, saved, showSuccess } = useAdminCrud()
+  const { loading, error, fetchFaqs, deleteFaq } = useFaq()
+  const toast = useToast()
 
-  const faqItems = ref([
-    {
-      id: 1,
-      question: 'Quels types de contenus rédigez-vous ?',
-      answer:
-        'Je rédige une variété de contenus : pages de vente, articles de blog, newsletters, descriptions de produits, et bien plus encore. Chaque contenu est adapté à vos besoins spécifiques.',
-      order: 1,
-    },
-    {
-      id: 2,
-      question: 'Quel est votre processus de travail ?',
-      answer:
-        'Mon processus se déroule en 5 étapes : consultation initiale, recherche et stratégie, rédaction et optimisation, révisions, et livraison finale avec suivi.',
-      order: 2,
-    },
-    {
-      id: 3,
-      question: 'Combien de temps prend un projet ?',
-      answer:
-        "Le délai varie selon la complexité et l'ampleur du projet. Un article de blog prend généralement 3-5 jours, tandis qu'une page de vente complète peut nécessiter 1-2 semaines.",
-      order: 3,
-    },
-  ])
+  const faqItems = ref([])
+
+  // Charger les FAQs au montage
+  const loadFaqs = async () => {
+    try {
+      faqItems.value = await fetchFaqs()
+    } catch (err: any) {
+      console.error('Erreur lors du chargement:', err)
+      toast.add({
+        title: 'Erreur de chargement',
+        description: err?.message || 'Impossible de charger les questions',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
+    }
+  }
+
+  onMounted(() => {
+    loadFaqs()
+  })
 
   const addFaqItem = () => {
     navigateTo('/admin/contenu/faq/ajouter')
@@ -37,15 +36,28 @@
     navigateTo(`/admin/contenu/faq/${item.id}`)
   }
 
-  const deleteFaqItem = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette question ?')) return
 
     try {
-      // TODO: API call to delete FAQ item
-      await new Promise(resolve => setTimeout(resolve, 500))
-      faqItems.value = faqItems.value.filter(item => item.id !== id)
-    } catch (error) {
-      console.error('Error deleting FAQ item:', error)
+      await deleteFaq(id)
+      toast.add({
+        title: 'Question supprimée',
+        description: 'La question a été supprimée définitivement',
+        color: 'success',
+        icon: 'i-lucide-trash-2',
+        duration: 3000,
+      })
+      await loadFaqs()
+    } catch (error: any) {
+      console.error('Erreur lors de la suppression:', error)
+      toast.add({
+        title: 'Erreur de suppression',
+        description: error?.data?.message || 'Impossible de supprimer la question',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -59,16 +71,13 @@
       </template>
     </AdminPageHeader>
 
-    <!-- Success Alert -->
-    <UAlert
-      v-if="saved"
-      color="success"
-      variant="soft"
-      title="Modifications enregistrées"
-      description="La question a été mise à jour avec succès" />
-
     <!-- FAQ List -->
-    <div class="space-y-4">
+    <div v-if="loading" class="text-center py-12">
+      <UIcon name="i-lucide-loader-2" class="animate-spin h-8 w-8 mx-auto text-primary" />
+      <p class="mt-4 text-gray-600 dark:text-gray-400">Chargement des questions...</p>
+    </div>
+
+    <div v-else class="space-y-4">
       <UCard v-for="item in faqItems" :key="item.id" class="shadow-sm h-full flex flex-col">
         <div class="flex-1 space-y-3">
           <div class="flex-1">
@@ -83,7 +92,7 @@
           <div class="flex items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700 mt-auto">
             <AdminCrudActions
               @edit="editFaqItem(item)"
-              @delete="deleteFaqItem(item.id)"
+              @delete="handleDelete(item.id)"
               confirm-message="Êtes-vous sûr de vouloir supprimer cette question ?" />
           </div>
         </div>
@@ -91,7 +100,7 @@
 
       <!-- Empty State -->
       <AdminEmptyState
-        v-if="faqItems.length === 0"
+        v-if="faqItems.length === 0 && !loading"
         icon="i-lucide-help-circle"
         title="Aucune question"
         description="Commencez par ajouter votre première question"

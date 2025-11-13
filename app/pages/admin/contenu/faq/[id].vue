@@ -5,42 +5,35 @@
 
   const route = useRoute()
   const router = useRouter()
-  const id = computed(() => Number(route.params.id))
+  const id = computed(() => route.params.id as string)
 
-  const loading = ref(false)
-  const saved = ref(false)
-
-  const faqItems = ref([
-    {
-      id: 1,
-      question: 'Quels types de contenus rédigez-vous ?',
-      answer:
-        'Je rédige une variété de contenus : pages de vente, articles de blog, newsletters, descriptions de produits, et bien plus encore. Chaque contenu est adapté à vos besoins spécifiques.',
-      order: 1,
-    },
-    {
-      id: 2,
-      question: 'Quel est votre processus de travail ?',
-      answer:
-        'Mon processus se déroule en 5 étapes : consultation initiale, recherche et stratégie, rédaction et optimisation, révisions, et livraison finale avec suivi.',
-      order: 2,
-    },
-    {
-      id: 3,
-      question: 'Combien de temps prend un projet ?',
-      answer:
-        "Le délai varie selon la complexité et l'ampleur du projet. Un article de blog prend généralement 3-5 jours, tandis qu'une page de vente complète peut nécessiter 1-2 semaines.",
-      order: 3,
-    },
-  ])
+  const { fetchFaq, updateFaq, loading } = useFaq()
+  const toast = useToast()
 
   const form = ref<any>(null)
 
-  onMounted(() => {
-    const faqItem = faqItems.value.find(item => item.id === id.value)
-    if (faqItem) {
-      form.value = { ...faqItem }
-    } else {
+  onMounted(async () => {
+    try {
+      const faq = await fetchFaq(id.value)
+      if (faq) {
+        form.value = {
+          id: faq.id,
+          question: faq.question,
+          answer: faq.answer,
+          displayOrder: faq.displayOrder,
+        }
+      } else {
+        router.push('/admin/contenu/faq')
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement:', error)
+      toast.add({
+        title: 'Erreur de chargement',
+        description: 'Impossible de charger la question',
+        color: 'error',
+        icon: 'i-lucide-alert-circle',
+        duration: 5000,
+      })
       router.push('/admin/contenu/faq')
     }
   })
@@ -50,24 +43,33 @@
   }
 
   const saveFaqItem = async () => {
-    loading.value = true
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      const index = faqItems.value.findIndex(item => item.id === form.value.id)
-      if (index !== -1) {
-        faqItems.value[index] = { ...form.value }
+      const updateData = {
+        question: form.value.question,
+        answer: form.value.answer,
+        displayOrder: form.value.displayOrder,
       }
+      await updateFaq(id.value, updateData)
 
-      saved.value = true
+      toast.add({
+        title: 'Modifications enregistrées',
+        description: 'La question a été mise à jour avec succès',
+        color: 'success',
+        icon: 'i-lucide-check-circle',
+        duration: 3000,
+      })
       setTimeout(() => {
-        saved.value = false
         goBack()
       }, 1500)
-    } catch (error) {
-      console.error('Error saving FAQ item:', error)
-    } finally {
-      loading.value = false
+    } catch (error: any) {
+      console.error('Erreur lors de la mise à jour:', error)
+      toast.add({
+        title: 'Erreur de mise à jour',
+        description: error?.data?.message || 'Impossible de mettre à jour la question',
+        color: 'error',
+        icon: 'i-lucide-x-circle',
+        duration: 5000,
+      })
     }
   }
 </script>
@@ -86,8 +88,6 @@
         Enregistrer
       </UButton>
     </div>
-
-    <UAlert v-if="saved" color="success" variant="soft" title="Modifications enregistrées" />
 
     <AdminFaqForm v-if="form" v-model:faq-item="form" :loading="loading" />
   </div>

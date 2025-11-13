@@ -25,7 +25,7 @@ export default defineEventHandler(async event => {
     })
 
     return testimonial
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to create testimonial',

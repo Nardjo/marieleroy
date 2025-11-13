@@ -1,5 +1,21 @@
 import { z } from 'zod'
 
+// Custom validator for URLs and relative paths
+const urlOrPath = z.string().refine(
+  (val) => {
+    // Allow relative paths starting with /
+    if (val.startsWith('/')) return true
+    // Allow full URLs
+    try {
+      new URL(val)
+      return true
+    } catch {
+      return false
+    }
+  },
+  { message: 'Invalid URL or path' }
+)
+
 // FAQ Schemas
 export const faqCreateSchema = z.object({
   question: z.string().min(1, 'Question is required'),
@@ -31,7 +47,7 @@ export const aboutSectionSchema = z.object({
   title: z.string().min(1),
   subtitle: z.string().optional(),
   description: z.string().min(1),
-  imageUrl: z.string().url().optional(),
+  imageUrl: urlOrPath.optional(),
 })
 
 // Method Schemas
@@ -63,7 +79,7 @@ export const seoSettingsSchema = z.object({
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   metaKeywords: z.string().optional(),
-  ogImage: z.string().url().optional(),
+  ogImage: urlOrPath.optional(),
   twitterCard: z.string().optional(),
   robotsTxt: z.string().optional(),
   googleAnalyticsId: z.string().optional(),

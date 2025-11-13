@@ -16,7 +16,7 @@ export default defineEventHandler(async () => {
     }
 
     return header
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to fetch method header',

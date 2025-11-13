@@ -10,7 +10,7 @@ export default defineEventHandler(async () => {
       },
       {} as Record<string, string | null>,
     )
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to fetch site settings',

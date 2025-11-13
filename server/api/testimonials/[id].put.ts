@@ -14,10 +14,7 @@ export default defineEventHandler(async event => {
   }
 
   const body = await readBody(event)
-  console.log('Received body:', JSON.stringify(body, null, 2))
-
   const validation = testimonialUpdateSchema.safeParse(body)
-  console.log('Validation result:', validation.success, validation.success ? validation.data : validation.error)
 
   if (!validation.success) {
     throw createError({
@@ -27,7 +24,7 @@ export default defineEventHandler(async event => {
     })
   }
 
-  // Only pass validated fields to Prisma (strips any extra properties)
+  // Only pass validated fields to Prisma
   const updateData: {
     title?: string
     quote?: string
@@ -40,9 +37,6 @@ export default defineEventHandler(async event => {
   if (validation.data.embedUrl !== undefined) updateData.embedUrl = validation.data.embedUrl
   if (validation.data.displayOrder !== undefined) updateData.displayOrder = validation.data.displayOrder
 
-  console.log('updateData to Prisma:', JSON.stringify(updateData, null, 2))
-  console.log('All keys in updateData:', Object.keys(updateData))
-
   try {
     const testimonial = await prisma.testimonial.update({
       where: { id },
@@ -51,8 +45,6 @@ export default defineEventHandler(async event => {
 
     return testimonial
   } catch (error: any) {
-    console.error('Error updating testimonial:', error)
-
     // Handle Prisma specific errors
     if (error.code === 'P2025') {
       throw createError({
@@ -64,7 +56,6 @@ export default defineEventHandler(async event => {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to update testimonial',
-      data: error instanceof Error ? error.message : 'Unknown error',
     })
   }
 })

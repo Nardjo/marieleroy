@@ -16,7 +16,7 @@ export default defineEventHandler(async event => {
     })
 
     return { success: true }
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to delete method step',

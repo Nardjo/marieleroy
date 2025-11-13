@@ -6,7 +6,7 @@ export default defineEventHandler(async () => {
       orderBy: { displayOrder: 'asc' },
     })
     return testimonials
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to fetch testimonials',

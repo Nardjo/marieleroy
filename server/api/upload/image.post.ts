@@ -47,8 +47,6 @@ export default defineEventHandler(async event => {
       success: true,
     }
   } catch (error: any) {
-    console.error("Erreur lors de l'upload de l'image:", error)
-
     if (error.statusCode) {
       throw error
     }

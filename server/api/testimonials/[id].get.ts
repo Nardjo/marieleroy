@@ -23,7 +23,7 @@ export default defineEventHandler(async event => {
     }
 
     return testimonial
-  } catch (error) {
+  } catch {
     if (error.statusCode === 404) throw error
 
     throw createError({

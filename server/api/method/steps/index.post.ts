@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
     })
 
     return step
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to create method step',

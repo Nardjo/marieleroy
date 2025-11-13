@@ -43,7 +43,7 @@ export default defineEventHandler(async event => {
       success: true,
       user: userWithoutPassword,
     }
-  } catch (error) {
+  } catch {
     if (error instanceof z.ZodError) {
       throw createError({
         statusCode: 400,

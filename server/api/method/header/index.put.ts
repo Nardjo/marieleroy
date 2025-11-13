@@ -28,7 +28,7 @@ export default defineEventHandler(async event => {
         data: validation.data,
       })
     }
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to update method header',

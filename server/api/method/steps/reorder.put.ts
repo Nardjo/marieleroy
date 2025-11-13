@@ -35,7 +35,7 @@ export default defineEventHandler(async event => {
     await prisma.$transaction(updates)
 
     return { success: true }
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to reorder method steps',

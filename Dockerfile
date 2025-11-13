@@ -1,72 +1,51 @@
-# Base stage - install dependencies
-FROM node:20-alpine AS base
-
-# Install pnpm
+# Stage 1: Dependencies
+FROM node:20-alpine AS deps
+RUN apk add --no-cache libc6-compat
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
-
-# Copy package files
 COPY package.json pnpm-lock.yaml ./
-
-# Dependencies stage
-FROM base AS dependencies
-
-# Install all dependencies (including devDependencies for build)
 RUN pnpm install --frozen-lockfile
 
-# Builder stage
-FROM base AS builder
+# Stage 2: Builder
+FROM node:20-alpine AS builder
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy dependencies from dependencies stage
-COPY --from=dependencies /app/node_modules ./node_modules
-
-# Copy prisma schema
-COPY prisma ./prisma
-
-# Generate Prisma Client
-RUN pnpm db:generate
-
-# Copy app source
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build the application
+RUN npx prisma generate
 RUN pnpm build
 
-# Production stage
-FROM node:20-alpine AS production
-
-# Install pnpm
+# Stage 3: Runner
+FROM node:20-alpine AS runner
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
-
-# Install only production dependencies
-RUN pnpm install --prod --frozen-lockfile
-
-# Copy prisma schema and generate client
-COPY prisma ./prisma
-RUN pnpm db:generate
-
-# Copy built application from builder
-COPY --from=builder /app/.output ./.output
-COPY --from=builder /app/public ./public
-
-# Create uploads directory
-RUN mkdir -p /app/uploads && chmod 755 /app/uploads
-
-# Set environment to production
 ENV NODE_ENV=production
 
-# Expose port (can be overridden by PORT env var)
-EXPOSE 3000
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nuxt
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+# Copy only what's needed
+COPY --from=builder --chown=nuxt:nodejs /app/.output ./.output
+COPY --from=builder --chown=nuxt:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nuxt:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=nuxt:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nuxt:nodejs /app/package.json ./package.json
+
+# Create uploads dir
+RUN mkdir -p /app/uploads && chown -R nuxt:nodejs /app/uploads
+
+USER nuxt
+
+EXPOSE 3000
+ENV PORT=3000 HOST=0.0.0.0
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start the application
-CMD ["sh", "-c", "pnpm db:push && node .output/server/index.mjs"]
+CMD ["sh", "-c", "npx prisma db push --skip-generate && node .output/server/index.mjs"]

@@ -124,7 +124,7 @@
 
     <!-- Mobile Sticky Save Button -->
     <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-default p-4 md:hidden z-40">
-      <div class="flex gap-3">
+      <div class="flex gap-3 justify-end">
         <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
           Enregistrer
         </UButton>

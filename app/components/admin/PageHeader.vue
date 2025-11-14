@@ -13,7 +13,7 @@
 
     <!-- Mobile Sticky Actions -->
     <div v-if="$slots.actions" class="fixed bottom-0 left-0 right-0 bg-card border-t border-default p-4 md:hidden z-40">
-      <div class="flex gap-3">
+      <div class="flex gap-3 justify-end">
         <slot name="actions" />
       </div>
     </div>

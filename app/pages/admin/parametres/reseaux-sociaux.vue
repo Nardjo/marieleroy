@@ -76,12 +76,18 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Réseaux sociaux</h1>
         <p class="text-gray-600 dark:text-gray-400 mt-2">Configurer les liens vers vos profils sociaux</p>
       </div>
-      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
+      <UButton
+        color="primary"
+        size="lg"
+        icon="i-lucide-save"
+        class="w-full md:w-auto"
+        :loading="loading"
+        @click="saveSettings">
         Enregistrer
       </UButton>
     </div>

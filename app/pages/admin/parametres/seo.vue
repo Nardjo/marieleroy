@@ -42,7 +42,7 @@
   })
 
   // Watcher pour uploader l'image dès qu'elle est sélectionnée
-  watch(selectedFiles, async (newFiles) => {
+  watch(selectedFiles, async newFiles => {
     if (newFiles && newFiles.length > 0) {
       uploading.value = true
       try {
@@ -97,12 +97,18 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">SEO</h1>
         <p class="text-gray-600 dark:text-gray-400 mt-2">Optimiser le référencement de votre site</p>
       </div>
-      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
+      <UButton
+        color="primary"
+        size="lg"
+        icon="i-lucide-save"
+        class="w-full md:w-auto"
+        :loading="loading"
+        @click="saveSettings">
         Enregistrer
       </UButton>
     </div>
@@ -202,13 +208,8 @@
             <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
               <div class="flex gap-3">
                 <div class="flex-shrink-0">
-                  <div
-                    v-if="form.ogImage"
-                    class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
-                    <img
-                      :src="form.ogImage"
-                      alt="Image de partage"
-                      class="w-full h-full object-cover" />
+                  <div v-if="form.ogImage" class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                    <img :src="form.ogImage" alt="Image de partage" class="w-full h-full object-cover" />
                   </div>
                   <div
                     v-else

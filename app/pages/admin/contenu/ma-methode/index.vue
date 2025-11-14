@@ -181,14 +181,16 @@
 
       <!-- Steps List -->
       <div class="space-y-4">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Les étapes</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
               Personnalisez Les étapes de votre méthode de travail
             </p>
           </div>
-          <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addStep">Ajouter une étape</UButton>
+          <UButton color="primary" size="lg" icon="i-lucide-plus" class="w-full sm:w-auto" @click="addStep">
+            Ajouter une étape
+          </UButton>
         </div>
 
         <!-- Empty State -->

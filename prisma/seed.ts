@@ -291,6 +291,31 @@ async function seedSeo() {
   console.log(`   - Title: ${seo.metaTitle}`)
 }
 
+async function seedImageSeparator() {
+  console.log('🌱 Seeding image separator...')
+
+  const count = await prisma.imageSeparator.count()
+
+  if (count > 0) {
+    console.log('⏭️  Image separator déjà présent, seeding ignoré')
+    return
+  }
+
+  const separator = await prisma.imageSeparator.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      desktopImage: '/images/separator.jpg',
+      mobileImage: '/images/separator.jpg',
+    },
+  })
+
+  console.log('✅ Image separator seeded')
+  console.log(`   - Desktop: ${separator.desktopImage}`)
+  console.log(`   - Mobile: ${separator.mobileImage}`)
+}
+
 async function main() {
   console.log('🚀 Starting database seed...\n')
 
@@ -303,6 +328,7 @@ async function main() {
     await seedSettings()
     await seedSocialLinks()
     await seedSeo()
+    await seedImageSeparator()
 
     console.log('\n✨ Database seeded successfully!')
   } catch (error) {

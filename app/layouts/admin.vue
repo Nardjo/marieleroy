@@ -47,12 +47,17 @@
           active: route.path === '/admin/contenu/temoignages',
         },
         {
+          label: 'Image de séparation',
+          icon: 'i-lucide-image',
+          to: '/admin/contenu/image-separation',
+          active: route.path === '/admin/contenu/image-separation',
+        },
+        {
           label: 'Ma méthode',
           icon: 'i-lucide-workflow',
           to: '/admin/contenu/ma-methode',
           active: route.path === '/admin/contenu/ma-methode',
         },
-
         {
           label: 'À propos',
           icon: 'i-lucide-user',

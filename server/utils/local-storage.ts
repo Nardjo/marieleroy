@@ -59,3 +59,24 @@ export const getLocalKeyFromUrl = (url: string | null | undefined): string | nul
 
   return null
 }
+
+/**
+ * Supprime un fichier du système local
+ */
+export const deleteFromLocal = async (key: string): Promise<void> => {
+  const uploadDir = getUploadDir()
+  const filePath = join(uploadDir, key)
+
+  try {
+    await fs.unlink(filePath)
+  } catch (error) {
+    // Si le fichier n'existe pas, on ignore l'erreur
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      console.error('Erreur lors de la suppression locale:', error)
+      throw createError({
+        statusCode: 500,
+        statusMessage: `Impossible de supprimer le fichier`,
+      })
+    }
+  }
+}

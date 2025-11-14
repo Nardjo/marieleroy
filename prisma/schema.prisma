@@ -135,3 +135,13 @@ model SEOSettings {
 
   @@map("seo_settings")
 }
+
+// Image Separator model
+model ImageSeparator {
+  id            String   @id @default(cuid())
+  desktopImage  String?
+  mobileImage   String?
+  updatedAt     DateTime @updatedAt
+
+  @@map("image_separator")
+}

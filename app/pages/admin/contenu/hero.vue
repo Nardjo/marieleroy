@@ -121,7 +121,7 @@
     <!-- Form -->
     <AdminSkeletonForm v-if="loading" :fields="5" />
 
-    <div v-else class="max-w-4xl space-y-6">
+    <div v-else class="space-y-6">
       <UCard>
         <div class="space-y-4">
           <!-- Video Upload Field -->

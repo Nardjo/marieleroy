@@ -11,7 +11,17 @@ export const useHero = () => {
     }
   }
 
-  const updateHero = async (data: { subtitle: string; description: string; videoUrl?: string | null }) => {
+  const updateHero = async (data: {
+    subtitle: string
+    description: string
+    videoUrl?: string | null
+    avatars?: Array<{
+      firstName: string
+      lastName: string
+      subtitle: string
+      imageUrl: string
+    }>
+  }) => {
     try {
       loading.value = true
       const response = await $fetch('/api/admin/hero', {

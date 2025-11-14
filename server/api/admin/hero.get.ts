@@ -4,6 +4,7 @@ export default defineEventHandler(async () => {
       subtitle: true,
       description: true,
       videoUrl: true,
+      avatars: true,
     },
   })
 

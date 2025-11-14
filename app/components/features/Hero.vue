@@ -4,9 +4,17 @@
         class="hero-section bg-gradient-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
       <div class="container mx-auto pt-16 md:pt-24">
         <div class="space-y-4">
-          <!-- Video placeholder -->
+          <!-- Video or placeholder -->
           <div class="max-w-3xl mx-auto">
             <div
+              v-if="videoUrl"
+              class="w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-black">
+              <video :src="videoUrl" controls class="w-full h-full object-cover">
+                Votre navigateur ne supporte pas la vidéo.
+              </video>
+            </div>
+            <div
+              v-else
               class="w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-gradient-to-br from-primary-200 to-primary-400 flex items-center justify-center">
               <div class="text-center text-primary-800">
                 <Icon name="i-lucide-video" class="w-16 h-16 mb-2 mx-auto opacity-50" />
@@ -31,8 +39,8 @@
 
             <template #description>
               <div class="flex flex-col gap-3">
-                <h2 class="text-2xl md:text-3xl text-primary-800">Copywriter Professionnelle</h2>
-                <span class="text-primary-600">Des mots qui convertissent, des messages qui résonnent.</span>
+                <h2 class="text-2xl md:text-3xl text-primary-800">{{ subtitle }}</h2>
+                <span class="text-primary-600">{{ description }}</span>
               </div>
 
               <!-- Avatars clients -->
@@ -67,6 +75,13 @@
 <script setup lang="ts">
   const { animatedCurvePath } = useCurvedAnimation()
   const { scrollToSection } = useSmoothScroll()
+
+  // Fetch hero data
+  const { data: hero } = await usePublicHero()
+
+  const subtitle = computed(() => hero.value?.subtitle || 'Copywriter Professionnelle')
+  const description = computed(() => hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.')
+  const videoUrl = computed(() => hero.value?.videoUrl || null)
 </script>
 
 <style scoped>

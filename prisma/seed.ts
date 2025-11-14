@@ -39,6 +39,31 @@ async function seedTestimonials() {
   console.log('✅ Testimonials seeded')
 }
 
+async function seedHero() {
+  console.log('🌱 Seeding hero section...')
+
+  const count = await prisma.heroSection.count()
+
+  if (count > 0) {
+    console.log('⏭️  Hero section déjà présente, seeding ignoré')
+    return
+  }
+
+  const hero = await prisma.heroSection.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      subtitle: 'Copywriter Professionnelle',
+      description: 'Des mots qui convertissent, des messages qui résonnent.',
+      videoUrl: null,
+    },
+  })
+
+  console.log('✅ Hero section seeded')
+  console.log(`   - Subtitle: ${hero.subtitle}`)
+}
+
 async function seedAbout() {
   console.log('🌱 Seeding about section...')
 
@@ -266,17 +291,44 @@ async function seedSeo() {
   console.log(`   - Title: ${seo.metaTitle}`)
 }
 
+async function seedImageSeparator() {
+  console.log('🌱 Seeding image separator...')
+
+  const count = await prisma.imageSeparator.count()
+
+  if (count > 0) {
+    console.log('⏭️  Image separator déjà présent, seeding ignoré')
+    return
+  }
+
+  const separator = await prisma.imageSeparator.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      desktopImage: '/images/separator.jpg',
+      mobileImage: '/images/separator.jpg',
+    },
+  })
+
+  console.log('✅ Image separator seeded')
+  console.log(`   - Desktop: ${separator.desktopImage}`)
+  console.log(`   - Mobile: ${separator.mobileImage}`)
+}
+
 async function main() {
   console.log('🚀 Starting database seed...\n')
 
   try {
     await seedTestimonials()
+    await seedHero()
     await seedAbout()
     await seedMethod()
     await seedFaq()
     await seedSettings()
     await seedSocialLinks()
     await seedSeo()
+    await seedImageSeparator()
 
     console.log('\n✨ Database seeded successfully!')
   } catch (error) {

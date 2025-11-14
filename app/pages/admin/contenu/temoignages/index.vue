@@ -3,17 +3,16 @@
     layout: 'admin',
   })
 
-  const { loading, error, fetchTestimonials, deleteTestimonial } = useTestimonials()
+  const router = useRouter()
+  const { loading, fetchTestimonials, deleteTestimonial } = useTestimonials()
   const toast = useToast()
 
-  const testimonials = ref([])
+  const testimonials = ref<any[]>([])
 
-  // Charger les témoignages
   const loadTestimonials = async () => {
     try {
       testimonials.value = await fetchTestimonials()
     } catch (err: any) {
-      console.error('Erreur lors du chargement:', err)
       toast.add({
         title: 'Erreur de chargement',
         description: err?.message || 'Impossible de charger les témoignages',
@@ -24,98 +23,100 @@
     }
   }
 
+  const confirmDelete = async (id: string, title: string) => {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer le témoignage "${title}" ?`)) {
+      try {
+        await deleteTestimonial(id)
+        toast.add({
+          title: 'Témoignage supprimé',
+          description: 'Le témoignage a été supprimé avec succès',
+          color: 'success',
+          icon: 'i-lucide-check',
+          duration: 3000,
+        })
+        await loadTestimonials()
+      } catch (error: any) {
+        toast.add({
+          title: 'Erreur',
+          description: error?.message || 'Impossible de supprimer le témoignage',
+          color: 'error',
+          duration: 5000,
+        })
+      }
+    }
+  }
+
   onMounted(() => {
     loadTestimonials()
   })
-
-  const addTestimonial = () => {
-    navigateTo('/admin/contenu/temoignages/ajouter')
-  }
-
-  const editTestimonial = (testimonial: any) => {
-    navigateTo(`/admin/contenu/temoignages/${testimonial.id}`)
-  }
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce témoignage ?')) return
-
-    try {
-      await deleteTestimonial(id)
-      toast.add({
-        title: 'Témoignage supprimé',
-        description: 'Le témoignage a été supprimé définitivement',
-        color: 'success',
-        icon: 'i-lucide-trash-2',
-        duration: 3000,
-      })
-      await loadTestimonials() // Recharger la liste
-    } catch (error: any) {
-      console.error('Erreur lors de la suppression:', error)
-      toast.add({
-        title: 'Erreur de suppression',
-        description: error?.data?.message || 'Impossible de supprimer le témoignage',
-        color: 'error',
-        icon: 'i-lucide-x-circle',
-        duration: 5000,
-      })
-    }
-  }
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <AdminPageHeader title="Témoignages" description="Gérer les témoignages vidéo de vos clients">
+    <AdminPageHeader title="Témoignages" description="Gérer les témoignages vidéo">
       <template #actions>
-        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addTestimonial">Ajouter un témoignage</UButton>
+        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="router.push('/admin/contenu/temoignages/nouveau')">
+          Ajouter un témoignage
+        </UButton>
       </template>
     </AdminPageHeader>
 
     <!-- Testimonials List -->
-    <AdminSkeletonCardList v-if="loading" :count="3" />
+    <AdminSkeletonForm v-if="loading" :fields="3" />
 
-    <!-- Empty State -->
-    <AdminEmptyState
-      v-else-if="testimonials.length === 0"
-      icon="i-lucide-message-circle"
-      title="Aucun témoignage"
-      description="Commencez par ajouter votre premier témoignage"
-      button-label="Ajouter un témoignage"
-      button-icon="i-lucide-plus"
-      @action="addTestimonial" />
-
-    <!-- Testimonials Cards -->
     <div v-else class="grid grid-cols-1 gap-6">
-      <UCard v-for="testimonial in testimonials" :key="testimonial.id" class="shadow-sm">
+      <UCard v-for="testimonial in testimonials" :key="testimonial.id">
         <div class="flex flex-col md:flex-row gap-6">
           <!-- Video Preview -->
-          <div class="md:w-80 aspect-video rounded-lg overflow-hidden bg-gray-100">
-            <iframe
-              :src="testimonial.embedUrl"
-              class="w-full h-full"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
+          <div class="md:w-1/3">
+            <div class="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <iframe
+                :src="testimonial.embedUrl"
+                class="w-full h-full"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+            </div>
           </div>
 
           <!-- Content -->
-          <div class="flex-1 space-y-3">
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                  {{ testimonial.title }}
-                </h3>
-                <p class="text-gray-600 dark:text-gray-400 mt-2 italic">"{{ testimonial.quote }}"</p>
+          <div class="md:w-2/3 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ testimonial.title }}</h3>
+                  <span class="text-sm text-gray-500">Ordre: {{ testimonial.displayOrder }}</span>
+                </div>
+                <div class="flex gap-2">
+                  <UButton
+                    color="neutral"
+                    variant="ghost"
+                    size="sm"
+                    icon="i-lucide-pencil"
+                    @click="router.push(`/admin/contenu/temoignages/${testimonial.id}`)" />
+                  <UButton
+                    color="error"
+                    variant="ghost"
+                    size="sm"
+                    icon="i-lucide-trash-2"
+                    @click="confirmDelete(testimonial.id, testimonial.title)" />
+                </div>
               </div>
+              <p class="text-gray-700 dark:text-gray-300 italic">"{{ testimonial.quote }}"</p>
             </div>
-
-            <div class="flex items-center gap-2 pt-2">
-              <AdminCrudActions
-                @edit="editTestimonial(testimonial)"
-                @delete="handleDelete(testimonial.id)"
-                confirm-message="Êtes-vous sûr de vouloir supprimer ce témoignage ?" />
+            <div class="mt-4 text-sm text-gray-500">
+              <code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">{{ testimonial.embedUrl }}</code>
             </div>
           </div>
+        </div>
+      </UCard>
+
+      <UCard v-if="testimonials.length === 0">
+        <div class="text-center py-12 text-gray-500">
+          <UIcon name="i-lucide-video" class="w-12 h-12 mx-auto mb-4 opacity-50" />
+          <p class="text-lg font-medium">Aucun témoignage</p>
+          <p class="text-sm mt-2">Commencez par ajouter votre premier témoignage vidéo</p>
         </div>
       </UCard>
     </div>

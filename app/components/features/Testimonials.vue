@@ -69,22 +69,8 @@
 </template>
 
 <script setup lang="ts">
-// Pour l'instant, des données statiques - vous pourrez connecter à une API plus tard
-const testimonials = ref([
-  {
-    title: 'Marie',
-    quote: 'Grâce à Marie, j\'ai pu transformer ma communication et atteindre mes objectifs de manière efficace.',
-    embedUrl: 'https://www.youtube.com/embed/KJNbhiD9YLg?rel=0&modestbranding=1&showinfo=0&controls=1&fs=1',
-  },
-  {
-    title: 'Jessica',
-    quote: 'Un travail exceptionnel qui a dépassé toutes mes attentes. Ma marque a pris une toute nouvelle dimension.',
-    embedUrl: 'https://www.youtube.com/embed/3enzfMLVIbo?rel=0&modestbranding=1&showinfo=0&controls=1&fs=1',
-  },
-  {
-    title: 'Lilie',
-    quote: 'Marie a su capter l\'essence de mon message et créer un contenu qui résonne vraiment avec mon audience.',
-    embedUrl: 'https://www.youtube.com/embed/3Ah-CkKIKx8?rel=0&modestbranding=1&showinfo=0&controls=1&fs=1',
-  },
-])
+  // Fetch testimonials from API
+  const { data: testimonialsData } = await usePublicTestimonials()
+
+  const testimonials = computed(() => testimonialsData.value || [])
 </script>

@@ -35,10 +35,22 @@
       icon: 'i-lucide-book-open',
       children: [
         {
+          label: 'Hero',
+          icon: 'i-lucide-home',
+          to: '/admin/contenu/hero',
+          active: route.path === '/admin/contenu/hero',
+        },
+        {
           label: 'Témoignages',
           icon: 'i-lucide-message-circle',
           to: '/admin/contenu/temoignages',
           active: route.path === '/admin/contenu/temoignages',
+        },
+        {
+          label: 'Image de séparation',
+          icon: 'i-lucide-image',
+          to: '/admin/contenu/image-separation',
+          active: route.path === '/admin/contenu/image-separation',
         },
         {
           label: 'Ma méthode',
@@ -46,7 +58,6 @@
           to: '/admin/contenu/ma-methode',
           active: route.path === '/admin/contenu/ma-methode',
         },
-
         {
           label: 'À propos',
           icon: 'i-lucide-user',

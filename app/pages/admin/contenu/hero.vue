@@ -10,7 +10,7 @@
     firstName: string
     lastName: string
     subtitle: string
-    imageUrl: string
+    imageUrl: string | null
   }
 
   const form = reactive({
@@ -44,14 +44,10 @@
 
   const saveContent = async () => {
     try {
-      console.log('[FRONTEND] form.avatars AVANT filtre:', JSON.stringify(form.avatars, null, 2))
-
       // Garder uniquement les avatars avec au minimum prénom, nom et sous-titre
       const filteredAvatars = form.avatars.filter(
         avatar => avatar.firstName?.trim() && avatar.lastName?.trim() && avatar.subtitle?.trim(),
       )
-
-      console.log('[FRONTEND] avatars APRÈS filtre:', JSON.stringify(filteredAvatars, null, 2))
 
       const payload = {
         subtitle: form.subtitle,
@@ -60,8 +56,6 @@
           form.videoUrl && typeof form.videoUrl === 'string' && form.videoUrl.trim() !== '' ? form.videoUrl : null,
         avatars: filteredAvatars,
       }
-
-      console.log('[FRONTEND] payload final:', JSON.stringify(payload, null, 2))
 
       await updateHero(payload)
       toast.add({
@@ -86,7 +80,7 @@
       firstName: '',
       lastName: '',
       subtitle: '',
-      imageUrl: '',
+      imageUrl: null,
     })
   }
 

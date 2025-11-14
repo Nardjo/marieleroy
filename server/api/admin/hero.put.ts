@@ -1,11 +1,6 @@
 export default defineEventHandler(async event => {
   const body = await readBody(event)
 
-  console.log('[HERO PUT] Body reçu:', JSON.stringify(body, null, 2))
-  console.log('[HERO PUT] avatars:', body.avatars)
-  console.log('[HERO PUT] avatars type:', typeof body.avatars)
-  console.log('[HERO PUT] avatars is array:', Array.isArray(body.avatars))
-
   const hero = await prisma.heroSection.findFirst()
 
   if (!hero) {
@@ -24,8 +19,6 @@ export default defineEventHandler(async event => {
       avatars: body.avatars || [],
     },
   })
-
-  console.log('[HERO PUT] Updated:', JSON.stringify(updated, null, 2))
 
   return updated
 })

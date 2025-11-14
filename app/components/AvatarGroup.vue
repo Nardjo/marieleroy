@@ -1,48 +1,44 @@
 <template>
   <div class="flex flex-col md:flex-row items-center justify-center w-full gap-3 md:gap-4">
-    <div class="flex flex-row items-center">
-      <AnimatedTooltip :items="people" />
+    <div v-if="displayAvatars.length > 0" class="flex flex-row items-center">
+      <AnimatedTooltip :items="displayAvatars" />
       <div
+        v-if="avatars.length > 5"
         class="group relative -mr-4 h-14 w-14 rounded-full border-2 border-white bg-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-md cursor-default"
         style="z-index: 0">
-        +2
+        +{{ avatars.length - 5 }}
       </div>
     </div>
-    <p class="text-lg text-primary-700 font-medium md:ml-2">clients satisfaits</p>
+    <p class="text-lg text-primary-700 font-medium md:ml-2">{{ clientsText }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-  const people = [
-    {
-      id: 1,
-      name: 'Sophie Martin',
-      designation: 'Entrepreneur',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie',
-    },
-    {
-      id: 2,
-      name: 'Thomas Dubois',
-      designation: 'Coach',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Thomas',
-    },
-    {
-      id: 3,
-      name: 'Julie Laurent',
-      designation: 'Consultante',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Julie',
-    },
-    {
-      id: 4,
-      name: 'Marc Petit',
-      designation: 'Freelance',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Marc',
-    },
-    {
-      id: 5,
-      name: 'Camille Roux',
-      designation: 'Business Owner',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Camille',
-    },
-  ]
+  interface Avatar {
+    firstName: string
+    lastName: string
+    subtitle: string
+    imageUrl?: string
+  }
+
+  interface Props {
+    avatars?: Avatar[]
+    clientsText?: string
+  }
+
+  const props = withDefaults(defineProps<Props>(), {
+    avatars: () => [],
+    clientsText: 'clients satisfaits',
+  })
+
+  // Transformer les avatars pour AnimatedTooltip
+  const displayAvatars = computed(() => {
+    return props.avatars.slice(0, 5).map((avatar, index) => ({
+      id: index + 1,
+      name: `${avatar.firstName} ${avatar.lastName}`,
+      designation: avatar.subtitle,
+      // Utiliser l'image uploadée ou générer un avatar par défaut
+      image: avatar.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${avatar.firstName}${avatar.lastName}`,
+    }))
+  })
 </script>

@@ -1,7 +1,6 @@
 <template>
   <section id="hero" class="relative overflow-hidden">
-    <div
-        class="hero-section bg-gradient-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
+    <div class="hero-section bg-gradient-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
       <div class="container mx-auto pt-16 md:pt-24">
         <div class="space-y-4">
           <!-- Video or placeholder -->
@@ -29,7 +28,7 @@
             :ui="{
               base: 'py-0',
               wrapper: '!py-0',
-              container: '!gap-6'
+              container: '!gap-6',
             }">
             <template #title>
               <div class="flex flex-col items-center">
@@ -45,7 +44,7 @@
 
               <!-- Avatars clients -->
               <div class="mt-6">
-                <AvatarGroup />
+                <AvatarGroup :avatars="avatars" :clients-text="clientsText" />
               </div>
             </template>
 
@@ -80,8 +79,12 @@
   const { data: hero } = await usePublicHero()
 
   const subtitle = computed(() => hero.value?.subtitle || 'Copywriter Professionnelle')
-  const description = computed(() => hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.')
+  const description = computed(
+    () => hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.',
+  )
   const videoUrl = computed(() => hero.value?.videoUrl || null)
+  const avatars = computed(() => hero.value?.avatars || [])
+  const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
 </script>
 
 <style scoped>

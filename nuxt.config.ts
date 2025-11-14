@@ -48,5 +48,11 @@ export default defineNuxtConfig({
     experimental: {
       wasm: true,
     },
+    publicAssets: [
+      {
+        baseURL: '/uploads',
+        dir: './uploads',
+      },
+    ],
   },
 })

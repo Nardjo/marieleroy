@@ -97,18 +97,14 @@
 <template>
   <div class="space-y-6">
     <!-- Page Header -->
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">SEO</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Optimiser le référencement de votre site</p>
-      </div>
-      <UButton
-        color="primary"
-        size="lg"
-        icon="i-lucide-save"
-        class="w-full md:w-auto"
-        :loading="loading"
-        @click="saveSettings">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">SEO</h1>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Optimiser le référencement de votre site</p>
+    </div>
+
+    <!-- Desktop Save Button -->
+    <div class="hidden md:flex gap-3 mb-6">
+      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveSettings">
         Enregistrer
       </UButton>
     </div>
@@ -116,7 +112,7 @@
     <!-- Form -->
     <AdminSkeletonForm v-if="loading" :fields="3" />
 
-    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-28 md:pb-0">
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-6">
         <!-- Meta Tags -->
@@ -256,6 +252,15 @@
             </div>
           </div>
         </UCard>
+      </div>
+    </div>
+
+    <!-- Mobile Sticky Save Button -->
+    <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-default p-4 md:hidden z-40">
+      <div class="flex gap-3 w-full">
+        <UButton color="primary" size="lg" icon="i-lucide-save" class="w-full" :loading="loading" @click="saveSettings">
+          Enregistrer
+        </UButton>
       </div>
     </div>
   </div>

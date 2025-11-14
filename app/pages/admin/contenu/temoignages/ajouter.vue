@@ -47,25 +47,41 @@
 
 <template>
   <div class="space-y-6">
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div>
-        <div class="flex items-center gap-2 mb-2">
-          <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" size="sm" @click="goBack" />
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Ajouter un témoignage</h1>
-        </div>
-        <p class="text-gray-600 dark:text-gray-400">Créer un nouveau témoignage vidéo</p>
+    <!-- Title and Description -->
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-2">
+        <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" size="sm" @click="goBack" />
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Ajouter un témoignage</h1>
       </div>
-      <UButton
-        color="primary"
-        size="lg"
-        icon="i-lucide-save"
-        class="w-full md:w-auto"
-        :loading="loading"
-        @click="saveTestimonial">
+      <p class="text-gray-600 dark:text-gray-400">Créer un nouveau témoignage vidéo</p>
+    </div>
+
+    <!-- Desktop Save Button -->
+    <div class="hidden md:flex gap-3 mb-6">
+      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveTestimonial">
         Enregistrer
       </UButton>
     </div>
 
+    <!-- Form Content -->
     <AdminTestimonialForm v-model:testimonial="form" :loading="loading" />
+
+    <!-- Mobile Sticky Save Button -->
+    <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-default p-4 md:hidden z-40">
+      <div class="flex gap-3 w-full">
+        <UButton
+          color="primary"
+          size="lg"
+          icon="i-lucide-save"
+          class="w-full"
+          :loading="loading"
+          @click="saveTestimonial">
+          Enregistrer
+        </UButton>
+      </div>
+    </div>
+
+    <!-- Mobile padding for sticky button -->
+    <div class="h-24 md:h-0" />
   </div>
 </template>

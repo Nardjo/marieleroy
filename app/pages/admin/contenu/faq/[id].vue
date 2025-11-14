@@ -76,7 +76,7 @@
 
 <template>
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
         <div class="flex items-center gap-2 mb-2">
           <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" size="sm" @click="goBack" />
@@ -84,7 +84,13 @@
         </div>
         <p class="text-gray-600 dark:text-gray-400">Modifier les informations de la question FAQ</p>
       </div>
-      <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveFaqItem">
+      <UButton
+        color="primary"
+        size="lg"
+        icon="i-lucide-save"
+        class="w-full md:w-auto"
+        :loading="loading"
+        @click="saveFaqItem">
         Enregistrer
       </UButton>
     </div>

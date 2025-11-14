@@ -39,6 +39,31 @@ async function seedTestimonials() {
   console.log('✅ Testimonials seeded')
 }
 
+async function seedHero() {
+  console.log('🌱 Seeding hero section...')
+
+  const count = await prisma.heroSection.count()
+
+  if (count > 0) {
+    console.log('⏭️  Hero section déjà présente, seeding ignoré')
+    return
+  }
+
+  const hero = await prisma.heroSection.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      subtitle: 'Copywriter Professionnelle',
+      description: 'Des mots qui convertissent, des messages qui résonnent.',
+      videoUrl: null,
+    },
+  })
+
+  console.log('✅ Hero section seeded')
+  console.log(`   - Subtitle: ${hero.subtitle}`)
+}
+
 async function seedAbout() {
   console.log('🌱 Seeding about section...')
 
@@ -271,6 +296,7 @@ async function main() {
 
   try {
     await seedTestimonials()
+    await seedHero()
     await seedAbout()
     await seedMethod()
     await seedFaq()

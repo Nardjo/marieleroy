@@ -47,19 +47,9 @@
 
           <template #content="{ item }">
             <div class="px-6 pb-6">
-              <p v-if="item.content" class="text-primary-700 leading-relaxed">
+              <p v-if="item.content" class="text-primary-700 leading-relaxed whitespace-pre-line">
                 {{ item.content }}
               </p>
-              <div v-if="item.slot === 'collaboration'" class="mt-2">
-                <p class="text-primary-700 mb-4 leading-relaxed">Pour démarrer une collaboration, c'est simple :</p>
-                <ol class="list-decimal pl-5 space-y-2 text-primary-700 leading-relaxed">
-                  <li>Contactez-moi via le formulaire de contact ou par email</li>
-                  <li>Nous planifierons un appel de découverte gratuit de 30 minutes</li>
-                  <li>Je vous enverrai une proposition détaillée avec tarifs et délais</li>
-                  <li>Après votre validation, nous démarrerons le projet</li>
-                </ol>
-                <CTAButton class="mt-6" text="Me contacter" size="md" icon="i-lucide-mail"/>
-              </div>
             </div>
           </template>
         </UAccordion>
@@ -83,36 +73,14 @@
 </template>
 
 <script setup lang="ts">
-const faqItems = ref<any[]>([
-  {
-    label: 'Quel est votre processus de travail ?',
-    iconName: 'i-lucide-workflow',
-    content:
-        "Mon processus commence par une consultation initiale pour comprendre vos besoins, suivie d'une recherche approfondie de votre marché et de votre audience. Ensuite, je rédige le contenu en utilisant des techniques de copywriting éprouvées, puis nous procédons à des révisions jusqu'à ce que le résultat soit parfait.",
-  },
-  {
-    label: 'Combien coûtent vos services ?',
-    iconName: 'i-lucide-euro',
-    content:
-        'Mes tarifs varient selon la complexité et la longueur du projet. Je propose des forfaits pour les pages de vente, les emails, et les contenus de blog. Contactez-moi pour obtenir un devis personnalisé adapté à vos besoins spécifiques.',
-  },
-  {
-    label: 'Quels types de projets acceptez-vous ?',
-    iconName: 'i-lucide-file-text',
-    content:
-        "Je travaille sur une variété de projets de copywriting : pages de vente, emails marketing, contenus de blog, descriptions de produits, scripts vidéo, et plus encore. Si vous avez un projet de rédaction persuasive, n'hésitez pas à me contacter.",
-  },
-  {
-    label: 'Quel est votre délai de livraison ?',
-    iconName: 'i-lucide-clock',
-    content:
-        'Les délais dépendent de la taille et de la complexité du projet. En général, une page de vente prend 7-10 jours, un email 2-3 jours, et un article de blog 3-5 jours. Je peux également travailler sur des délais plus courts moyennant un supplément.',
-  },
-  {
-    label: 'Comment démarrer une collaboration ?',
-    iconName: 'i-lucide-handshake',
-    slot: 'collaboration',
-    content: '',
-  },
-])
+  // Fetch FAQ from API
+  const { data: faqData } = await usePublicFaq()
+
+  const faqItems = computed(() => {
+    const items = faqData.value || []
+    return items.map(item => ({
+      label: item.question,
+      content: item.answer,
+    }))
+  })
 </script>

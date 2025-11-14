@@ -1,95 +1,64 @@
 export const useTestimonials = () => {
   const loading = ref(false)
-  const error = ref<string | null>(null)
 
-  // Récupérer tous les témoignages
   const fetchTestimonials = async () => {
-    loading.value = true
-    error.value = null
     try {
-      const data = await $fetch('/api/testimonials')
-      return data
-    } catch (err: any) {
-      error.value = err.message || 'Erreur lors du chargement des témoignages'
-      throw err
+      loading.value = true
+      const response = await $fetch('/api/admin/testimonials')
+      return response
     } finally {
       loading.value = false
     }
   }
 
-  // Récupérer un témoignage par ID
-  const fetchTestimonial = async (id: string) => {
-    loading.value = true
-    error.value = null
+  const createTestimonial = async (data: {
+    title: string
+    quote: string
+    embedUrl: string
+    displayOrder?: number
+  }) => {
     try {
-      const data = await $fetch(`/api/testimonials/${id}`)
-      return data
-    } catch (err: any) {
-      error.value = err.message || 'Erreur lors du chargement du témoignage'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  // Créer un témoignage
-  const createTestimonial = async (testimonial: any) => {
-    loading.value = true
-    error.value = null
-    try {
-      const data = await $fetch('/api/testimonials', {
+      loading.value = true
+      const response = await $fetch('/api/admin/testimonials', {
         method: 'POST',
-        body: testimonial,
+        body: data,
       })
-      return data
-    } catch (err: any) {
-      error.value = err.message || 'Erreur lors de la création du témoignage'
-      throw err
+      return response
     } finally {
       loading.value = false
     }
   }
 
-  // Mettre à jour un témoignage
-  const updateTestimonial = async (id: string, testimonial: any) => {
-    loading.value = true
-    error.value = null
+  const updateTestimonial = async (
+    id: string,
+    data: { title: string; quote: string; embedUrl: string; displayOrder: number },
+  ) => {
     try {
-      const data = await $fetch(`/api/testimonials/${id}`, {
+      loading.value = true
+      const response = await $fetch(`/api/admin/testimonials/${id}`, {
         method: 'PUT',
-        body: testimonial,
+        body: data,
       })
-      return data
-    } catch (err: any) {
-      error.value = err.message || 'Erreur lors de la mise à jour du témoignage'
-      throw err
+      return response
     } finally {
       loading.value = false
     }
   }
 
-  // Supprimer un témoignage
   const deleteTestimonial = async (id: string) => {
-    loading.value = true
-    error.value = null
     try {
-      await $fetch(`/api/testimonials/${id}`, {
+      loading.value = true
+      await $fetch(`/api/admin/testimonials/${id}`, {
         method: 'DELETE',
       })
-      return true
-    } catch (err: any) {
-      error.value = err.message || 'Erreur lors de la suppression du témoignage'
-      throw err
     } finally {
       loading.value = false
     }
   }
 
   return {
-    loading: readonly(loading),
-    error: readonly(error),
+    loading,
     fetchTestimonials,
-    fetchTestimonial,
     createTestimonial,
     updateTestimonial,
     deleteTestimonial,

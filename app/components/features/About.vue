@@ -1,3 +1,12 @@
+<script setup lang="ts">
+  const { data: about } = await usePublicAbout()
+
+  const title = computed(() => about.value?.title || 'Marie Leroy')
+  const subtitle = computed(() => about.value?.subtitle || 'mon parcours')
+  const description = computed(() => about.value?.description || '')
+  const imageUrl = computed(() => about.value?.imageUrl || '/images/hero.jpg')
+</script>
+
 <template>
   <section id="about" class="py-16 bg-white ">
     <div class="mx-auto px-4 max-w-6xl">
@@ -12,12 +21,9 @@
           À propos
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
-          Qui suis-je,
-          <span class="text-primary-600">mon parcours</span>
+          {{ title }},
+          <span class="text-primary-600">{{ subtitle }}</span>
         </h2>
-        <p class="text-primary-700 max-w-2xl mx-auto">
-          Une copywriter passionnée par les mots qui convertissent et les histoires qui résonnent
-        </p>
       </div>
 
       <div
@@ -30,27 +36,19 @@
           <div class="flex flex-col-reverse md:flex-row gap-8 md:gap-12 items-center p-6">
             <!-- Texte à gauche -->
             <div class="flex-1 space-y-6">
-              <p class="text-primary-700 leading-relaxed">
-                Je suis une copywriter spécialisée dans la création de contenus persuasifs qui convertissent les visiteurs
-                en clients. Avec plus de 5 ans d'expérience dans le domaine, j'ai aidé des dizaines d'entreprises à
-                améliorer leur communication et à augmenter leurs ventes grâce à des textes efficaces.
-              </p>
-              <p class="text-primary-700 leading-relaxed">
-                Mon approche combine une compréhension approfondie des principes de persuasion, une recherche minutieuse
-                de votre marché cible, et une écriture claire et engageante. Je m'adapte à votre voix de marque pour créer
-                un contenu authentique qui résonne avec votre audience.
-              </p>
-              <p class="text-primary-700 leading-relaxed">
-                Que vous ayez besoin d'emails qui génèrent des clics, de pages de vente qui convertissent, ou de contenus
-                de blog qui établissent votre autorité, je peux vous aider à atteindre vos objectifs.
+              <p
+                v-for="(paragraph, index) in description.split('\n\n')"
+                :key="index"
+                class="text-primary-700 leading-relaxed whitespace-pre-line">
+                {{ paragraph }}
               </p>
             </div>
 
             <!-- Avatar à droite -->
             <div class="flex-shrink-0">
               <img
-                src="/images/hero.jpg"
-                alt="Marie Leroy"
+                :src="imageUrl"
+                :alt="title"
                 class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl border-4 border-primary-200" />
             </div>
           </div>

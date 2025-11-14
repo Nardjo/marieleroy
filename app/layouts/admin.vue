@@ -35,6 +35,12 @@
       icon: 'i-lucide-book-open',
       children: [
         {
+          label: 'Hero',
+          icon: 'i-lucide-home',
+          to: '/admin/contenu/hero',
+          active: route.path === '/admin/contenu/hero',
+        },
+        {
           label: 'Témoignages',
           icon: 'i-lucide-message-circle',
           to: '/admin/contenu/temoignages',

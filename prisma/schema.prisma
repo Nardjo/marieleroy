@@ -53,6 +53,17 @@ model Testimonial {
   @@map("testimonials")
 }
 
+// Hero Section model
+model HeroSection {
+  id          String   @id @default(cuid())
+  subtitle    String
+  description String   @db.Text
+  videoUrl    String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("hero_section")
+}
+
 // About Section model
 model AboutSection {
   id          String   @id @default(cuid())

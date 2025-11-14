@@ -12,11 +12,11 @@
           Ma Méthode
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
-          Comment je travaille,
-          <span class="text-primary-600">étape par étape</span>
+          {{ headerTitle }},
+          <span class="text-primary-600">{{ headerSubtitle }}</span>
         </h2>
-        <p class="text-primary-700 max-w-2xl mx-auto">
-          Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience
+        <p v-if="headerDescription" class="text-primary-700 max-w-2xl mx-auto">
+          {{ headerDescription }}
         </p>
       </div>
 
@@ -88,36 +88,27 @@
   const activeStep = ref(0)
   const sectionRef = ref(null)
 
-  const steps = [
-    {
-      id: 'step-1',
-      title: 'Consultation initiale',
-      text: 'Nous commençons par une discussion approfondie pour comprendre vos objectifs, votre audience cible et vos attentes.',
-    },
-    {
-      id: 'step-2',
-      title: 'Recherche et stratégie',
-      text: "J'analyse votre marché, votre concurrence et votre audience pour développer une stratégie de contenu efficace.",
-    },
-    {
-      id: 'step-3',
-      title: 'Rédaction et optimisation',
-      text: "Je rédige votre contenu en utilisant des techniques de copywriting éprouvées pour maximiser l'impact et les conversions.",
-    },
-    {
-      id: 'step-4',
-      title: 'Révisions et ajustements',
-      text: "Je travaille avec vous pour affiner le contenu jusqu'à ce qu'il corresponde parfaitement à vos attentes et objectifs.",
-    },
-    {
-      id: 'step-5',
-      title: 'Livraison et suivi',
-      text: 'Je vous livre le contenu final et reste disponible pour des ajustements mineurs et pour répondre à vos questions.',
-    },
-  ]
+  // Fetch method data
+  const { data: methodData } = await usePublicMethod()
+
+  const header = computed(() => methodData.value?.header || {})
+  const headerTitle = computed(() => header.value.title || 'Comment je travaille')
+  const headerSubtitle = computed(() => header.value.subtitle || 'étape par étape')
+  const headerDescription = computed(() => header.value.description || 'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience')
+
+  const steps = computed(() => {
+    const dbSteps = methodData.value?.steps || []
+    return dbSteps.map(step => ({
+      id: step.id,
+      title: step.title,
+      text: step.description,
+    }))
+  })
 
   const lineProgress = computed(() => {
-    const progress = (activeStep.value / (steps.length - 1)) * 100
+    const stepsLength = steps.value.length
+    if (stepsLength === 0) return '0%'
+    const progress = (activeStep.value / (stepsLength - 1)) * 100
     return `${progress}%`
   })
 
@@ -149,7 +140,8 @@
       // Déterminer l'étape active en fonction de la progression
       // Utiliser une courbe très accélérée pour faire apparaître toutes les étapes rapidement
       const acceleratedProgress = Math.pow(progress, 0.5)
-      const newStep = Math.min(Math.floor(acceleratedProgress * steps.length), steps.length - 1)
+      const stepsLength = steps.value.length
+      const newStep = Math.min(Math.floor(acceleratedProgress * stepsLength), stepsLength - 1)
 
       if (newStep !== activeStep.value) {
         activeStep.value = newStep

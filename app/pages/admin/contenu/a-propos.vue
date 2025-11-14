@@ -38,7 +38,8 @@
         title: form.title,
         description: form.description,
         subtitle: form.subtitle && form.subtitle.trim() !== '' ? form.subtitle : undefined,
-        imageUrl: form.imageUrl && typeof form.imageUrl === 'string' && form.imageUrl.trim() !== '' ? form.imageUrl : undefined,
+        imageUrl:
+          form.imageUrl && typeof form.imageUrl === 'string' && form.imageUrl.trim() !== '' ? form.imageUrl : undefined,
       }
       await updateAbout(payload)
       toast.add({
@@ -77,7 +78,7 @@
     <!-- Form -->
     <AdminSkeletonForm v-if="loading" :fields="4" />
 
-    <div v-else class="max-w-4xl">
+    <div v-else>
       <UCard>
         <div class="space-y-4">
           <AdminImageUploadField

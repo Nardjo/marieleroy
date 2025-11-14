@@ -80,7 +80,7 @@
     <!-- Form -->
     <AdminSkeletonForm v-if="loading" :fields="2" />
 
-    <div v-else class="max-w-4xl">
+    <div v-else>
       <UCard>
         <div class="space-y-6">
           <!-- Desktop Image -->

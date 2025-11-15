@@ -51,6 +51,9 @@ RUN pnpm install --frozen-lockfile --prod --ignore-scripts && \
 # Copy built application from builder stage
 COPY --from=builder --chown=nuxt:nodejs /app/.output ./
 
+# Fix permissions for node_modules and app directory
+RUN chown -R nuxt:nodejs /app
+
 # Create uploads dir
 RUN mkdir -p /app/uploads && chown -R nuxt:nodejs /app/uploads
 

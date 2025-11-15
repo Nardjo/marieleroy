@@ -120,7 +120,8 @@ INSERT INTO site_settings (key, value, type) VALUES
     ('site_description', 'Copywriter professionnelle - Des mots qui convertissent, des messages qui résonnent', 'string'),
     ('contact_email', 'contact@marieleroy.fr', 'string'),
     ('contact_phone', '+33 6 12 34 56 78', 'string'),
-    ('contact_address', 'Paris, France', 'string')
+    ('contact_address', 'Paris, France', 'string'),
+    ('cta_link', '', 'string')
 ON CONFLICT (key) DO NOTHING;
 
 -- Insert default about section

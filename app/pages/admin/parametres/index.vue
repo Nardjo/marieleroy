@@ -12,6 +12,7 @@
     email: '',
     phone: '',
     address: '',
+    ctaLink: '',
   })
 
   // Charger les paramètres au montage
@@ -23,6 +24,7 @@
       form.email = settings.email || ''
       form.phone = settings.phone || ''
       form.address = settings.address || ''
+      form.ctaLink = settings.cta_link || ''
     } catch (err: any) {
       console.error('Erreur lors du chargement:', err)
       toast.add({
@@ -94,6 +96,15 @@
                 v-model="form.siteDescription"
                 :rows="3"
                 placeholder="Une brève description de votre activité" />
+            </UFormField>
+
+            <UFormField label="Lien CTA (Call To Action)">
+              <UInput
+                v-model="form.ctaLink"
+                type="url"
+                size="lg"
+                placeholder="https://calendly.com/marieleroy"
+                icon="i-lucide-external-link" />
             </UFormField>
           </div>
         </UCard>

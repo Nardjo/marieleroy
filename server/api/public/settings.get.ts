@@ -30,7 +30,7 @@ export default defineEventHandler(async () => {
   // Transformer les settings en objet clé-valeur
   const settingsObj = settings.reduce(
     (acc, setting) => {
-      acc[setting.key] = setting.value
+      acc[setting.key] = setting.value || ''
       return acc
     },
     {} as Record<string, string>,
@@ -43,6 +43,7 @@ export default defineEventHandler(async () => {
       email: settingsObj.email || '',
       phone: settingsObj.phone || '',
       address: settingsObj.address || '',
+      ctaLink: settingsObj.cta_link || '',
     },
     socialLinks: socialLinks || [],
     seo: seo || null,

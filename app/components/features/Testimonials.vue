@@ -6,12 +6,14 @@
         :initial="{ opacity: 0, y: 50 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="text-center mb-12">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
           <Icon name="i-lucide-quote" class="w-4 h-4" />
           Témoignages
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
-          Ce que disent mes clients, <span class="text-primary-600">leurs résultats</span>
+          Ce que disent mes clients,
+          <span class="text-primary-600">leurs résultats</span>
         </h2>
         <p class="text-primary-700 max-w-2xl mx-auto">
           Découvrez comment j'ai aidé mes clients à transformer leurs idées en contenus percutants
@@ -34,8 +36,7 @@
               class="w-full h-full"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+              allowfullscreen></iframe>
           </div>
 
           <!-- Contenu en dessous -->
@@ -43,9 +44,7 @@
             <h3 class="text-3xl font-bold text-primary-900 mb-4">
               {{ testimonial.title }}
             </h3>
-            <p class="text-lg text-primary-700 italic leading-relaxed">
-              "{{ testimonial.quote }}"
-            </p>
+            <p class="text-lg text-primary-700 italic leading-relaxed">"{{ testimonial.quote }}"</p>
           </div>
         </UCard>
       </div>
@@ -60,6 +59,8 @@
           title="Prêt à transformer votre communication ?"
           description="Discutons ensemble de votre projet et voyons comment je peux vous aider à atteindre vos objectifs."
           button-text="Démarrer un projet"
+          :button-to="ctaLink"
+          :button-external="true"
           icon="i-lucide-rocket"
           card-bg-class="!bg-primary-200"
           @cta-click="console.log('CTA clicked')" />
@@ -71,6 +72,8 @@
 <script setup lang="ts">
   // Fetch testimonials from API
   const { data: testimonialsData } = await usePublicTestimonials()
+  const { data: settings } = await usePublicSettings()
 
   const testimonials = computed(() => testimonialsData.value || [])
+  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
 </script>

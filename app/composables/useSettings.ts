@@ -22,9 +22,15 @@ export const useSettings = () => {
     loading.value = true
     error.value = null
     try {
+      // Transform camelCase keys to snake_case for database
+      const transformedSettings: Record<string, string | null> = {}
+      for (const [key, value] of Object.entries(settings)) {
+        const dbKey = key === 'ctaLink' ? 'cta_link' : key
+        transformedSettings[dbKey] = value
+      }
       const data = await $fetch('/api/settings', {
         method: 'PUT',
-        body: settings,
+        body: transformedSettings,
       })
       return data
     } catch (err: any) {

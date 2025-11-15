@@ -1,14 +1,22 @@
 <template>
   <div>
-    <!-- Title and Description -->
-    <div class="mb-6">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ title }}</h1>
-      <p v-if="description" class="text-gray-600 dark:text-gray-400 mt-2">{{ description }}</p>
+    <!-- Desktop: Title and Actions on same line -->
+    <div class="hidden md:flex items-start justify-between gap-6 mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ title }}</h1>
+        <p v-if="description" class="text-gray-600 dark:text-gray-400 mt-2">{{ description }}</p>
+      </div>
+      <div v-if="$slots.actions" class="flex gap-3 flex-shrink-0">
+        <slot name="actions" />
+      </div>
     </div>
 
-    <!-- Desktop Actions -->
-    <div v-if="$slots.actions" class="hidden md:flex gap-3 mb-6">
-      <slot name="actions" />
+    <!-- Mobile: Title and Description separate from actions -->
+    <div class="md:hidden">
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ title }}</h1>
+        <p v-if="description" class="text-gray-600 dark:text-gray-400 mt-2">{{ description }}</p>
+      </div>
     </div>
 
     <!-- Mobile Sticky Actions -->

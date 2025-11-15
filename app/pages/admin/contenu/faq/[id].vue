@@ -86,7 +86,7 @@
     </div>
 
     <!-- Desktop Save Button -->
-    <div class="hidden md:flex gap-3 mb-6">
+    <div class="hidden md:flex gap-3 mb-6 justify-end">
       <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveFaqItem">
         Enregistrer
       </UButton>

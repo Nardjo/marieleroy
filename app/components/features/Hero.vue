@@ -55,7 +55,7 @@
                 icon="i-lucide-arrow-down"
                 text="Témoignages"
                 @click="scrollToSection('testimonials')" />
-              <CTAButton icon="i-lucide-rocket" size="xl" text="On discute ?" />
+              <CTAButton icon="i-lucide-rocket" size="xl" text="On discute ?" :to="ctaLink" :external="true" />
             </template>
           </UPageHero>
         </div>
@@ -77,6 +77,7 @@
 
   // Fetch hero data
   const { data: hero } = await usePublicHero()
+  const { data: settings } = await usePublicSettings()
 
   const subtitle = computed(() => hero.value?.subtitle || 'Copywriter Professionnelle')
   const description = computed(
@@ -85,6 +86,7 @@
   const videoUrl = computed(() => hero.value?.videoUrl || null)
   const avatars = computed(() => hero.value?.avatars || [])
   const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
+  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
 </script>
 
 <style scoped>

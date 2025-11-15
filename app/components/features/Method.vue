@@ -38,7 +38,7 @@
             class="relative pl-20 transition-all duration-500"
             :class="{
               'opacity-100 translate-x-0': index <= activeStep,
-              'opacity-0 translate-x-8': index > activeStep
+              'opacity-0 translate-x-8': index > activeStep,
             }">
             <!-- Point sur la ligne -->
             <div
@@ -46,7 +46,7 @@
               :class="[
                 index <= activeStep
                   ? 'bg-gradient-to-br from-primary-600 to-primary-800 text-white scale-110'
-                  : 'bg-white text-primary-400 scale-100'
+                  : 'bg-white text-primary-400 scale-100',
               ]">
               <Icon v-if="index < activeStep" name="i-lucide-check" class="w-4 h-4" />
               <span v-else>{{ index + 1 }}</span>
@@ -77,6 +77,8 @@
           title="Prêt à transformer votre contenu ?"
           description="Découvrez comment ma méthode peut vous aider à atteindre vos objectifs de conversion et d'engagement."
           button-text="Démarrer mon projet"
+          :button-to="ctaLink"
+          :button-external="true"
           icon="i-lucide-rocket"
           @cta-click="console.log('CTA clicked')" />
       </div>
@@ -90,11 +92,16 @@
 
   // Fetch method data
   const { data: methodData } = await usePublicMethod()
+  const { data: settings } = await usePublicSettings()
 
   const header = computed(() => methodData.value?.header || {})
   const headerTitle = computed(() => header.value.title || 'Comment je travaille')
   const headerSubtitle = computed(() => header.value.subtitle || 'étape par étape')
-  const headerDescription = computed(() => header.value.description || 'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience')
+  const headerDescription = computed(
+    () =>
+      header.value.description ||
+      'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
+  )
 
   const steps = computed(() => {
     const dbSteps = methodData.value?.steps || []
@@ -104,6 +111,8 @@
       text: step.description,
     }))
   })
+
+  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
 
   const lineProgress = computed(() => {
     const stepsLength = steps.value.length

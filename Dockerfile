@@ -44,12 +44,11 @@ COPY --from=builder /app/prisma ./prisma
 # Copy scripts directory (needed for migrations)
 COPY --from=builder /app/scripts ./scripts
 
-# Install production dependencies without running scripts (Prisma client already generated in builder)
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+# Install production dependencies
+RUN pnpm install --frozen-lockfile --prod
 
-# Copy generated Prisma Client from builder
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
+# Generate Prisma Client
+RUN npx prisma generate
 
 # Copy built application from builder stage
 COPY --from=builder /app/.output ./

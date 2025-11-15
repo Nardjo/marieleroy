@@ -4,7 +4,7 @@
       <div class="container mx-auto pt-16 md:pt-24">
         <div class="space-y-4">
           <!-- Video or placeholder -->
-          <div class="max-w-3xl mx-auto">
+          <div class="max-w-3xl mx-auto px-4 md:px-0">
             <div
               v-if="videoUrl"
               class="w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-black">
@@ -92,6 +92,13 @@
 <style scoped>
   .hero-section {
     position: relative;
-    padding-bottom: 1rem;
+    padding-bottom: 4rem;
+    /* Espace supplémentaire sur mobile pour éloigner la courbe des boutons */
+  }
+
+  @media (min-width: 768px) {
+    .hero-section {
+      padding-bottom: 5rem;
+    }
   }
 </style>

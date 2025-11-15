@@ -10,12 +10,8 @@ mkdir -p /app/uploads
 if [ -n "$DATABASE_URL" ]; then
   echo "📊 Running database migrations..."
   cd /app
-  npx prisma db push --skip-generate
-
-  echo "👤 Creating admin user if not exists..."
-  npx tsx scripts/create-user.ts
-else
-  echo "⚠️  DATABASE_URL not set, skipping migrations"
+  # Prisma client already generated in builder stage, just run migrations
+  npx prisma migrate deploy || echo "⚠️  Migration failed or not needed"
 fi
 
 echo "✅ Starting application..."

@@ -41,8 +41,12 @@ COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 # Copy Prisma schema (nécessaire pour runtime)
 COPY --from=builder /app/prisma ./prisma
 
-# Installer les dépendances de production (Prisma client déjà généré dans builder)
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+# Copy scripts directory for user creation
+COPY --from=builder /app/scripts ./scripts
+
+# Installer les dépendances de production + tsx pour les scripts
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts && \
+    pnpm add tsx --ignore-scripts
 
 # Copy built application from builder stage
 COPY --from=builder --chown=nuxt:nodejs /app/.output ./

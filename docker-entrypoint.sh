@@ -11,6 +11,9 @@ if [ -n "$DATABASE_URL" ]; then
   echo "📊 Running database migrations..."
   cd /app
   npx prisma db push --skip-generate
+
+  echo "👤 Creating admin user if not exists..."
+  npx tsx scripts/create-user.ts
 else
   echo "⚠️  DATABASE_URL not set, skipping migrations"
 fi

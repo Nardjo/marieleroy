@@ -19,6 +19,9 @@ COPY prisma ./prisma
 # Install dependencies with Prisma postinstall support
 RUN pnpm install --frozen-lockfile --prod=false --config.ignore-scripts=false
 
+# Generate Prisma Client
+RUN npx prisma generate
+
 # Copy source code
 COPY . .
 
@@ -47,8 +50,9 @@ COPY --from=builder /app/scripts ./scripts
 # Install production dependencies
 RUN pnpm install --frozen-lockfile --prod
 
-# Generate Prisma Client
-RUN npx prisma generate
+# Copy generated Prisma Client from builder
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
 
 # Copy built application from builder stage
 COPY --from=builder /app/.output ./

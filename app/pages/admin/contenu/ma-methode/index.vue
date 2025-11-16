@@ -188,7 +188,7 @@
               Personnalisez Les étapes de votre méthode de travail
             </p>
           </div>
-          <UButton color="primary" size="lg" icon="i-lucide-plus" class="w-full sm:w-auto" @click="addStep">
+          <UButton color="neutral" size="lg" icon="i-lucide-plus" class="w-full sm:w-auto" @click="addStep">
             Ajouter une étape
           </UButton>
         </div>
@@ -244,6 +244,13 @@
             </UCard>
           </template>
         </draggable>
+      </div>
+
+      <!-- Bouton Enregistrer en bas (desktop seulement) -->
+      <div class="hidden md:flex justify-end pt-6 pb-6">
+        <UButton color="primary" size="lg" icon="i-lucide-save" @click="saveHeader" :loading="loading">
+          Enregistrer
+        </UButton>
       </div>
     </template>
   </div>

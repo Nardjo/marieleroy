@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import draggable from 'vuedraggable'
+
   definePageMeta({
     layout: 'admin',
   })
@@ -147,49 +149,74 @@
         <template #header>
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold">Avatars clients</h3>
-            <UButton color="primary" size="sm" icon="i-lucide-plus" @click="addAvatar">Ajouter un avatar</UButton>
+            <UButton color="neutral" size="sm" icon="i-lucide-plus" @click="addAvatar">Ajouter un avatar</UButton>
           </div>
         </template>
         <div class="space-y-4">
-          <div v-if="form.avatars.length > 0" class="space-y-6">
-            <UCard v-for="(avatar, index) in form.avatars" :key="index" class="!bg-gray-200 dark:!bg-gray-950">
-              <template #header>
-                <div class="flex items-center justify-between">
-                  <h4 class="font-medium">Avatar {{ index + 1 }}</h4>
-                  <UButton color="error" variant="soft" size="sm" icon="i-lucide-trash" @click="removeAvatar(index)">
-                    Supprimer
-                  </UButton>
-                </div>
-              </template>
-              <div class="space-y-4">
-                <AdminImageUploadField
-                  v-model="form.avatars[index].imageUrl"
-                  label="Photo"
-                  :name="`avatar-image-${index}`"
-                  hint="Format recommandé: 100x100px (image carrée)" />
+          <draggable
+            v-if="form.avatars.length > 0"
+            v-model="form.avatars"
+            item-key="index"
+            class="space-y-6"
+            handle=".drag-handle"
+            :animation="200">
+            <template #item="{ element: avatar, index }">
+              <UCard class="!bg-gray-200 dark:!bg-gray-950">
+                <template #header>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="drag-handle cursor-move text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <Icon name="i-lucide-grip-vertical" class="w-5 h-5" />
+                      </div>
+                      <h4 class="font-medium">Avatar {{ index + 1 }}</h4>
+                    </div>
+                    <UButton color="error" variant="soft" size="sm" icon="i-lucide-trash" @click="removeAvatar(index)">
+                      Supprimer
+                    </UButton>
+                  </div>
+                </template>
+                <div class="space-y-4">
+                  <AdminImageUploadField
+                    v-model="form.avatars[index].imageUrl"
+                    label="Photo"
+                    :name="`avatar-image-${index}`"
+                    hint="Format recommandé: 100x100px (image carrée)" />
 
-                <div class="grid grid-cols-2 gap-4">
-                  <UFormField label="Prénom" required>
-                    <UInput v-model="form.avatars[index].firstName" placeholder="Marie" />
+                  <div class="grid grid-cols-2 gap-4">
+                    <UFormField label="Prénom" required>
+                      <UInput v-model="form.avatars[index].firstName" placeholder="Marie" />
+                    </UFormField>
+
+                    <UFormField label="Nom" required>
+                      <UInput v-model="form.avatars[index].lastName" placeholder="Dupont" />
+                    </UFormField>
+                  </div>
+
+                  <UFormField label="Sous-titre" required>
+                    <UInput v-model="form.avatars[index].subtitle" placeholder="Entrepreneure" />
                   </UFormField>
-
-                  <UFormField label="Nom" required>
-                    <UInput v-model="form.avatars[index].lastName" placeholder="Dupont" />
-                  </UFormField>
                 </div>
-
-                <UFormField label="Sous-titre" required>
-                  <UInput v-model="form.avatars[index].subtitle" placeholder="Entrepreneure" />
-                </UFormField>
-              </div>
-            </UCard>
-          </div>
+              </UCard>
+            </template>
+          </draggable>
 
           <div v-else class="text-center py-8 text-gray-500">
             Aucun avatar ajouté. Cliquez sur "Ajouter un avatar" pour commencer.
           </div>
+
+          <!-- Bouton en bas de la liste -->
+          <div class="flex justify-end pt-4">
+            <UButton color="neutral" size="lg" icon="i-lucide-plus" @click="addAvatar">Ajouter un avatar</UButton>
+          </div>
         </div>
       </UCard>
+
+      <!-- Bouton Enregistrer en bas (desktop seulement) -->
+      <div class="hidden md:flex justify-end pt-6 pb-6">
+        <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveContent">
+          Enregistrer
+        </UButton>
+      </div>
     </div>
   </div>
 </template>

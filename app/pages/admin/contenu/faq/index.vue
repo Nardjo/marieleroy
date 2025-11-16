@@ -67,7 +67,7 @@
     <!-- Page Header -->
     <AdminPageHeader title="FAQ" description="Gérer les questions fréquemment posées">
       <template #actions>
-        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="addFaqItem">Ajouter une question</UButton>
+        <UButton color="neutral" size="lg" icon="i-lucide-plus" @click="addFaqItem">Ajouter une question</UButton>
       </template>
     </AdminPageHeader>
 

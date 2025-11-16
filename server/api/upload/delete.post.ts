@@ -4,8 +4,6 @@ export default defineEventHandler(async event => {
   const body = await readBody(event)
   const { url } = body
 
-  console.log('🔍 DELETE - URL reçue:', url)
-
   if (!url) {
     throw createError({
       statusCode: 400,
@@ -23,8 +21,6 @@ export default defineEventHandler(async event => {
 
   // Extraire la clé depuis l'URL
   const key = getLocalKeyFromUrl(url)
-
-  console.log('🔍 DELETE - Clé extraite:', key)
 
   if (!key) {
     throw createError({

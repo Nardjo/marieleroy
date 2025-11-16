@@ -56,7 +56,7 @@
     <!-- Page Header -->
     <AdminPageHeader title="Témoignages" description="Gérer les témoignages vidéo">
       <template #actions>
-        <UButton color="primary" size="lg" icon="i-lucide-plus" @click="router.push('/admin/contenu/temoignages/nouveau')">
+        <UButton color="neutral" size="lg" icon="i-lucide-plus" @click="router.push('/admin/contenu/temoignages/nouveau')">
           Ajouter un témoignage
         </UButton>
       </template>

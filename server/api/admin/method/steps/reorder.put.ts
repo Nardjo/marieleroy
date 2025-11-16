@@ -1,4 +1,4 @@
-import { prisma } from '../../../utils/prisma'
+import { prisma } from '../../../../utils/prisma'
 import { z } from 'zod'
 
 const reorderSchema = z.object({

@@ -37,9 +37,9 @@
       const payload = {
         title: form.title,
         description: form.description,
-        subtitle: form.subtitle && form.subtitle.trim() !== '' ? form.subtitle : undefined,
+        subtitle: form.subtitle && form.subtitle.trim() !== '' ? form.subtitle : null,
         imageUrl:
-          form.imageUrl && typeof form.imageUrl === 'string' && form.imageUrl.trim() !== '' ? form.imageUrl : undefined,
+          form.imageUrl && typeof form.imageUrl === 'string' && form.imageUrl.trim() !== '' ? form.imageUrl : null,
       }
       await updateAbout(payload)
       toast.add({

@@ -4,11 +4,11 @@
   const title = computed(() => about.value?.title || 'Marie Leroy')
   const subtitle = computed(() => about.value?.subtitle || 'mon parcours')
   const description = computed(() => about.value?.description || '')
-  const imageUrl = computed(() => about.value?.imageUrl || '/images/hero.jpg')
+  const imageUrl = computed(() => about.value?.imageUrl)
 </script>
 
 <template>
-  <section id="about" class="py-16 bg-white ">
+  <section id="about" class="py-16 bg-white">
     <div class="mx-auto px-4 max-w-6xl">
       <div
         v-motion
@@ -30,9 +30,7 @@
         v-motion
         :initial="{ opacity: 0, y: 50 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: 200 } }">
-        <UPageCard
-          spotlight
-          class="shadow-lg bg-primary-100 [--spotlight-color:#8b6239] [--spotlight-size:600px]">
+        <UPageCard spotlight class="shadow-lg bg-primary-100 [--spotlight-color:#8b6239] [--spotlight-size:600px]">
           <div class="flex flex-col-reverse md:flex-row gap-8 md:gap-12 items-center p-6">
             <!-- Texte à gauche -->
             <div class="flex-1 space-y-6">
@@ -45,7 +43,7 @@
             </div>
 
             <!-- Avatar à droite -->
-            <div class="flex-shrink-0">
+            <div v-if="imageUrl" class="flex- shrink-0">
               <img
                 :src="imageUrl"
                 :alt="title"

@@ -13,7 +13,11 @@
   const { data: settings } = await usePublicSettings()
 
   const siteName = computed(() => settings.value?.site?.name || 'Marie Leroy')
-  const socialLinks = computed(() => settings.value?.socialLinks || [])
+  const socialLinks = computed(() => {
+    const links = settings.value?.socialLinks || []
+    // Filtrer pour n'afficher que les liens avec une URL valide
+    return links.filter(link => link.url && link.url.trim() !== '')
+  })
 
   const socialIconMap: Record<string, string> = {
     instagram: 'i-lucide-instagram',

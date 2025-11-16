@@ -1,17 +1,19 @@
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async event => {
+  // TODO: Add authentication check
+
   const id = getRouterParam(event, 'id')
 
   if (!id) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Step ID is required',
+      statusMessage: 'FAQ ID is required',
     })
   }
 
   try {
-    await prisma.methodStep.delete({
+    await prisma.faq.delete({
       where: { id },
     })
 
@@ -19,7 +21,7 @@ export default defineEventHandler(async event => {
   } catch {
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to delete method step',
+      statusMessage: 'Failed to delete FAQ',
     })
   }
 })

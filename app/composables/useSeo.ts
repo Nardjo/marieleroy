@@ -7,7 +7,7 @@ export const useSeo = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/settings/seo')
+      const data = await $fetch('/api/admin/settings/seo')
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement des paramètres SEO'
@@ -22,7 +22,7 @@ export const useSeo = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/settings/seo', {
+      const data = await $fetch('/api/admin/settings/seo', {
         method: 'PUT',
         body: settings,
       })

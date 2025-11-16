@@ -6,7 +6,7 @@ export const useAbout = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/about')
+      const data = await $fetch('/api/admin/about')
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement de la section'
@@ -20,7 +20,7 @@ export const useAbout = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/about', {
+      const data = await $fetch('/api/admin/about', {
         method: 'PUT',
         body: about,
       })

@@ -1,5 +1,5 @@
-import { prisma } from '../../utils/prisma'
-import { seoSettingsSchema } from '../../utils/validation'
+import { prisma } from '../../../utils/prisma'
+import { seoSettingsSchema } from '../../../utils/validation'
 
 export default defineEventHandler(async event => {
   try {

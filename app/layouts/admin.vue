@@ -16,11 +16,16 @@
   })
 
   const { user } = useAuth()
+  const { logout } = useAuth()
 
   // Mobile drawer state
   const isOpen = ref(false)
   const toggleDrawer = () => (isOpen.value = !isOpen.value)
   const closeDrawer = () => (isOpen.value = false)
+
+  onMounted(() => {
+    colorMode.preference = 'system'
+  })
 
   // Navigation items
   const navigationItems = computed((): NavigationMenuItem[] => [
@@ -126,8 +131,6 @@
       },
     ],
   ]
-
-  const { logout } = useAuth()
 </script>
 
 <template>

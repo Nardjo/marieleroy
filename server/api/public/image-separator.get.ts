@@ -7,7 +7,7 @@ export default defineEventHandler(async () => {
   })
 
   return separator || {
-    desktopImage: '/images/separator.jpg',
-    mobileImage: '/images/separator.jpg',
+    desktopImage: null,
+    mobileImage: null,
   }
 })

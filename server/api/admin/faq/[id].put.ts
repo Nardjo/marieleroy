@@ -1,5 +1,5 @@
-import { prisma } from '../../utils/prisma'
-import { faqUpdateSchema } from '../../utils/validation'
+import { prisma } from '../../../utils/prisma'
+import { faqUpdateSchema } from '../../../utils/validation'
 
 export default defineEventHandler(async event => {
   // TODO: Add authentication check

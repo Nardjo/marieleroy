@@ -1,23 +1,16 @@
-import { prisma } from '../../utils/prisma'
-import { aboutSectionSchema } from '../../utils/validation'
+import { prisma } from '../../../utils/prisma'
+import { aboutSectionSchema, cleanOptionalField } from '../../../utils/validation'
 
 export default defineEventHandler(async event => {
   // TODO: Add authentication check
 
   const rawBody = await readBody(event)
 
-  // Clean empty strings, null, and whitespace-only strings to undefined for optional fields
-  const cleanField = (value: any) => {
-    if (value === null || value === undefined || value === '') return undefined
-    if (typeof value === 'string' && value.trim() === '') return undefined
-    return value
-  }
-
   const body = {
     title: rawBody.title,
     description: rawBody.description,
-    subtitle: cleanField(rawBody.subtitle),
-    imageUrl: cleanField(rawBody.imageUrl),
+    subtitle: cleanOptionalField(rawBody.subtitle),
+    imageUrl: cleanOptionalField(rawBody.imageUrl),
   }
 
   const validation = aboutSectionSchema.safeParse(body)

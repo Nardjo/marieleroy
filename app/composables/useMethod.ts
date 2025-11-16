@@ -7,7 +7,7 @@ export const useMethod = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/method/header')
+      const data = await $fetch('/api/admin/method/header')
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement de l\'en-tête'
@@ -21,7 +21,7 @@ export const useMethod = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/method/header', {
+      const data = await $fetch('/api/admin/method/header', {
         method: 'PUT',
         body: header,
       })
@@ -39,7 +39,7 @@ export const useMethod = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/method/steps')
+      const data = await $fetch('/api/admin/method/steps')
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement des étapes'
@@ -53,7 +53,7 @@ export const useMethod = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch(`/api/method/steps/${id}`)
+      const data = await $fetch(`/api/admin/method/steps/${id}`)
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement de l\'étape'
@@ -67,7 +67,7 @@ export const useMethod = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/method/steps', {
+      const data = await $fetch('/api/admin/method/steps', {
         method: 'POST',
         body: step,
       })
@@ -84,7 +84,7 @@ export const useMethod = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch(`/api/method/steps/${id}`, {
+      const data = await $fetch(`/api/admin/method/steps/${id}`, {
         method: 'PUT',
         body: step,
       })
@@ -101,7 +101,7 @@ export const useMethod = () => {
     loading.value = true
     error.value = null
     try {
-      await $fetch(`/api/method/steps/${id}`, {
+      await $fetch(`/api/admin/method/steps/${id}`, {
         method: 'DELETE',
       })
       return true
@@ -117,7 +117,7 @@ export const useMethod = () => {
     loading.value = true
     error.value = null
     try {
-      await $fetch('/api/method/steps/reorder', {
+      await $fetch('/api/admin/method/steps/reorder', {
         method: 'PUT',
         body: { steps },
       })

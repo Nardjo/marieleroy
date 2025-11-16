@@ -7,7 +7,7 @@ export const useFaq = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/faq')
+      const data = await $fetch('/api/admin/faq')
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement des questions'
@@ -22,7 +22,7 @@ export const useFaq = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch(`/api/faq/${id}`)
+      const data = await $fetch(`/api/admin/faq/${id}`)
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement de la question'
@@ -37,7 +37,7 @@ export const useFaq = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/faq', {
+      const data = await $fetch('/api/admin/faq', {
         method: 'POST',
         body: faq,
       })
@@ -55,7 +55,7 @@ export const useFaq = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch(`/api/faq/${id}`, {
+      const data = await $fetch(`/api/admin/faq/${id}`, {
         method: 'PUT',
         body: faq,
       })
@@ -73,7 +73,7 @@ export const useFaq = () => {
     loading.value = true
     error.value = null
     try {
-      await $fetch(`/api/faq/${id}`, {
+      await $fetch(`/api/admin/faq/${id}`, {
         method: 'DELETE',
       })
       return true

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { cleanOptionalField } from '../../utils/validation'
 
 const updateSchema = z.object({
   desktopImage: z.string().nullable().optional(),
@@ -6,7 +7,12 @@ const updateSchema = z.object({
 })
 
 export default defineEventHandler(async event => {
-  const body = await readBody(event)
+  const rawBody = await readBody(event)
+
+  const body = {
+    desktopImage: cleanOptionalField(rawBody.desktopImage),
+    mobileImage: cleanOptionalField(rawBody.mobileImage),
+  }
 
   const validated = updateSchema.parse(body)
 

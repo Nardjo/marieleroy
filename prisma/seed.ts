@@ -83,7 +83,7 @@ async function seedAbout() {
       subtitle: 'Votre copywriter professionnelle',
       description:
         "Passionnée par l'art de raconter des histoires, je suis une copywriter spécialisée dans la création de contenus qui captivent, engagent et convertissent. Avec plusieurs années d'expérience dans le marketing digital et le copywriting, j'aide les entrepreneurs et les marques à trouver leur voix authentique et à communiquer efficacement avec leur audience.\n\nMa approche combine la stratégie, la psychologie du consommateur et l'art de la narration pour créer des contenus qui résonnent vraiment avec vos clients.",
-      imageUrl: '/images/hero.jpg',
+      imageUrl: null,
     },
   })
 
@@ -306,14 +306,14 @@ async function seedImageSeparator() {
     update: {},
     create: {
       id: 'default',
-      desktopImage: '/images/separator.jpg',
-      mobileImage: '/images/separator.jpg',
+      desktopImage: null,
+      mobileImage: null,
     },
   })
 
   console.log('✅ Image separator seeded')
-  console.log(`   - Desktop: ${separator.desktopImage}`)
-  console.log(`   - Mobile: ${separator.mobileImage}`)
+  console.log(`   - Desktop: ${separator.desktopImage || 'Non définie'}`)
+  console.log(`   - Mobile: ${separator.mobileImage || 'Non définie'}`)
 }
 
 async function main() {

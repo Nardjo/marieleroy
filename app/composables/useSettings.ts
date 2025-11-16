@@ -7,7 +7,7 @@ export const useSettings = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/settings')
+      const data = await $fetch('/api/admin/settings')
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement des paramètres'
@@ -28,7 +28,7 @@ export const useSettings = () => {
         const dbKey = key === 'ctaLink' ? 'cta_link' : key
         transformedSettings[dbKey] = value
       }
-      const data = await $fetch('/api/settings', {
+      const data = await $fetch('/api/admin/settings', {
         method: 'PUT',
         body: transformedSettings,
       })
@@ -46,7 +46,7 @@ export const useSettings = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/settings/social')
+      const data = await $fetch('/api/admin/settings/social')
       return data
     } catch (err: any) {
       error.value = err.message || 'Erreur lors du chargement des réseaux sociaux'
@@ -61,7 +61,7 @@ export const useSettings = () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch('/api/settings/social', {
+      const data = await $fetch('/api/admin/settings/social', {
         method: 'PUT',
         body: links,
       })

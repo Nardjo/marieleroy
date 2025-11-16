@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full">
+  <section v-if="hasImages" class="w-full">
     <div
       v-motion
       :initial="{ opacity: 0, scale: 1.1 }"
@@ -29,6 +29,7 @@
   // Fetch separator images from API
   const { data: separatorData } = await usePublicImageSeparator()
 
-  const desktopImage = computed(() => separatorData.value?.desktopImage || '/images/separator.jpg')
-  const mobileImage = computed(() => separatorData.value?.mobileImage || '/images/separator.jpg')
+  const desktopImage = computed(() => separatorData.value?.desktopImage || null)
+  const mobileImage = computed(() => separatorData.value?.mobileImage || null)
+  const hasImages = computed(() => !!(desktopImage.value || mobileImage.value))
 </script>

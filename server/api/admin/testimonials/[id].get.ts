@@ -1,4 +1,4 @@
-import { prisma } from '../../utils/prisma'
+import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async event => {
   const id = getRouterParam(event, 'id')
@@ -6,29 +6,29 @@ export default defineEventHandler(async event => {
   if (!id) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'FAQ ID is required',
+      statusMessage: 'Testimonial ID is required',
     })
   }
 
   try {
-    const faq = await prisma.faq.findUnique({
+    const testimonial = await prisma.testimonial.findUnique({
       where: { id },
     })
 
-    if (!faq) {
+    if (!testimonial) {
       throw createError({
         statusCode: 404,
-        statusMessage: 'FAQ not found',
+        statusMessage: 'Testimonial not found',
       })
     }
 
-    return faq
+    return testimonial
   } catch {
     if (error.statusCode === 404) throw error
 
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to fetch FAQ',
+      statusMessage: 'Failed to fetch testimonial',
     })
   }
 })

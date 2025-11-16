@@ -1,5 +1,14 @@
 import { z } from 'zod'
 
+/**
+ * Nettoie les champs optionnels en convertissant les chaînes vides en null
+ */
+export const cleanOptionalField = (value: any): any => {
+  if (value === null || value === undefined || value === '') return null
+  if (typeof value === 'string' && value.trim() === '') return null
+  return value
+}
+
 // Custom validator for URLs and relative paths
 const urlOrPath = z.string().refine(
   (val) => {
@@ -45,16 +54,16 @@ export const testimonialUpdateSchema = z
 // About Section Schema
 export const aboutSectionSchema = z.object({
   title: z.string().min(1),
-  subtitle: z.string().optional(),
+  subtitle: z.string().nullable().optional(),
   description: z.string().min(1),
-  imageUrl: urlOrPath.optional(),
+  imageUrl: urlOrPath.nullable().optional(),
 })
 
 // Method Schemas
 export const methodHeaderSchema = z.object({
   title: z.string().min(1),
-  subtitle: z.string().optional(),
-  description: z.string().optional(),
+  subtitle: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
 })
 
 export const methodStepSchema = z.object({

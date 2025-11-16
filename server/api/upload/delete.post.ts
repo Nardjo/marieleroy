@@ -4,6 +4,8 @@ export default defineEventHandler(async event => {
   const body = await readBody(event)
   const { url } = body
 
+  console.log('🔍 DELETE - URL reçue:', url)
+
   if (!url) {
     throw createError({
       statusCode: 400,
@@ -11,13 +13,23 @@ export default defineEventHandler(async event => {
     })
   }
 
+  // Si c'est une image par défaut (depuis /images/), on ne la supprime pas
+  if (url.startsWith('/images/') || url.includes('/images/')) {
+    return {
+      success: true,
+      message: 'Image par défaut - aucune suppression nécessaire',
+    }
+  }
+
   // Extraire la clé depuis l'URL
   const key = getLocalKeyFromUrl(url)
+
+  console.log('🔍 DELETE - Clé extraite:', key)
 
   if (!key) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'URL invalide',
+      statusMessage: 'URL invalide - seuls les fichiers uploadés dans /uploads/ peuvent être supprimés',
     })
   }
 

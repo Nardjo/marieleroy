@@ -21,7 +21,7 @@
     { key: 'twitter', label: 'Twitter / X', icon: 'i-lucide-twitter', color: 'sky' },
     { key: 'linkedin', label: 'LinkedIn', icon: 'i-lucide-linkedin', color: 'blue' },
     { key: 'youtube', label: 'YouTube', icon: 'i-lucide-youtube', color: 'red' },
-    { key: 'tiktok', label: 'TikTok', icon: 'i-lucide-music', color: 'slate' },
+    { key: 'tiktok', label: 'TikTok', icon: 'i-simple-icons-tiktok', color: 'slate' },
   ]
 
   // Charger les liens sociaux au montage

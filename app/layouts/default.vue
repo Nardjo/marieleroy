@@ -14,6 +14,19 @@
 
   const siteName = computed(() => settings.value?.site?.name || 'Marie Leroy')
   const socialLinks = computed(() => settings.value?.socialLinks || [])
+
+  const socialIconMap: Record<string, string> = {
+    instagram: 'i-lucide-instagram',
+    facebook: 'i-lucide-facebook',
+    twitter: 'i-lucide-twitter',
+    linkedin: 'i-lucide-linkedin',
+    youtube: 'i-lucide-youtube',
+    tiktok: 'i-simple-icons-tiktok',
+  }
+
+  const getSocialIcon = (platform: string) => {
+    return socialIconMap[platform.toLowerCase()] || 'i-lucide-link'
+  }
   const ctaLink = computed(() => settings.value?.site?.ctaLink || undefined)
 
   // Set theme attribute on html element to prevent flicker
@@ -131,13 +144,13 @@
             </ul>
           </div>
 
-          <div class="flex flex-col items-center">
+          <div class="flex flex-col items-center md:items-start">
             <h3 class="font-semibold text-gray-800 mb-4">Réseaux Sociaux</h3>
-            <div class="flex gap-4">
+            <div class="flex gap-4 justify-center md:justify-start">
               <UButton
                 v-for="link in socialLinks"
                 :key="link.platform"
-                :icon="`i-lucide-${link.platform.toLowerCase()}`"
+                :icon="getSocialIcon(link.platform)"
                 color="neutral"
                 variant="ghost"
                 size="xl"

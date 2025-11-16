@@ -57,6 +57,18 @@ export const getLocalKeyFromUrl = (url: string | null | undefined): string | nul
     return url.slice('/uploads/'.length)
   }
 
+  // Si c'est une URL complète, extraire la partie après /uploads/
+  try {
+    const urlObj = new URL(url)
+    const pathname = urlObj.pathname
+    if (pathname.includes('/uploads/')) {
+      const uploadsIndex = pathname.indexOf('/uploads/')
+      return pathname.slice(uploadsIndex + '/uploads/'.length)
+    }
+  } catch {
+    // Si ce n'est pas une URL valide, continuer
+  }
+
   return null
 }
 

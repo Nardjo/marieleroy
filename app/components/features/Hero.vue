@@ -7,7 +7,7 @@
           <div class="max-w-3xl mx-auto px-4 md:px-0">
             <div
               v-if="videoUrl"
-              class="w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-black">
+              class="video-container w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-black">
               <video :src="videoUrl" controls class="w-full h-full object-cover">
                 Votre navigateur ne supporte pas la vidéo.
               </video>
@@ -99,6 +99,29 @@
   @media (min-width: 768px) {
     .hero-section {
       padding-bottom: 5rem;
+    }
+  }
+
+  .video-container {
+    animation: soft-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes soft-glow {
+    0%, 100% {
+      box-shadow:
+        0 0 20px rgba(251, 191, 36, 0.3),
+        0 0 40px rgba(251, 191, 36, 0.2),
+        0 0 60px rgba(251, 191, 36, 0.1),
+        0 10px 25px -5px rgb(0 0 0 / 0.1),
+        0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    50% {
+      box-shadow:
+        0 0 30px rgba(251, 191, 36, 0.4),
+        0 0 60px rgba(251, 191, 36, 0.3),
+        0 0 90px rgba(251, 191, 36, 0.2),
+        0 10px 25px -5px rgb(0 0 0 / 0.1),
+        0 8px 10px -6px rgb(0 0 0 / 0.1);
     }
   }
 </style>

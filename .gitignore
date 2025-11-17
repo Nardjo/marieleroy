@@ -26,5 +26,5 @@ logs
 /app/generated/prisma
 
 # Uploads directory
-uploads/
-!uploads/.gitkeep
+/uploads/
+!/uploads/.gitkeep

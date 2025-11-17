@@ -44,6 +44,15 @@ export default defineNuxtConfig({
     ],
   },
 
+  routeRules: {
+    '/api/**': {
+      prerender: false,
+    },
+    '/uploads/**': {
+      prerender: false,
+    },
+  },
+
   nitro: {
     experimental: {
       wasm: true,

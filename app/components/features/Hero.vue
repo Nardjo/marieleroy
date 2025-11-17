@@ -54,8 +54,17 @@
                 size="xl"
                 icon="i-lucide-arrow-down"
                 text="Témoignages"
+                tracking-name="scroll_to_testimonials"
+                tracking-section="hero"
                 @click="scrollToSection('testimonials')" />
-              <CTAButton icon="i-lucide-rocket" size="xl" text="On discute ?" :to="ctaLink" :external="true" />
+              <CTAButton
+                icon="i-lucide-rocket"
+                size="xl"
+                text="On discute ?"
+                :to="ctaLink"
+                :external="true"
+                tracking-name="contact_cta"
+                tracking-section="hero" />
             </template>
           </UPageHero>
         </div>
@@ -107,7 +116,8 @@
   }
 
   @keyframes soft-glow {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow:
         0 0 20px rgba(251, 191, 36, 0.3),
         0 0 40px rgba(251, 191, 36, 0.2),

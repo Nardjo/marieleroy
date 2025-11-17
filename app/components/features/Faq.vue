@@ -68,6 +68,8 @@
           :button-to="ctaLink"
           :button-external="true"
           icon="i-lucide-message-circle"
+          tracking-name="ask_question_cta"
+          tracking-section="faq"
           @cta-click="console.log('CTA clicked')" />
       </div>
     </div>

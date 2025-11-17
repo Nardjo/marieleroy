@@ -1,5 +1,25 @@
 import tailwindcss from '@tailwindcss/vite'
 
+const isDev = process.env.NODE_ENV !== 'production'
+
+const cspDirectives = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://eu-assets.i.posthog.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
+  `img-src 'self' data: blob:${isDev ? ' http://localhost:3000' : ''}`,
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.sentry.io https://fonts.googleapis.com https://fonts.gstatic.com",
+  "media-src 'self' blob:",
+  "worker-src 'self' blob:",
+  "child-src 'self' blob:",
+  "object-src 'none'",
+  "frame-ancestors 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  ...(process.env.NODE_ENV === 'production' ? ['upgrade-insecure-requests'] : []),
+  'trusted-types default dompurify vue posthog',
+].join('; ')
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -15,7 +35,19 @@ export default defineNuxtConfig({
     '@vueuse/motion/nuxt',
     'nuxt-auth-utils',
     '@sentry/nuxt/module',
+    'nuxt-posthog',
   ],
+
+  runtimeConfig: {
+    posthogProjectId: process.env.POSTHOG_PROJECT_ID,
+    posthogPersonalApiKey: process.env.POSTHOG_PERSONAL_API_KEY,
+    posthogHost: process.env.POSTHOG_HOST || 'https://eu.i.posthog.com',
+
+    public: {
+      siteName: 'Marie Leroy',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    },
+  },
 
   ui: {
     colorMode: true,
@@ -52,6 +84,22 @@ export default defineNuxtConfig({
     '/uploads/**': {
       prerender: false,
     },
+    '/**': {
+      headers: {
+        'Content-Security-Policy': cspDirectives,
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'X-Frame-Options': 'DENY',
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+      },
+    },
+  },
+
+  posthog: {
+    publicKey: process.env.NUXT_PUBLIC_POSTHOG_KEY,
+    host: 'https://eu.i.posthog.com',
+    disabled: !process.env.NUXT_PUBLIC_POSTHOG_KEY,
   },
 
   nitro: {

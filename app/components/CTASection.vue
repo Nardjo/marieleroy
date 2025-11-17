@@ -14,6 +14,8 @@
           :size="buttonSize"
           :to="buttonTo"
           :external="buttonExternal"
+          :tracking-name="trackingName"
+          :tracking-section="trackingSection"
           @click="$emit('cta-click')" />
       </div>
     </UCard>
@@ -31,6 +33,8 @@
     variant?: 'outline' | 'solid' | 'soft' | 'subtle'
     buttonSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
     cardBgClass?: string
+    trackingName?: string
+    trackingSection?: string
   }
 
   withDefaults(defineProps<Props>(), {
@@ -40,6 +44,8 @@
     buttonTo: undefined,
     buttonExternal: false,
     cardBgClass: 'bg-white',
+    trackingName: undefined,
+    trackingSection: undefined,
   })
 
   defineEmits<{

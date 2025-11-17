@@ -9,6 +9,8 @@
     to?: string
     external?: boolean
     target?: '_blank' | '_self' | '_parent' | '_top'
+    trackingName?: string
+    trackingSection?: string
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -20,7 +22,11 @@
     target: '_blank',
     icon: undefined,
     to: undefined,
+    trackingName: undefined,
+    trackingSection: undefined,
   })
+
+  const { trackCTAClick } = useAnalytics()
 
   const emit = defineEmits<{
     click: []
@@ -28,6 +34,25 @@
 
   const handleClick = () => {
     if (props.disabled) return
+
+    if (props.trackingName) {
+      const trackingProps: Record<string, any> = {
+        button_text: props.text,
+        variant: props.variant,
+        type: props.external ? 'external' : 'internal',
+      }
+
+      if (props.trackingSection) {
+        trackingProps.section = props.trackingSection
+      }
+
+      if (props.to) {
+        trackingProps.destination = props.to
+      }
+
+      trackCTAClick(props.trackingName, trackingProps)
+    }
+
     if (!props.to) {
       emit('click')
     }

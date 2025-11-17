@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@vueuse/motion/nuxt',
     'nuxt-auth-utils',
+    '@sentry/nuxt/module',
   ],
 
   ui: {
@@ -57,5 +58,16 @@ export default defineNuxtConfig({
     experimental: {
       wasm: true,
     },
+  },
+
+  sentry: {
+    sourceMapsUploadOptions: {
+      org: 'jordan-bastin',
+      project: 'marieleroy',
+    },
+  },
+
+  sourcemap: {
+    client: 'hidden',
   },
 })

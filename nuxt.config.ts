@@ -24,6 +24,20 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  experimental: {
+    inlineSSRStyles: true, // Inline critical CSS
+  },
+
+  app: {
+    head: {
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
+        { rel: 'dns-prefetch', href: 'https://eu.i.posthog.com' },
+      ],
+    },
+  },
+
   modules: [
     '@nuxt/eslint',
     '@nuxt/fonts',
@@ -82,6 +96,14 @@ export default defineNuxtConfig({
     },
     '/uploads/**': {
       prerender: false,
+      headers: {
+        'Cache-Control': 'public, max-age=31536000, immutable', // Cache 1 an pour les images
+      },
+    },
+    '/_nuxt/**': {
+      headers: {
+        'Cache-Control': 'public, max-age=31536000, immutable', // Cache 1 an pour les assets JS/CSS
+      },
     },
     '/**': {
       headers: {
@@ -104,6 +126,25 @@ export default defineNuxtConfig({
   nitro: {
     experimental: {
       wasm: true,
+    },
+    compressPublicAssets: true, // Compression Gzip/Brotli
+    prerender: {
+      crawlLinks: true,
+      routes: ['/'],
+    },
+  },
+
+  vite: {
+    build: {
+      cssCodeSplit: true, // Split CSS par route
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Séparer les vendors lourds
+            'vue-vendor': ['vue', 'vue-router'],
+          },
+        },
+      },
     },
   },
 

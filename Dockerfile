@@ -17,7 +17,8 @@ COPY package.json pnpm-lock.yaml .npmrc ./
 COPY prisma ./prisma
 
 # Install dependencies with Prisma postinstall support
-RUN pnpm install --frozen-lockfile --prod=false
+# Use --dangerously-allow-all-builds for pnpm 10.x to enable Prisma build scripts
+RUN pnpm install --frozen-lockfile --prod=false --dangerously-allow-all-builds
 
 # Generate Prisma Client (ignore missing checksums for offline/proxy environments)
 ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
@@ -50,7 +51,8 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/scripts ./scripts
 
 # Install production dependencies
-RUN pnpm install --frozen-lockfile --prod
+# Use --dangerously-allow-all-builds for pnpm 10.x to enable Prisma build scripts
+RUN pnpm install --frozen-lockfile --prod --dangerously-allow-all-builds
 
 # Generate Prisma Client in production (ignore missing checksums)
 ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1

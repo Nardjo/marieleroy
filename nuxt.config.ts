@@ -96,8 +96,11 @@ export default defineNuxtConfig({
     },
     '/uploads/**': {
       prerender: false,
+      // Cache-Control défini dans server/routes/uploads/[...path].get.ts
+    },
+    '/_ipx/**': {
       headers: {
-        'Cache-Control': 'public, max-age=31536000, immutable', // Cache 1 an pour les images
+        'Cache-Control': 'public, max-age=31536000, immutable', // Cache 1 an pour images IPX
       },
     },
     '/_nuxt/**': {
@@ -173,6 +176,9 @@ export default defineNuxtConfig({
     },
     densities: [1, 2],
     domains: ['api.dicebear.com'],
+    ipx: {
+      maxAge: 31536000, // Cache IPX images for 1 year
+    },
     presets: {
       avatar: {
         modifiers: {

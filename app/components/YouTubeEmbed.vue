@@ -48,10 +48,7 @@
 
   // Extraire l'ID de la vidéo YouTube depuis l'URL
   const videoId = computed(() => {
-    if (!props.embedUrl) {
-      console.error('YouTubeEmbed: embedUrl is empty')
-      return null
-    }
+    if (!props.embedUrl) return null
 
     // Support pour différents formats YouTube
     let match = props.embedUrl.match(/youtube\.com\/embed\/([^?]+)/)
@@ -65,19 +62,12 @@
       match = props.embedUrl.match(/youtube-nocookie\.com\/embed\/([^?]+)/)
     }
 
-    if (!match) {
-      console.error('YouTubeEmbed: Could not extract video ID from URL:', props.embedUrl)
-      return null
-    }
-
-    console.log('YouTubeEmbed: Video ID extracted:', match[1], 'from URL:', props.embedUrl)
-    return match[1]
+    return match ? match[1] : null
   })
 
   // URL de la thumbnail YouTube (hqdefault = 480x360, toujours disponible)
   const thumbnailUrl = computed(() => {
     if (!videoId.value) return ''
-    // Utiliser hqdefault qui existe toujours pour toutes les vidéos
     return `https://img.youtube.com/vi/${videoId.value}/hqdefault.jpg`
   })
 

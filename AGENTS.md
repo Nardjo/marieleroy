@@ -1,5 +1,14 @@
 # Agent Guidelines for Marie Leroy Repository
 
+## Git Workflow
+
+**IMPORTANT: Never commit or push automatically without explicit user request**
+
+- ❌ DO NOT run `git commit` unless explicitly asked
+- ❌ DO NOT run `git push` unless explicitly asked
+- ✅ Make code changes and wait for user to request commit
+- ✅ Always ask before creating commits or pushing changes
+
 ## Build/Lint/Test Commands
 
 **IMPORTANT: Always use `pnpm` instead of `npm` for this project**

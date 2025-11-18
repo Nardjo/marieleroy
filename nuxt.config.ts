@@ -4,7 +4,7 @@ const cspDirectives = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://eu-assets.i.posthog.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
-  `img-src 'self' data: blob: https://api.dicebear.com${isDev ? ' http://localhost:3000' : ''}`,
+  `img-src 'self' data: blob: https://api.dicebear.com https://img.youtube.com`,
   "font-src 'self' data: https://fonts.gstatic.com",
   "connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.sentry.io https://fonts.googleapis.com https://fonts.gstatic.com",
   "media-src 'self' blob:",

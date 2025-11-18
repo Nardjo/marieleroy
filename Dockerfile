@@ -11,18 +11,16 @@ RUN npm install -g pnpm
 WORKDIR /app
 
 # Copy package files
-COPY package.json pnpm-lock.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml ./
 
 # Ensure Prisma schema exists for postinstall
 COPY prisma ./prisma
 
 # Install dependencies with Prisma postinstall support
-# Use --dangerously-allow-all-builds for pnpm 10.x to enable Prisma build scripts
-RUN pnpm install --frozen-lockfile --prod=false --dangerously-allow-all-builds
+RUN pnpm install --frozen-lockfile --prod=false --config.ignore-scripts=false
 
-# Generate Prisma Client (ignore missing checksums for offline/proxy environments)
-ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
-RUN pnpm exec prisma generate
+# Generate Prisma Client
+RUN npx prisma generate
 
 # Copy source code
 COPY . .
@@ -42,7 +40,6 @@ WORKDIR /app
 # Copy package files
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/.npmrc ./.npmrc
 
 # Copy Prisma schema (needed for runtime)
 COPY --from=builder /app/prisma ./prisma
@@ -51,12 +48,10 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/scripts ./scripts
 
 # Install production dependencies
-# Use --dangerously-allow-all-builds for pnpm 10.x to enable Prisma build scripts
-RUN pnpm install --frozen-lockfile --prod --dangerously-allow-all-builds
+RUN pnpm install --frozen-lockfile --prod
 
-# Generate Prisma Client in production (ignore missing checksums)
-ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
-RUN pnpm exec prisma generate
+# Generate Prisma Client in production
+RUN npx prisma generate
 
 # Copy built application from builder stage
 COPY --from=builder /app/.output ./

@@ -48,16 +48,37 @@
 
   // Extraire l'ID de la vidéo YouTube depuis l'URL
   const videoId = computed(() => {
-    const match = props.embedUrl.match(/youtube\.com\/embed\/([^?]+)/)
-    return match ? match[1] : null
+    if (!props.embedUrl) {
+      console.error('YouTubeEmbed: embedUrl is empty')
+      return null
+    }
+
+    // Support pour différents formats YouTube
+    let match = props.embedUrl.match(/youtube\.com\/embed\/([^?]+)/)
+    if (!match) {
+      match = props.embedUrl.match(/youtu\.be\/([^?]+)/)
+    }
+    if (!match) {
+      match = props.embedUrl.match(/youtube\.com\/watch\?v=([^&]+)/)
+    }
+    if (!match) {
+      match = props.embedUrl.match(/youtube-nocookie\.com\/embed\/([^?]+)/)
+    }
+
+    if (!match) {
+      console.error('YouTubeEmbed: Could not extract video ID from URL:', props.embedUrl)
+      return null
+    }
+
+    console.log('YouTubeEmbed: Video ID extracted:', match[1], 'from URL:', props.embedUrl)
+    return match[1]
   })
 
-  // URL de la thumbnail YouTube (haute qualité)
+  // URL de la thumbnail YouTube (hqdefault = 480x360, toujours disponible)
   const thumbnailUrl = computed(() => {
     if (!videoId.value) return ''
-    // maxresdefault.jpg = haute qualité (1280x720)
-    // Si non disponible, YouTube fallback automatiquement sur hqdefault.jpg
-    return `https://img.youtube.com/vi/${videoId.value}/maxresdefault.jpg`
+    // Utiliser hqdefault qui existe toujours pour toutes les vidéos
+    return `https://img.youtube.com/vi/${videoId.value}/hqdefault.jpg`
   })
 
   // Ajouter autoplay=1 quand on charge la vidéo (meilleure UX)

@@ -148,35 +148,10 @@ export default defineNuxtConfig({
   vite: {
     build: {
       cssCodeSplit: true, // Split CSS par route
-      minify: 'esbuild', // Plus rapide que terser
-      target: 'es2020', // Modern browsers only
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // Séparer les vendors lourds
-            'vue-vendor': ['vue', 'vue-router'],
-            // Sentry séparé (chargé seulement en production)
-            'sentry': ['@sentry/nuxt'],
-            // PostHog séparé (analytics)
-            'analytics': ['posthog-js', 'nuxt-posthog'],
-          },
-        },
-      },
     },
     optimizeDeps: {
       include: ['vue', 'vue-router'],
       exclude: ['vue3-apexcharts', 'apexcharts'], // ApexCharts lazy-loaded
-    },
-  },
-
-  // Améliorer le tree-shaking
-  optimization: {
-    treeShake: {
-      composables: {
-        client: {
-          vue: ['onMounted', 'ref', 'computed', 'watch'],
-        },
-      },
     },
   },
 

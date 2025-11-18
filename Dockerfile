@@ -22,7 +22,7 @@ RUN pnpm install --frozen-lockfile --prod=false --dangerously-allow-all-builds
 
 # Generate Prisma Client (ignore missing checksums for offline/proxy environments)
 ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
-RUN npx prisma generate
+RUN pnpm exec prisma generate
 
 # Copy source code
 COPY . .
@@ -56,7 +56,7 @@ RUN pnpm install --frozen-lockfile --prod --dangerously-allow-all-builds
 
 # Generate Prisma Client in production (ignore missing checksums)
 ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
-RUN npx prisma generate
+RUN pnpm exec prisma generate
 
 # Copy built application from builder stage
 COPY --from=builder /app/.output ./

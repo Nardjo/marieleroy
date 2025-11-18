@@ -148,8 +148,6 @@ export default defineNuxtConfig({
   vite: {
     build: {
       cssCodeSplit: true, // Split CSS par route
-      minify: 'esbuild', // Plus rapide que terser
-      target: 'es2020', // Modern browsers only
       rollupOptions: {
         output: {
           manualChunks: {

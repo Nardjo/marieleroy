@@ -16,7 +16,9 @@
         width="640"
         height="280"
         preset="separator"
-        sizes="sm:640px md:0px" />
+        sizes="sm:640px"
+        format="webp"
+        quality="80" />
       <!-- Desktop image (shown on medium and larger screens) -->
       <NuxtImg
         v-if="desktopImage"
@@ -28,7 +30,9 @@
         width="1920"
         height="500"
         preset="separator"
-        sizes="sm:0px md:768px lg:1024px xl:1280px" />
+        sizes="md:768px lg:1024px xl:1920px"
+        format="webp"
+        quality="80" />
     </div>
   </section>
 </template>
@@ -37,7 +41,7 @@
   // Fetch separator images from API
   const { data: separatorData } = await usePublicImageSeparator()
 
-  const desktopImage = computed(() => separatorData.value?.desktopImage || null)
-  const mobileImage = computed(() => separatorData.value?.mobileImage || null)
+  const desktopImage = useFullImageUrl(() => separatorData.value?.desktopImage)
+  const mobileImage = useFullImageUrl(() => separatorData.value?.mobileImage)
   const hasImages = computed(() => !!(desktopImage.value || mobileImage.value))
 </script>

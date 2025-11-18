@@ -17,7 +17,7 @@ COPY package.json pnpm-lock.yaml .npmrc ./
 COPY prisma ./prisma
 
 # Install dependencies with Prisma postinstall support
-RUN pnpm install --frozen-lockfile --prod=false --config.ignore-scripts=false
+RUN pnpm install --frozen-lockfile --prod=false
 
 # Generate Prisma Client (ignore missing checksums for offline/proxy environments)
 ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1

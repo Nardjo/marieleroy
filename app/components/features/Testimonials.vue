@@ -31,7 +31,7 @@
           class="overflow-hidden shadow-xl !bg-primary-200">
           <!-- Vidéo (Lazy loaded) -->
           <div class="mb-6">
-            <LazyYouTube :embed-url="testimonial.embedUrl" :title="testimonial.title" />
+            <YouTubeEmbed :embed-url="testimonial.embedUrl" :title="testimonial.title" />
           </div>
 
           <!-- Contenu en dessous -->

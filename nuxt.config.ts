@@ -1,5 +1,9 @@
 const isDev = process.env.NODE_ENV !== 'production'
 
+// Extract domain from site URL for Nuxt Image
+const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+const siteDomain = new URL(siteUrl).host
+
 const cspDirectives = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://eu-assets.i.posthog.com",
@@ -131,7 +135,7 @@ export default defineNuxtConfig({
       xxl: 1536,
     },
     densities: [1, 2],
-    domains: ['api.dicebear.com'],
+    domains: ['api.dicebear.com', siteDomain],
     presets: {
       avatar: {
         modifiers: {

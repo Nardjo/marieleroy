@@ -1,10 +1,14 @@
 <script setup lang="ts">
   const { data: about } = await usePublicAbout()
+  const config = useRuntimeConfig()
 
   const title = computed(() => about.value?.title || 'Marie Leroy')
   const subtitle = computed(() => about.value?.subtitle || 'mon parcours')
   const description = computed(() => about.value?.description || '')
-  const imageUrl = computed(() => about.value?.imageUrl)
+  const imageUrl = computed(() => {
+    const path = about.value?.imageUrl
+    return path ? `${config.public.siteUrl}${path}` : null
+  })
 </script>
 
 <template>
@@ -44,13 +48,17 @@
 
             <!-- Avatar à droite -->
             <div v-if="imageUrl" class="flex- shrink-0">
-              <img
+              <NuxtImg
                 :src="imageUrl"
                 :alt="title"
                 class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl border-4 border-primary-200"
                 loading="lazy"
                 width="320"
-                height="320" />
+                height="320"
+                preset="avatar"
+                sizes="xs:256px md:320px"
+                format="webp"
+                quality="85" />
             </div>
           </div>
         </UPageCard>

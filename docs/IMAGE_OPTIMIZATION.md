@@ -103,12 +103,6 @@ Tous les composants ont été mis à jour pour utiliser `<NuxtImg>` au lieu de `
 />
 ```
 
-#### FocusCard.vue
-
-```vue
-<NuxtImg :src="card.imageUrl" preset="thumbnail" loading="lazy" sizes="sm:100vw md:33vw" :width="400" :height="340" />
-```
-
 ## Bénéfices Attendus
 
 ### Performance

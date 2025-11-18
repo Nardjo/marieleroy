@@ -6,7 +6,7 @@
       :visible-once="{ opacity: 1, scale: 1, transition: { duration: 800 } }"
       class="w-full h-70 md:h-[500px] lg:h-[500px] overflow-hidden drop-shadow-xl">
       <!-- Mobile image (shown on small screens) -->
-      <NuxtImg
+      <img
         v-if="mobileImage"
         :src="mobileImage"
         alt="Séparateur"
@@ -14,11 +14,9 @@
         loading="eager"
         fetchpriority="high"
         width="640"
-        height="280"
-        preset="separator"
-        sizes="sm:640px md:0px" />
+        height="280" />
       <!-- Desktop image (shown on medium and larger screens) -->
-      <NuxtImg
+      <img
         v-if="desktopImage"
         :src="desktopImage"
         alt="Séparateur"
@@ -26,9 +24,7 @@
         loading="eager"
         fetchpriority="high"
         width="1920"
-        height="500"
-        preset="separator"
-        sizes="sm:0px md:768px lg:1024px xl:1280px" />
+        height="500" />
     </div>
   </section>
 </template>

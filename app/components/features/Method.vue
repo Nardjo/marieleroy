@@ -81,8 +81,7 @@
           :button-external="true"
           icon="i-lucide-rocket"
           tracking-name="start_project_cta"
-          tracking-section="method"
-          @cta-click="console.log('CTA clicked')" />
+          tracking-section="method" />
       </div>
     </div>
   </section>

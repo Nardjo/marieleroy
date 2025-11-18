@@ -64,8 +64,7 @@
           icon="i-lucide-rocket"
           card-bg-class="!bg-primary-200"
           tracking-name="start_project_cta"
-          tracking-section="testimonials"
-          @cta-click="console.log('CTA clicked')" />
+          tracking-section="testimonials" />
       </div>
     </div>
   </section>

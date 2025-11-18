@@ -48,9 +48,6 @@
   const isLoading = ref(false)
   const error = ref('')
 
-  console.log('Cookie value:', rememberedEmail.value)
-  console.log('Form state:', form)
-
   const fields = [
     {
       name: 'email',

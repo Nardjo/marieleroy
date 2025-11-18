@@ -5,9 +5,6 @@ export default defineEventHandler(async event => {
   const session = await requireUserSession(event)
   const body = await readBody(event)
 
-  console.log('Profile PUT - Session user:', session.user)
-  console.log('Profile PUT - User ID:', session.user.id)
-
   const validation = userProfileUpdateSchema.safeParse(body)
 
   if (!validation.success) {

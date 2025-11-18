@@ -29,14 +29,9 @@
           :initial="{ opacity: 0, y: 50 }"
           :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: index * 200 } }"
           class="overflow-hidden shadow-xl !bg-primary-200">
-          <!-- Vidéo -->
-          <div class="aspect-video rounded-lg overflow-hidden mb-6">
-            <iframe
-              :src="testimonial.embedUrl"
-              class="w-full h-full"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
+          <!-- Vidéo (Lazy loaded) -->
+          <div class="mb-6">
+            <LazyYouTube :embed-url="testimonial.embedUrl" :title="testimonial.title" />
           </div>
 
           <!-- Contenu en dessous -->

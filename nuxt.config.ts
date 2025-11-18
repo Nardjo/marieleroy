@@ -64,6 +64,17 @@ export default defineNuxtConfig({
 
   ui: {
     colorMode: true,
+
+    // Optimisations Nuxt UI
+    fonts: false, // On utilise déjà @nuxt/fonts
+    content: false, // Pas de @nuxt/content
+    mdc: false, // Pas de MDC
+
+    // Limiter aux couleurs utilisées
+    theme: {
+      transitions: false, // Désactiver les transitions CSS inutilisées
+      colors: ['primary', 'error', 'neutral', 'success', 'warning', 'info'],
+    },
   },
 
   fonts: {
@@ -160,10 +171,30 @@ export default defineNuxtConfig({
       org: 'jordan-bastin',
       project: 'marieleroy',
     },
+    // Optimisations Sentry
+    clientIntegrations: {
+      // Désactiver les intégrations lourdes non essentielles
+      Replay: false, // Session replay désactivé (lourd)
+      Feedback: false, // Widget feedback désactivé
+    },
+    // Auto-instrumentation allégée
+    autoInstrumentation: {
+      serverRoutes: false, // Pas besoin côté serveur pour les routes
+    },
   },
 
   sourcemap: {
     client: 'hidden',
+  },
+
+  build: {
+    analyze: process.env.ANALYZE === 'true'
+      ? {
+          analyzerMode: 'static',
+          reportFilename: 'bundle-report.html',
+          openAnalyzer: true,
+        }
+      : false,
   },
 
   image: {

@@ -7,34 +7,43 @@
       </div>
 
       <div v-if="img" class="w-full md:w-1/2 aspect-video">
-        <img class="w-full h-full object-cover rounded-lg" :src="img" :alt="title" />
+        <NuxtImg
+          class="w-full h-full object-cover rounded-lg"
+          :src="img"
+          :alt="title"
+          loading="lazy"
+          width="800"
+          height="450"
+          format="webp"
+          quality="80"
+          sizes="sm:640px md:384px lg:512px xl:640px" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-  img: {
-    type: String,
-    default:
-      'https://images.unsplash.com/photo-1454493246676-c0e063828dce?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  text: {
-    type: String,
-    required: true,
-  },
-  reverse: {
-    type: Boolean,
-    default: false,
-  },
-})
+  defineProps({
+    id: {
+      type: String,
+      required: true,
+    },
+    img: {
+      type: String,
+      default:
+        'https://images.unsplash.com/photo-1454493246676-c0e063828dce?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
+    },
+    reverse: {
+      type: Boolean,
+      default: false,
+    },
+  })
 </script>

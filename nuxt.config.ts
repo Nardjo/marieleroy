@@ -4,7 +4,7 @@ const cspDirectives = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://eu-assets.i.posthog.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
-  `img-src 'self' data: blob:${isDev ? ' http://localhost:3000' : ''}`,
+  `img-src 'self' data: blob: https://api.dicebear.com${isDev ? ' http://localhost:3000' : ''}`,
   "font-src 'self' data: https://fonts.gstatic.com",
   "connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.sentry.io https://fonts.googleapis.com https://fonts.gstatic.com",
   "media-src 'self' blob:",
@@ -116,5 +116,43 @@ export default defineNuxtConfig({
 
   sourcemap: {
     client: 'hidden',
+  },
+
+  image: {
+    provider: 'ipx',
+    quality: 80,
+    format: ['webp'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+    densities: [1, 2],
+    domains: ['api.dicebear.com'],
+    presets: {
+      avatar: {
+        modifiers: {
+          format: 'webp',
+          quality: 85,
+          fit: 'cover',
+        },
+      },
+      separator: {
+        modifiers: {
+          format: 'webp',
+          quality: 80,
+          fit: 'cover',
+        },
+      },
+      thumbnail: {
+        modifiers: {
+          format: 'webp',
+          quality: 75,
+        },
+      },
+    },
   },
 })

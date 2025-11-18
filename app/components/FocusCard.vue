@@ -11,7 +11,15 @@
           'rounded-lg relative overflow-hidden h-60 md:h-85 w-full transition-all duration-300 ease-out cursor-pointer',
           hovered !== null && hovered !== i ? 'blur-xs scale-[0.98]' : '',
         ]">
-        <img :src="card.imageUrl" :alt="card.title" class="w-full h-full object-cover" />
+        <NuxtImg
+          :src="card.imageUrl"
+          :alt="card.title"
+          class="w-full h-full object-cover"
+          loading="lazy"
+          width="400"
+          height="340"
+          format="webp"
+          quality="80" />
         <div
           :class="[
             'absolute inset-0 bg-black/20 flex items-end py-8 px-4 transition-opacity duration-300',
@@ -27,33 +35,29 @@
 
     <template #content>
       <div class="relative w-full aspect-video">
-        <iframe
-          v-if="videoUrl"
-          :src="videoUrl"
-          class="absolute inset-0 w-full h-full rounded"
-          allowfullscreen />
+        <iframe v-if="videoUrl" :src="videoUrl" class="absolute inset-0 w-full h-full rounded" allowfullscreen />
       </div>
     </template>
   </UModal>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-interface Card {
-  title: string
-  imageUrl: string
-  videoUrl: string
-}
+  interface Card {
+    title: string
+    imageUrl: string
+    videoUrl: string
+  }
 
-defineProps<{ cards: Card[] }>()
+  defineProps<{ cards: Card[] }>()
 
-const hovered = ref<number | null>(null)
-const show = ref(false)
-const videoUrl = ref<string | null>(null)
+  const hovered = ref<number | null>(null)
+  const show = ref(false)
+  const videoUrl = ref<string | null>(null)
 
-function open(src: string) {
-  videoUrl.value = src
-  show.value = true
-}
+  function open(src: string) {
+    videoUrl.value = src
+    show.value = true
+  }
 </script>

@@ -117,4 +117,42 @@ export default defineNuxtConfig({
   sourcemap: {
     client: 'hidden',
   },
+
+  image: {
+    quality: 80,
+    format: ['webp'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+    densities: [1, 2],
+    domains: [],
+    dir: 'public',
+    presets: {
+      avatar: {
+        modifiers: {
+          format: 'webp',
+          quality: 85,
+          fit: 'cover',
+        },
+      },
+      separator: {
+        modifiers: {
+          format: 'webp',
+          quality: 80,
+          fit: 'cover',
+        },
+      },
+      thumbnail: {
+        modifiers: {
+          format: 'webp',
+          quality: 75,
+        },
+      },
+    },
+  },
 })

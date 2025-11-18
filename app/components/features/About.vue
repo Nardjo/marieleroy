@@ -44,10 +44,15 @@
 
             <!-- Avatar à droite -->
             <div v-if="imageUrl" class="flex- shrink-0">
-              <img
+              <NuxtImg
                 :src="imageUrl"
                 :alt="title"
-                class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl border-4 border-primary-200" />
+                preset="avatar"
+                class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl border-4 border-primary-200"
+                loading="lazy"
+                sizes="sm:256px md:320px"
+                :width="320"
+                :height="320" />
             </div>
           </div>
         </UPageCard>

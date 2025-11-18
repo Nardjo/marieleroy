@@ -6,21 +6,29 @@
       :visible-once="{ opacity: 1, scale: 1, transition: { duration: 800 } }"
       class="w-full h-70 md:h-[500px] lg:h-[500px] overflow-hidden drop-shadow-xl">
       <!-- Mobile image (shown on small screens) -->
-      <img
+      <NuxtImg
         v-if="mobileImage"
         :src="mobileImage"
         alt="Séparateur"
         class="block md:hidden w-full h-full object-cover"
-        loading="lazy"
-      />
+        preset="separator"
+        loading="eager"
+        fetchpriority="high"
+        sizes="sm:100vw md:0"
+        :width="640"
+        :height="280" />
       <!-- Desktop image (shown on medium and larger screens) -->
-      <img
+      <NuxtImg
         v-if="desktopImage"
         :src="desktopImage"
         alt="Séparateur"
         class="hidden md:block w-full h-full object-cover"
-        loading="lazy"
-      />
+        preset="separator"
+        loading="eager"
+        fetchpriority="high"
+        sizes="sm:0 md:100vw"
+        :width="1920"
+        :height="500" />
     </div>
   </section>
 </template>

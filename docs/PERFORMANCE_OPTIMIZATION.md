@@ -34,7 +34,7 @@ const VueApexCharts = defineAsyncComponent(() =>
 - ✅ Réduction de ~60% du JavaScript inutilisé
 - ✅ ApexCharts chargé uniquement quand l'admin accède au dashboard
 
-### 2. Code Splitting avec Manual Chunks
+### 2. Code Splitting Automatique
 
 **Fichier modifié** : `nuxt.config.ts`
 
@@ -42,25 +42,17 @@ const VueApexCharts = defineAsyncComponent(() =>
 ```typescript
 vite: {
   build: {
-    cssCodeSplit: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vue-vendor': ['vue', 'vue-router'],
-          'sentry': ['@sentry/nuxt'],
-          'analytics': ['posthog-js', 'nuxt-posthog'],
-        },
-      },
-    },
+    cssCodeSplit: true, // Split CSS par route
   },
 }
 ```
 
+**Note** : Les manual chunks initialement prévus ont été retirés car ils causaient des conflits avec le parser Rollup. Nuxt/Vite gère automatiquement le code splitting de manière efficace.
+
 **Impact attendu** :
-- ✅ Séparation des vendors lourds en chunks distincts
-- ✅ Meilleur caching (vendors changent rarement)
-- ✅ Chargement parallèle optimisé
-- ✅ Sentry et PostHog isolés (chargés seulement si nécessaire)
+- ✅ CSS automatiquement splité par route
+- ✅ Chunks automatiques générés par Vite
+- ✅ Meilleur caching (hash dans les noms de fichiers)
 
 ### 3. Optimisation des Dépendances Vite
 
@@ -76,26 +68,7 @@ optimizeDeps: {
 - ✅ Vue et Vue Router pré-bundlés pour un démarrage plus rapide
 - ✅ ApexCharts exclu du pré-bundling (lazy-loaded)
 
-### 4. Tree-Shaking Amélioré
-
-**Configuration ajoutée** :
-```typescript
-optimization: {
-  treeShake: {
-    composables: {
-      client: {
-        vue: ['onMounted', 'ref', 'computed', 'watch'],
-      },
-    },
-  },
-}
-```
-
-**Impact attendu** :
-- ✅ Élimination du code mort
-- ✅ Bundle final plus léger
-
-### 5. Route Rules et Caching
+### 4. Route Rules et Caching
 
 **Configuration ajoutée** :
 ```typescript
@@ -125,7 +98,7 @@ routeRules: {
 - ✅ Cache d'1 an pour les assets et images optimisées
 - ✅ Réduction de la charge serveur
 
-### 6. Optimisation des Images (Voir IMAGE_OPTIMIZATION.md)
+### 5. Optimisation des Images (Voir IMAGE_OPTIMIZATION.md)
 
 **Déjà implémenté** :
 - ✅ Nuxt Image avec IPX provider
@@ -228,7 +201,7 @@ npx vite-bundle-visualizer
 
 ## Problèmes Rencontrés et Solutions
 
-### Problème : Build Error avec ES2020 Target
+### Problème 1 : Build Error avec ES2020 Target
 
 **Erreur** :
 ```
@@ -237,7 +210,15 @@ Nullish coalescing operator(??) requires parens when mixing with logical operato
 
 **Cause** : Le `target: 'es2020'` était trop strict pour Rollup lors du parsing du code interne de Nuxt.
 
-**Solution** : Suppression du `target: 'es2020'` dans PR #14. Les navigateurs modernes sont de toute façon supportés par défaut par Vite.
+**Solution** : Suppression du `target: 'es2020'` dans commit `abdfa6d`. Les navigateurs modernes sont de toute façon supportés par défaut par Vite.
+
+### Problème 2 : Build Error avec Manual Chunks et Optimization Config
+
+**Erreur** : Même erreur que ci-dessus persistait même après la suppression du `target: 'es2020'`.
+
+**Cause** : Les configurations `rollupOptions.output.manualChunks` et `optimization.treeShake` causaient des conflits avec le parser Rollup dans Nuxt 4.2.0 / Vite 7.2.2.
+
+**Solution** : Suppression de ces configurations dans commit `a62edbe`. Nuxt/Vite gère automatiquement le code splitting de manière efficace sans configuration manuelle.
 
 ## Prochaines Étapes Recommandées
 

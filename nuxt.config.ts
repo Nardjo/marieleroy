@@ -24,6 +24,71 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: {enabled: true},
 
+<<<<<<< HEAD
+  experimental: {
+    inlineSSRStyles: true, // Inline critical CSS
+  },
+
+  app: {
+    head: {
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
+        { rel: 'dns-prefetch', href: 'https://eu.i.posthog.com' },
+      ],
+    },
+  },
+
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/fonts',
+    '@nuxt/image',
+    '@nuxt/ui',
+    '@nuxt/test-utils',
+    '@nuxtjs/device',
+    '@vueuse/motion/nuxt',
+    'nuxt-auth-utils',
+    '@sentry/nuxt/module',
+    'nuxt-posthog',
+  ],
+
+  runtimeConfig: {
+    posthogProjectId: process.env.POSTHOG_PROJECT_ID,
+    posthogPersonalApiKey: process.env.POSTHOG_PERSONAL_API_KEY,
+    posthogHost: process.env.POSTHOG_HOST || 'https://eu.i.posthog.com',
+
+    public: {
+      siteName: 'Marie Leroy',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    },
+  },
+
+  ui: {
+    colorMode: true,
+  },
+
+  fonts: {
+    defaults: {
+      weights: [400, 500, 600, 700],
+      styles: ['normal', 'italic'],
+      subsets: ['latin', 'latin-ext'],
+    },
+    families: [
+      {
+        name: 'Open Sans',
+        provider: 'google',
+        weights: [400, 500, 600, 700],
+        styles: ['normal', 'italic'],
+        subsets: ['latin', 'latin-ext'],
+      },
+      {
+        name: 'Dancing Script',
+        provider: 'google',
+        weights: [400, 500, 600, 700],
+        styles: ['normal'],
+        subsets: ['latin', 'latin-ext'],
+      },
+=======
     modules: [
         '@nuxt/eslint',
         '@nuxt/fonts',
@@ -35,8 +100,106 @@ export default defineNuxtConfig({
         'nuxt-auth-utils',
         '@sentry/nuxt/module',
         'nuxt-posthog',
+>>>>>>> main
     ],
 
+<<<<<<< HEAD
+  routeRules: {
+    '/api/**': {
+      prerender: false,
+    },
+    '/uploads/**': {
+      prerender: false,
+      // Cache-Control défini dans server/routes/uploads/[...path].get.ts
+    },
+    '/_ipx/**': {
+      headers: {
+        'Cache-Control': 'public, max-age=31536000, immutable', // Cache 1 an pour images IPX
+      },
+    },
+    '/_nuxt/**': {
+      headers: {
+        'Cache-Control': 'public, max-age=31536000, immutable', // Cache 1 an pour les assets JS/CSS
+      },
+    },
+    '/**': {
+      headers: {
+        'Content-Security-Policy': cspDirectives,
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'X-Frame-Options': 'DENY',
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+      },
+    },
+  },
+
+  posthog: {
+    publicKey: process.env.NUXT_PUBLIC_POSTHOG_KEY,
+    host: 'https://eu.i.posthog.com',
+    disabled: !process.env.NUXT_PUBLIC_POSTHOG_KEY,
+  },
+
+  nitro: {
+    experimental: {
+      wasm: true,
+    },
+    compressPublicAssets: true, // Compression Gzip/Brotli
+    prerender: {
+      crawlLinks: true,
+      routes: ['/'],
+    },
+  },
+
+  vite: {
+    build: {
+      cssCodeSplit: true, // Split CSS par route
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Séparer les vendors lourds
+            'vue-vendor': ['vue', 'vue-router'],
+          },
+        },
+      },
+    },
+  },
+
+  sentry: {
+    sourceMapsUploadOptions: {
+      org: 'jordan-bastin',
+      project: 'marieleroy',
+    },
+  },
+
+  sourcemap: {
+    client: 'hidden',
+  },
+
+  image: {
+    provider: 'ipx',
+    quality: 80,
+    format: ['webp'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+    densities: [1, 2],
+    domains: ['api.dicebear.com'],
+    ipx: {
+      maxAge: 31536000, // Cache IPX images for 1 year
+    },
+    presets: {
+      avatar: {
+        modifiers: {
+          format: 'webp',
+          quality: 85,
+          fit: 'cover',
+=======
     runtimeConfig: {
         posthogProjectId: process.env.POSTHOG_PROJECT_ID,
         posthogPersonalApiKey: process.env.POSTHOG_PERSONAL_API_KEY,
@@ -153,6 +316,7 @@ export default defineNuxtConfig({
                     quality: 75,
                 },
             },
+>>>>>>> main
         },
     },
 })

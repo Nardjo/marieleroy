@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue'
 import { useColorMode } from '#imports'
+
+// Lazy load ApexCharts only when needed (admin only)
+const VueApexCharts = defineAsyncComponent(() =>
+  import('vue3-apexcharts').then(module => module.default)
+)
 
 const hasData = computed(() => {
   return analyticsData.value.pageViews.length > 0 && analyticsData.value.contactClicks.length > 0

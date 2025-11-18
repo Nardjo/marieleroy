@@ -40,17 +40,8 @@
 <script setup lang="ts">
   // Fetch separator images from API
   const { data: separatorData } = await usePublicImageSeparator()
-  const config = useRuntimeConfig()
 
-  const desktopImage = computed(() => {
-    const path = separatorData.value?.desktopImage
-    return path ? `${config.public.siteUrl}${path}` : null
-  })
-
-  const mobileImage = computed(() => {
-    const path = separatorData.value?.mobileImage
-    return path ? `${config.public.siteUrl}${path}` : null
-  })
-
+  const desktopImage = useFullImageUrl(() => separatorData.value?.desktopImage)
+  const mobileImage = useFullImageUrl(() => separatorData.value?.mobileImage)
   const hasImages = computed(() => !!(desktopImage.value || mobileImage.value))
 </script>

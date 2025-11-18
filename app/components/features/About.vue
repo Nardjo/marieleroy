@@ -1,14 +1,10 @@
 <script setup lang="ts">
   const { data: about } = await usePublicAbout()
-  const config = useRuntimeConfig()
 
   const title = computed(() => about.value?.title || 'Marie Leroy')
   const subtitle = computed(() => about.value?.subtitle || 'mon parcours')
   const description = computed(() => about.value?.description || '')
-  const imageUrl = computed(() => {
-    const path = about.value?.imageUrl
-    return path ? `${config.public.siteUrl}${path}` : null
-  })
+  const imageUrl = useFullImageUrl(() => about.value?.imageUrl)
 </script>
 
 <template>

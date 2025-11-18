@@ -1,5 +1,3 @@
-import tailwindcss from '@tailwindcss/vite'
-
 const isDev = process.env.NODE_ENV !== 'production'
 
 const cspDirectives = [
@@ -12,6 +10,7 @@ const cspDirectives = [
   "media-src 'self' blob:",
   "worker-src 'self' blob:",
   "child-src 'self' blob:",
+  "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
   "object-src 'none'",
   "frame-ancestors 'self'",
   "base-uri 'self'",

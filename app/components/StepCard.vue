@@ -12,9 +12,11 @@
           :src="img"
           :alt="title"
           loading="lazy"
-          sizes="sm:100vw md:50vw"
-          :width="800"
-          :height="450" />
+          width="800"
+          height="450"
+          format="webp"
+          quality="80"
+          sizes="sm:640px md:384px lg:512px xl:640px" />
       </div>
     </div>
   </div>

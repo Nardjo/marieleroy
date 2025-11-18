@@ -155,12 +155,7 @@
               <div class="flex gap-4 items-center">
                 <div class="flex-shrink-0">
                   <div v-if="form.ogImage" class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                    <NuxtImg
-                      :src="form.ogImage"
-                      alt="Image OG"
-                      class="w-full h-full object-cover"
-                      :width="80"
-                      :height="80" />
+                    <img :src="form.ogImage" alt="Image OG" class="w-full h-full object-cover" width="80" height="80" />
                   </div>
                   <div v-else class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
                     <UIcon name="i-lucide-image" class="w-6 h-6 text-gray-400" />
@@ -210,12 +205,12 @@
               <div class="flex gap-3">
                 <div class="flex-shrink-0">
                   <div v-if="form.ogImage" class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
-                    <NuxtImg
+                    <img
                       :src="form.ogImage"
                       alt="Image de partage"
                       class="w-full h-full object-cover"
-                      :width="64"
-                      :height="64" />
+                      width="64"
+                      height="64" />
                   </div>
                   <div
                     v-else

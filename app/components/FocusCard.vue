@@ -15,11 +15,11 @@
           :src="card.imageUrl"
           :alt="card.title"
           class="w-full h-full object-cover"
-          preset="thumbnail"
           loading="lazy"
-          sizes="sm:100vw md:33vw"
-          :width="400"
-          :height="340" />
+          width="400"
+          height="340"
+          format="webp"
+          quality="80" />
         <div
           :class="[
             'absolute inset-0 bg-black/20 flex items-end py-8 px-4 transition-opacity duration-300',

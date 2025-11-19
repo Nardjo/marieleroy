@@ -24,9 +24,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  experimental: {
-    inlineSSRStyles: true, // Inline critical CSS
-  },
+
 
   app: {
     head: {
@@ -119,6 +117,11 @@ export default defineNuxtConfig({
         'Cache-Control': 'public, max-age=31536000, immutable', // Cache 1 an pour les assets JS/CSS
       },
     },
+    '/favicon.ico': {
+      headers: {
+        'Cache-Control': 'public, max-age=86400, immutable', // Cache 1 jour
+      },
+    },
     // Précharger la page d'accueil (critique)
     '/': {
       prerender: true,
@@ -158,6 +161,7 @@ export default defineNuxtConfig({
 
   vite: {
     build: {
+      target: 'esnext', // Modern JS for smaller bundles
       cssCodeSplit: true, // Split CSS par route
     },
     optimizeDeps: {
@@ -172,15 +176,16 @@ export default defineNuxtConfig({
       project: 'marieleroy',
     },
     // Optimisations Sentry
-    clientIntegrations: {
-      // Désactiver les intégrations lourdes non essentielles
-      Replay: false, // Session replay désactivé (lourd)
-      Feedback: false, // Widget feedback désactivé
-    },
+    // clientIntegrations: {
+    //   // Désactiver les intégrations lourdes non essentielles
+    //   Replay: false, // Session replay désactivé (lourd)
+    //   Feedback: false, // Widget feedback désactivé
+    // },
     // Auto-instrumentation allégée
-    autoInstrumentation: {
-      serverRoutes: false, // Pas besoin côté serveur pour les routes
-    },
+    // Auto-instrumentation allégée
+    // autoInstrumentation: {
+    //   serverRoutes: false, // Pas besoin côté serveur pour les routes
+    // },
   },
 
   sourcemap: {
@@ -190,17 +195,17 @@ export default defineNuxtConfig({
   build: {
     analyze: process.env.ANALYZE === 'true'
       ? {
-          analyzerMode: 'static',
-          reportFilename: 'bundle-report.html',
-          openAnalyzer: true,
-        }
+        analyzerMode: 'static',
+        reportFilename: 'bundle-report.html',
+        openAnalyzer: true,
+      }
       : false,
   },
 
   image: {
     provider: 'ipx',
     quality: 80,
-    format: ['webp'],
+    format: ['avif', 'webp'],
     screens: {
       xs: 320,
       sm: 640,

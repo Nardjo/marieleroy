@@ -48,12 +48,12 @@ COPY --from=builder /app/prisma ./prisma
 # Copy scripts directory (needed for migrations)
 COPY --from=builder /app/scripts ./scripts
 
-# Install production dependencies
+# Install production dependencies (includes @prisma/client)
 RUN pnpm install --frozen-lockfile --prod
 
-# Copy generated Prisma client from builder stage (avoids version mismatch with npx)
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
+# Generate Prisma Client using npx with forced version 6.19.0 (avoids Prisma 7.0.0)
+ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+RUN npx prisma@6.19.0 generate
 
 # Copy built application from builder stage
 COPY --from=builder /app/.output ./

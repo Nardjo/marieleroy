@@ -51,8 +51,7 @@ COPY --from=builder /app/scripts ./scripts
 # Install production dependencies
 RUN pnpm install --frozen-lockfile --prod
 
-# Generate Prisma Client in production (ignore checksum errors when binaries server has issues)
-ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+# Generate Prisma Client in production
 RUN npx prisma generate
 
 # Copy built application from builder stage

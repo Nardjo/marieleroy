@@ -193,17 +193,18 @@
     }
 
     /* Ensure cards and components respect dark mode */
-    html.dark .bg-card,
-    .dark .bg-card,
-    html.dark [data-theme] .bg-card,
-    .dark [data-theme] .bg-card {
+    /* Ensure cards and components respect dark mode ONLY in admin */
+    [data-theme='admin'].dark .bg-card,
+    [data-theme='admin'] .dark .bg-card,
+    [data-theme='admin'].dark [data-theme] .bg-card,
+    [data-theme='admin'] .dark [data-theme] .bg-card {
         background-color: var(--card) !important;
         color: var(--card-foreground) !important;
     }
 
-    /* Force UCard components to use proper dark mode colors */
-    html.dark .bg-white,
-    .dark .bg-white {
+    /* Force UCard components to use proper dark mode colors ONLY in admin */
+    [data-theme='admin'].dark .bg-white,
+    [data-theme='admin'] .dark .bg-white {
         background-color: var(--card) !important;
         color: var(--card-foreground) !important;
     }

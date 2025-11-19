@@ -173,4 +173,11 @@
   .gradient-soft {
     background: linear-gradient(180deg, #fdfcfb 0%, #faf6f2 100%);
   }
+
+  /* Force vitrine cards to use correct background (prevent admin styles leak) */
+  [data-theme='vitrine'] .bg-card,
+  [data-theme='vitrine'] [class*='bg-card'] {
+    background-color: var(--card) !important;
+    color: var(--card-foreground) !important;
+  }
 }

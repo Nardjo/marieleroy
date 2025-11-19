@@ -12,10 +12,10 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  password  String   // Hashed password
+  password  String // Hashed password
   firstName String
   lastName  String?
-  name      String   // Full name
+  name      String // Full name
   role      Role     @default(ADMIN)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -55,13 +55,13 @@ model Testimonial {
 
 // Hero Section model
 model HeroSection {
-  id                 String   @id @default(cuid())
-  subtitle           String
-  description        String   @db.Text
-  videoUrl           String?
-  clientsText        String   @default("clients satisfaits")
-  avatars            Json     @default("[]")
-  updatedAt          DateTime @updatedAt
+  id          String   @id @default(cuid())
+  subtitle    String
+  description String   @db.Text
+  videoUrl    String?
+  clientsText String   @default("clients satisfaits")
+  avatars     Json     @default("[]")
+  updatedAt   DateTime @updatedAt
 
   @@map("hero_section")
 }
@@ -124,7 +124,7 @@ model SocialLink {
 
 // SEO Settings model
 model SEOSettings {
-  id                  String   @id @default(cuid())
+  id                 String   @id @default(cuid())
   metaTitle          String?
   metaDescription    String?  @db.Text
   metaKeywords       String?  @db.Text
@@ -140,10 +140,10 @@ model SEOSettings {
 
 // Image Separator model
 model ImageSeparator {
-  id            String   @id @default(cuid())
-  desktopImage  String?
-  mobileImage   String?
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  desktopImage String?
+  mobileImage  String?
+  updatedAt    DateTime @updatedAt
 
   @@map("image_separator")
 }

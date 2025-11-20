@@ -60,6 +60,7 @@
                 size="xl"
                 icon="i-lucide-arrow-down"
                 text="Témoignages"
+                to="#testimonials"
                 tracking-name="scroll_to_testimonials"
                 tracking-section="hero"
                 @click="scrollToSection('testimonials')" />

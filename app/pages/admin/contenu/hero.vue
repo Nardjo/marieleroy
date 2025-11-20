@@ -1,6 +1,10 @@
 <script setup lang="ts">
   import draggable from 'vuedraggable'
 
+  useHead({
+    title: 'Hero',
+  })
+
   definePageMeta({
     layout: 'admin',
   })

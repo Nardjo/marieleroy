@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  useHead({
+    title: 'Modifier la question',
+  })
+
   definePageMeta({
     layout: 'admin',
   })

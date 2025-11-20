@@ -10,6 +10,10 @@
 </template>
 
 <script setup lang="ts">
+  useHead({
+    title: 'Accueil',
+  })
+
   const { trackPageView } = useAnalytics()
 
   onMounted(() => {

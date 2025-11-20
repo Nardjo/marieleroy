@@ -26,8 +26,10 @@ export default defineNuxtConfig({
     app: {
         head: {
             htmlAttrs: {
+                lang: 'fr',
                 'data-theme': 'vitrine', // Default theme for SSR
             },
+            titleTemplate: '%s - Marie Leroy | Copywriter Professionnelle',
             link: [
                 {rel: 'preconnect', href: 'https://fonts.googleapis.com'},
                 {rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous'},

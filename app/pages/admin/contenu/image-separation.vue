@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  useHead({
+    title: 'Image de séparation',
+  })
+
   definePageMeta({
     layout: 'admin',
   })

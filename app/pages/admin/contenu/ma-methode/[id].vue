@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  useHead({
+    title: "Modifier l'étape",
+  })
+
   definePageMeta({
     layout: 'admin',
   })

@@ -9,8 +9,9 @@
   }
   const colorMode = useColorMode()
 
-  // Fetch settings for footer
+  // Fetch settings for footer and SEO
   const { data: settings } = await usePublicSettings()
+  const { data: seoSettings } = await usePublicSeo()
 
   const siteName = computed(() => settings.value?.site?.name || 'Marie Leroy')
   const socialLinks = computed(() => {
@@ -38,6 +39,23 @@
     htmlAttrs: {
       'data-theme': 'vitrine',
     },
+  })
+
+  // SEO meta tags
+  const config = useRuntimeConfig()
+  const siteUrl = config.public.siteUrl
+
+  useSeoMeta({
+    description: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent. Découvrez mes services de copywriting pour transformer votre contenu.'),
+    ogTitle: computed(() => seoSettings.value?.metaTitle || 'Marie Leroy | Copywriter Professionnelle'),
+    ogDescription: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent.'),
+    ogImage: computed(() => seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`),
+    ogUrl: siteUrl,
+    ogType: 'website',
+    twitterCard: 'summary_large_image',
+    twitterTitle: computed(() => seoSettings.value?.metaTitle || 'Marie Leroy | Copywriter Professionnelle'),
+    twitterDescription: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent.'),
+    twitterImage: computed(() => seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`),
   })
 
   const showHeader = ref(true)

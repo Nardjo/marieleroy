@@ -155,7 +155,7 @@ export default defineNuxtConfig({
         },
         compressPublicAssets: true, // Compression Gzip/Brotli
         prerender: {
-            crawlLinks: true,
+            crawlLinks: false, // Disable crawling to reduce memory during build
             routes: ['/'],
         },
     },

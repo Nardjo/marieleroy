@@ -8,6 +8,7 @@
   })
 
   const { loading, fetchSettings, updateSettings } = useSettings()
+  const { refreshSettings } = useRefreshPublicData()
   const toast = useToast()
 
   const form = reactive({
@@ -48,6 +49,8 @@
   const saveSettings = async () => {
     try {
       await updateSettings(form)
+      // Invalidate public settings cache to show updated data
+      await refreshSettings()
       toast.add({
         title: 'Paramètres enregistrés',
         description: 'Les paramètres ont été mis à jour avec succès',

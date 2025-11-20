@@ -10,6 +10,7 @@
   })
 
   const { loading, fetchHero, updateHero } = useHero()
+  const { refreshHero } = useRefreshPublicData()
   const toast = useToast()
 
   interface Avatar {
@@ -64,6 +65,8 @@
       }
 
       await updateHero(payload)
+      // Invalidate public hero cache to show updated data
+      await refreshHero()
       toast.add({
         title: 'Hero enregistré',
         description: 'La section Hero a été mise à jour avec succès',

@@ -10,6 +10,7 @@
   })
 
   const { loading, fetchSteps, deleteStep, reorderSteps, fetchHeader, updateHeader } = useMethod()
+  const { refreshMethod } = useRefreshPublicData()
   const toast = useToast()
 
   const steps = ref([])
@@ -46,6 +47,8 @@
   const saveHeader = async () => {
     try {
       await updateHeader(headerForm)
+      // Invalidate public method cache to show updated data
+      await refreshMethod()
       toast.add({
         title: 'En-tête enregistré',
         description: "L'en-tête a été mis à jour avec succès",
@@ -85,6 +88,8 @@
 
     try {
       await deleteStep(id)
+      // Invalidate public method cache to show updated data
+      await refreshMethod()
       toast.add({
         title: 'Étape supprimée',
         description: "L'étape a été supprimée avec succès",
@@ -120,6 +125,8 @@
 
     try {
       await reorderSteps(reorderedSteps)
+      // Invalidate public method cache to show updated data
+      await refreshMethod()
       toast.add({
         title: 'Ordre mis à jour',
         description: "L'ordre des étapes a été sauvegardé",

@@ -131,9 +131,9 @@ export default defineNuxtConfig({
         'Cache-Control': 'public, max-age=86400, immutable', // Cache 1 jour
       },
     },
-    // Précharger la page d'accueil (critique)
+    // Page d'accueil: SSR pour afficher les données à jour
     '/': {
-      prerender: true,
+      prerender: false,
     },
     // Pages admin: pas de prerender, chargées à la demande
     '/admin/**': {
@@ -164,10 +164,6 @@ export default defineNuxtConfig({
     compressPublicAssets: {
       gzip: true,
       brotli: true,
-    },
-    prerender: {
-      crawlLinks: false, // Disable crawling to reduce memory during build
-      routes: ['/'],
     },
     minify: true, // Minify server output
   },

@@ -10,6 +10,7 @@
   const route = useRoute()
   const router = useRouter()
   const { loading, fetchTestimonials, createTestimonial, updateTestimonial } = useTestimonials()
+  const { refreshTestimonials } = useRefreshPublicData()
   const toast = useToast()
 
   const isNew = computed(() => route.params.id === 'nouveau')
@@ -66,6 +67,8 @@
     try {
       if (isNew.value) {
         await createTestimonial(form)
+        // Invalidate public testimonials cache to show updated data
+        await refreshTestimonials()
         toast.add({
           title: 'Témoignage créé',
           description: 'Le témoignage a été ajouté avec succès',
@@ -75,6 +78,8 @@
         })
       } else {
         await updateTestimonial(testimonialId.value!, form)
+        // Invalidate public testimonials cache to show updated data
+        await refreshTestimonials()
         toast.add({
           title: 'Témoignage modifié',
           description: 'Le témoignage a été mis à jour avec succès',

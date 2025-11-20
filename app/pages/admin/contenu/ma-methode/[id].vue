@@ -9,6 +9,7 @@
 
   const route = useRoute()
   const { loading, fetchStep, updateStep } = useMethod()
+  const { refreshMethod } = useRefreshPublicData()
   const toast = useToast()
 
   const stepId = route.params.id as string
@@ -47,6 +48,8 @@
 
     try {
       await updateStep(stepId, form)
+      // Invalidate public method cache to show updated data
+      await refreshMethod()
       toast.add({
         title: 'Étape modifiée',
         description: "L'étape a été mise à jour avec succès",

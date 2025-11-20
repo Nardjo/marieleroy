@@ -8,6 +8,7 @@
   })
 
   const { loading, fetchSocialLinks, updateSocialLinks } = useSettings()
+  const { refreshSettings } = useRefreshPublicData()
   const toast = useToast()
 
   const form = reactive({
@@ -57,6 +58,8 @@
   const saveSettings = async () => {
     try {
       await updateSocialLinks(form)
+      // Invalidate public settings cache to show updated data
+      await refreshSettings()
       toast.add({
         title: 'Liens enregistrés',
         description: 'Les liens ont été mis à jour avec succès',

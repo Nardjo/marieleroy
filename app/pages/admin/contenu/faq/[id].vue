@@ -12,6 +12,7 @@
   const id = computed(() => route.params.id as string)
 
   const { fetchFaq, updateFaq, loading } = useFaq()
+  const { refreshFaq } = useRefreshPublicData()
   const toast = useToast()
 
   const form = ref<any>(null)
@@ -54,6 +55,8 @@
         displayOrder: form.value.displayOrder,
       }
       await updateFaq(id.value, updateData)
+      // Invalidate public FAQ cache to show updated data
+      await refreshFaq()
 
       toast.add({
         title: 'Modifications enregistrées',

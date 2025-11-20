@@ -9,6 +9,7 @@
 
   const router = useRouter()
   const { createTestimonial, loading } = useTestimonials()
+  const { refreshTestimonials } = useRefreshPublicData()
   const toast = useToast()
 
   const form = ref({
@@ -25,6 +26,8 @@
   const saveTestimonial = async () => {
     try {
       await createTestimonial(form.value)
+      // Invalidate public testimonials cache to show updated data
+      await refreshTestimonials()
 
       toast.add({
         title: 'Témoignage créé',

@@ -8,6 +8,7 @@
   })
 
   const { loading, error, fetchFaqs, deleteFaq } = useFaq()
+  const { refreshFaq } = useRefreshPublicData()
   const toast = useToast()
 
   const faqItems = ref([])
@@ -45,6 +46,8 @@
 
     try {
       await deleteFaq(id)
+      // Invalidate public FAQ cache to show updated data
+      await refreshFaq()
       toast.add({
         title: 'Question supprimée',
         description: 'La question a été supprimée définitivement',

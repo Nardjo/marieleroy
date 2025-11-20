@@ -9,6 +9,7 @@
 
   const router = useRouter()
   const { createFaq, loading } = useFaq()
+  const { refreshFaq } = useRefreshPublicData()
   const toast = useToast()
 
   const form = ref({
@@ -25,6 +26,8 @@
   const saveFaqItem = async () => {
     try {
       await createFaq(form.value)
+      // Invalidate public FAQ cache to show updated data
+      await refreshFaq()
 
       toast.add({
         title: 'Question créée',

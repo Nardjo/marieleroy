@@ -8,6 +8,7 @@
   })
 
   const { loading, fetchImageSeparator, updateImageSeparator } = useImageSeparator()
+  const { refreshImageSeparator } = useRefreshPublicData()
   const toast = useToast()
 
   const form = reactive({
@@ -44,6 +45,8 @@
         mobileImage: form.mobileImage && form.mobileImage.trim() !== '' ? form.mobileImage : null,
       }
       await updateImageSeparator(payload)
+      // Invalidate public image separator cache to show updated data
+      await refreshImageSeparator()
       toast.add({
         title: 'Séparateur enregistré',
         description: "L'image de séparation a été mise à jour avec succès",

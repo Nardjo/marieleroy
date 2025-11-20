@@ -8,6 +8,7 @@
   })
 
   const { loading, fetchAbout, updateAbout } = useAbout()
+  const { refreshAbout } = useRefreshPublicData()
   const toast = useToast()
 
   const form = reactive({
@@ -46,6 +47,8 @@
           form.imageUrl && typeof form.imageUrl === 'string' && form.imageUrl.trim() !== '' ? form.imageUrl : null,
       }
       await updateAbout(payload)
+      // Invalidate public about cache to show updated data
+      await refreshAbout()
       toast.add({
         title: 'Section enregistrée',
         description: 'La section "À propos" a été mise à jour avec succès',

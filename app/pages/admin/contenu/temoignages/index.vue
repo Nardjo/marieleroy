@@ -9,6 +9,7 @@
 
   const router = useRouter()
   const { loading, fetchTestimonials, deleteTestimonial } = useTestimonials()
+  const { refreshTestimonials } = useRefreshPublicData()
   const toast = useToast()
 
   const testimonials = ref<any[]>([])
@@ -31,6 +32,8 @@
     if (confirm(`Êtes-vous sûr de vouloir supprimer le témoignage "${title}" ?`)) {
       try {
         await deleteTestimonial(id)
+        // Invalidate public testimonials cache to show updated data
+        await refreshTestimonials()
         toast.add({
           title: 'Témoignage supprimé',
           description: 'Le témoignage a été supprimé avec succès',

@@ -8,6 +8,7 @@
   })
 
   const { loading, fetchSteps, createStep } = useMethod()
+  const { refreshMethod } = useRefreshPublicData()
   const toast = useToast()
 
   const form = reactive({
@@ -40,6 +41,8 @@
 
     try {
       await createStep(form)
+      // Invalidate public method cache to show updated data
+      await refreshMethod()
       toast.add({
         title: 'Étape créée',
         description: 'La nouvelle étape a été ajoutée avec succès',

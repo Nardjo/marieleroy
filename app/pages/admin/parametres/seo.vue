@@ -9,6 +9,7 @@
 
   const { loading, fetchSeoSettings, updateSeoSettings } = useSeo()
   const { uploadImage } = useImageUpload()
+  const { refreshSeo } = useRefreshPublicData()
   const toast = useToast()
 
   const form = reactive({
@@ -78,6 +79,8 @@
   const saveSettings = async () => {
     try {
       await updateSeoSettings(form)
+      // Invalidate public SEO cache to show updated data
+      await refreshSeo()
       toast.add({
         title: 'Paramètres SEO enregistrés',
         description: 'Les paramètres SEO ont été mis à jour avec succès',

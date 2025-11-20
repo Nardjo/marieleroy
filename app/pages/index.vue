@@ -1,11 +1,11 @@
 <template>
   <div>
     <FeaturesHero />
-    <FeaturesTestimonials />
-    <ImageSeparator />
-    <FeaturesMethod />
-    <FeaturesAbout />
-    <FeaturesFaq />
+    <LazyFeaturesTestimonials />
+    <LazyImageSeparator />
+    <LazyFeaturesMethod />
+    <LazyFeaturesAbout />
+    <LazyFeaturesFaq />
   </div>
 </template>
 

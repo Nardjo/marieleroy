@@ -84,7 +84,7 @@ export default defineNuxtConfig({
         defaults: {
             weights: [400, 500, 600, 700],
             styles: ['normal', 'italic'],
-            subsets: ['latin', 'latin-ext'],
+            subsets: ['latin'], // Réduit: removed latin-ext pour réduire la taille
         },
         families: [
             {
@@ -92,14 +92,16 @@ export default defineNuxtConfig({
                 provider: 'google',
                 weights: [400, 500, 600, 700],
                 styles: ['normal', 'italic'],
-                subsets: ['latin', 'latin-ext'],
+                subsets: ['latin'],
+                display: 'swap', // Performance: affiche le texte immédiatement avec fallback
             },
             {
                 name: 'Dancing Script',
                 provider: 'google',
-                weights: [400, 500, 600, 700],
+                weights: [400], // Réduit: seulement regular (rarement utilisé)
                 styles: ['normal'],
-                subsets: ['latin', 'latin-ext'],
+                subsets: ['latin'],
+                display: 'swap', // Performance: affiche le texte immédiatement avec fallback
             },
         ],
     },
@@ -157,17 +159,36 @@ export default defineNuxtConfig({
         experimental: {
             wasm: true,
         },
-        compressPublicAssets: true, // Compression Gzip/Brotli
+        compressPublicAssets: {
+            gzip: true,
+            brotli: true,
+        },
         prerender: {
             crawlLinks: false, // Disable crawling to reduce memory during build
             routes: ['/'],
         },
+        minify: true, // Minify server output
+    },
+
+    experimental: {
+        inlineSSRStyles: false, // Disable pour réduire HTML initial
+        payloadExtraction: true, // Extract payload to reduce JS bundle
     },
 
     vite: {
         build: {
             target: 'esnext', // Modern JS for smaller bundles
-            cssCodeSplit: false, // Split CSS par route
+            cssCodeSplit: true, // Split CSS par route pour réduire le bundle initial
+            minify: 'esbuild', // Minification rapide avec esbuild
+            cssMinify: 'esbuild',
+            rollupOptions: {
+                output: {
+                    manualChunks: {
+                        'nuxt-ui': ['@nuxt/ui'],
+                        'motion': ['@vueuse/motion'],
+                    },
+                },
+            },
         },
         optimizeDeps: {
             include: ['vue', 'vue-router'],
@@ -209,8 +230,8 @@ export default defineNuxtConfig({
 
     image: {
         provider: 'ipx',
-        quality: 80,
-        format: ['avif', 'webp'],
+        quality: 75, // Réduction de 80 à 75 pour meilleure compression
+        format: ['avif', 'webp'], // AVIF en priorité (meilleure compression)
         screens: {
             xs: 320,
             sm: 640,
@@ -227,22 +248,22 @@ export default defineNuxtConfig({
         presets: {
             avatar: {
                 modifiers: {
-                    format: 'webp',
-                    quality: 85,
+                    format: 'avif', // AVIF pour meilleure compression
+                    quality: 70, // Réduit de 85 à 70
                     fit: 'cover',
                 },
             },
             separator: {
                 modifiers: {
-                    format: 'webp',
-                    quality: 80,
+                    format: 'avif', // AVIF pour meilleure compression
+                    quality: 65, // Réduit de 80 à 65
                     fit: 'cover',
                 },
             },
             thumbnail: {
                 modifiers: {
-                    format: 'webp',
-                    quality: 75,
+                    format: 'avif', // AVIF pour meilleure compression
+                    quality: 60, // Réduit de 75 à 60
                 },
             },
         },

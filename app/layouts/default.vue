@@ -58,6 +58,38 @@
     twitterImage: computed(() => seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`),
   })
 
+  // Structured data for SEO (Schema.org JSON-LD) - Dynamic from database
+  useHead({
+    script: [
+      {
+        type: 'application/ld+json',
+        children: computed(() => JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'ProfessionalService',
+          name: seoSettings.value?.metaTitle || 'Marie Leroy',
+          description: seoSettings.value?.metaDescription || 'Copywriter professionnelle spécialisée dans la création de contenus qui convertissent',
+          url: siteUrl,
+          image: seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`,
+          priceRange: '$$',
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'FR',
+          },
+          areaServed: {
+            '@type': 'Country',
+            name: 'France',
+          },
+          serviceType: 'Copywriting',
+          provider: {
+            '@type': 'Person',
+            name: siteName.value,
+            jobTitle: 'Copywriter Professionnelle',
+          },
+        })),
+      },
+    ],
+  })
+
   const showHeader = ref(true)
   const lastScrollY = ref(0)
   const scrollThreshold = 5 // Pixels à scroller avant de déclencher le changement

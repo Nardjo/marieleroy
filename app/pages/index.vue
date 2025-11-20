@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-  const { trackPageView } = useAnalytics()
+ const { trackPageView } = useAnalytics()
 
   onMounted(() => {
     trackPageView('homepage', {

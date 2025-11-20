@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  useHead({
+    title: 'Ajouter une question',
+  })
+
   definePageMeta({
     layout: 'admin',
   })

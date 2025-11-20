@@ -2,6 +2,10 @@
   import { z } from 'zod'
   import type { FormSubmitEvent } from '#ui/types'
 
+  useHead({
+    title: 'Connexion',
+  })
+
   definePageMeta({
     layout: 'login',
   })

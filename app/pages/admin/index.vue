@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useHead({
+  title: 'Dashboard Admin',
+})
+
 definePageMeta({
   layout: 'admin',
 })

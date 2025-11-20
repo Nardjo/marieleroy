@@ -22,7 +22,7 @@
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
           {{ title }},
-          <span class="text-primary-600">{{ subtitle }}</span>
+          <span class="text-primary-700">{{ subtitle }}</span>
         </h2>
       </div>
 

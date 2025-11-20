@@ -9,8 +9,9 @@
   }
   const colorMode = useColorMode()
 
-  // Fetch settings for footer
+  // Fetch settings for footer and SEO
   const { data: settings } = await usePublicSettings()
+  const { data: seoSettings } = await usePublicSeo()
 
   const siteName = computed(() => settings.value?.site?.name || 'Marie Leroy')
   const socialLinks = computed(() => {
@@ -33,11 +34,60 @@
   }
   const ctaLink = computed(() => settings.value?.site?.ctaLink || undefined)
 
-  // Set theme attribute on html element to prevent flicker
   useHead({
     htmlAttrs: {
       'data-theme': 'vitrine',
     },
+    titleTemplate: computed(() => siteName.value),
+  })
+
+  // SEO meta tags
+  const config = useRuntimeConfig()
+  const siteUrl = config.public.siteUrl
+
+  useSeoMeta({
+    description: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent. Découvrez mes services de copywriting pour transformer votre contenu.'),
+    ogTitle: computed(() => seoSettings.value?.metaTitle || 'Marie Leroy | Copywriter Professionnelle'),
+    ogDescription: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent.'),
+    ogImage: computed(() => seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`),
+    ogUrl: siteUrl,
+    ogType: 'website',
+    twitterCard: 'summary_large_image',
+    twitterTitle: computed(() => seoSettings.value?.metaTitle || 'Marie Leroy | Copywriter Professionnelle'),
+    twitterDescription: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent.'),
+    twitterImage: computed(() => seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`),
+  })
+
+  // Structured data for SEO (Schema.org JSON-LD) - Dynamic from database
+  useHead({
+    script: [
+      {
+        type: 'application/ld+json',
+        children: computed(() => JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'ProfessionalService',
+          name: seoSettings.value?.metaTitle || 'Marie Leroy',
+          description: seoSettings.value?.metaDescription || 'Copywriter professionnelle spécialisée dans la création de contenus qui convertissent',
+          url: siteUrl,
+          image: seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`,
+          priceRange: '$$',
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'FR',
+          },
+          areaServed: {
+            '@type': 'Country',
+            name: 'France',
+          },
+          serviceType: 'Copywriting',
+          provider: {
+            '@type': 'Person',
+            name: siteName.value,
+            jobTitle: 'Copywriter Professionnelle',
+          },
+        })),
+      },
+    ],
   })
 
   const showHeader = ref(true)

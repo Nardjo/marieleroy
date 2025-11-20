@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  useHead({
+    title: 'Mon compte',
+  })
+
   definePageMeta({
     layout: 'admin',
   })

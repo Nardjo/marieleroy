@@ -13,7 +13,7 @@
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
           Vos questions,
-          <span class="text-primary-600">mes réponses</span>
+          <span class="text-primary-700">mes réponses</span>
         </h2>
         <p class="text-primary-700 max-w-2xl mx-auto">
           Retrouvez les réponses aux questions les plus courantes sur mes services de copywriting
@@ -34,7 +34,7 @@
               'cursor-pointer group hover:bg-primary-200 transition-all duration-200 !px-4 rounded-t-lg data-[state=open]:bg-primary-200',
             content: 'bg-primary-200 rounded-b-lg',
             item: 'border-0 text-base',
-            trailingIcon: '!text-primary-600',
+            trailingIcon: '!text-primary-700',
           }"
           multiple>
           <template #default="{ item }">

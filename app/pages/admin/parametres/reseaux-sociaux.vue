@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  useHead({
+    title: 'Réseaux sociaux',
+  })
+
   definePageMeta({
     layout: 'admin',
   })

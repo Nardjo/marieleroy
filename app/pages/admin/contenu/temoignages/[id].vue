@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  useHead({
+    title: 'Modifier le témoignage',
+  })
+
   definePageMeta({
     layout: 'admin',
   })

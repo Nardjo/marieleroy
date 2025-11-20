@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     app: {
         head: {
             htmlAttrs: {
+                lang: 'fr',
                 'data-theme': 'vitrine', // Default theme for SSR
             },
             link: [

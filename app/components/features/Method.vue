@@ -13,7 +13,7 @@
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
           {{ headerTitle }},
-          <span class="text-primary-600">{{ headerSubtitle }}</span>
+          <span class="text-primary-700">{{ headerSubtitle }}</span>
         </h2>
         <p v-if="headerDescription" class="text-primary-700 max-w-2xl mx-auto">
           {{ headerDescription }}

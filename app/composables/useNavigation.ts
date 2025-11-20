@@ -85,7 +85,7 @@ export const useNavigation = () => {
     {
       label: 'Témoignages',
       to: '#testimonials',
-      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4  ${
+      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px] flex items-center ${
         activeSection.value === 'testimonials'
           ? 'underline underline-offset-4 !font-extrabold'
           : '!hover:!text-primary-800'
@@ -95,7 +95,7 @@ export const useNavigation = () => {
     {
       label: 'Ma méthode',
       to: '#method',
-      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4  ${
+      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px] flex items-center ${
         activeSection.value === 'method' ? 'underline underline-offset-4 !font-extrabold' : '!hover:!text-primary-800'
       }`,
       onClick: () => scrollToSection('method'),
@@ -103,7 +103,7 @@ export const useNavigation = () => {
     {
       label: 'À propos',
       to: '#about',
-      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4  ${
+      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px] flex items-center ${
         activeSection.value === 'about' ? 'underline underline-offset-4 !font-extrabold' : '!hover:!text-primary-800'
       }`,
       onClick: () => scrollToSection('about'),
@@ -111,7 +111,7 @@ export const useNavigation = () => {
     {
       label: 'FAQ',
       to: '#faq',
-      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4  ${
+      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px] flex items-center ${
         activeSection.value === 'faq' ? 'underline underline-offset-4 !font-extrabold' : '!hover:!text-primary-800'
       }`,
       onClick: () => scrollToSection('faq'),

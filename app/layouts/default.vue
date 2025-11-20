@@ -169,9 +169,9 @@
       </template>
     </UHeader>
 
-    <UMain class="flex-1 pt-16">
+    <main class="flex-1 pt-16">
       <slot />
-    </UMain>
+    </main>
 
     <footer class="bg-primary-100 py-12 border-t">
       <UContainer class="max-w-7xl">
@@ -182,7 +182,7 @@
               <li v-for="link in items" :key="link.label">
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px]"
                   @click="link.onClick">
                   {{ link.label }}
                 </UButton>
@@ -190,7 +190,7 @@
               <li>
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px]"
                   @click="navigateTo('/admin')">
                   Administration
                 </UButton>

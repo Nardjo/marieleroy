@@ -30,22 +30,13 @@
         <div class="text-xs text-white whitespace-nowrap">{{ item.designation }}</div>
       </div>
     </Transition>
-    <!-- Utiliser img pour les URLs externes (dicebear SVG) et NuxtImg pour les images locales -->
+    <!-- Toujours utiliser img pour les avatars (trop petits pour bénéficier de l'optimisation IPX) -->
     <img
-      v-if="item.image.startsWith('http')"
-      :src="item.image"
-      :alt="item.name"
-      class="relative !m-0 h-14 w-14 rounded-full border-2 border-white bg-white object-cover object-top !p-0 cursor-pointer"
-      height="56"
-      width="56" />
-    <NuxtImg
-      v-else
       :src="item.image"
       :alt="item.name"
       class="relative !m-0 h-14 w-14 rounded-full border-2 border-white bg-white object-cover object-top !p-0 cursor-pointer"
       height="56"
       width="56"
-      preset="avatar"
       loading="lazy" />
   </div>
 </template>

@@ -8,7 +8,13 @@
             <div
               v-if="videoUrl"
               class="video-container w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-black">
-              <video :src="videoUrl" controls class="w-full h-full object-cover">
+              <video
+                :src="videoUrl"
+                controls
+                class="w-full h-full object-cover"
+                aria-label="Vidéo de présentation de Marie Leroy, copywriter professionnelle"
+                title="Vidéo de présentation">
+                <!-- TODO: Add <track> element for captions when available -->
                 Votre navigateur ne supporte pas la vidéo.
               </video>
             </div>
@@ -39,7 +45,7 @@
             <template #description>
               <div class="flex flex-col gap-3">
                 <h2 class="text-2xl md:text-3xl text-primary-800">{{ subtitle }}</h2>
-                <span class="text-primary-600">{{ description }}</span>
+                <span class="text-primary-700">{{ description }}</span>
               </div>
 
               <!-- Avatars clients -->

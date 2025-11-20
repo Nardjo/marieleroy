@@ -193,6 +193,9 @@ export default defineNuxtConfig({
             include: ['vue', 'vue-router'],
             exclude: ['vue3-apexcharts', 'apexcharts'], // ApexCharts lazy-loaded
         },
+        ssr: {
+            noExternal: ['@nuxt/ui'], // Bundle @nuxt/ui for better tree-shaking
+        },
     },
 
     sentry: {

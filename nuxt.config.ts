@@ -32,6 +32,8 @@ export default defineNuxtConfig({
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
         { rel: 'dns-prefetch', href: 'https://eu.i.posthog.com' },
+        // Preload critical font to avoid render blocking
+        { rel: 'preload', as: 'style', href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap' },
       ],
     },
   },
@@ -93,6 +95,7 @@ export default defineNuxtConfig({
         styles: ['normal', 'italic'],
         subsets: ['latin'],
         display: 'swap', // Performance: affiche le texte immédiatement avec fallback
+        preload: true, // Preload critical font
       },
       {
         name: 'Dancing Script',
@@ -100,7 +103,7 @@ export default defineNuxtConfig({
         weights: [400], // Réduit: seulement regular (rarement utilisé)
         styles: ['normal'],
         subsets: ['latin'],
-        display: 'swap', // Performance: affiche le texte immédiatement avec fallback
+        display: 'optional', // Optional: n'attend pas le chargement si trop long
       },
     ],
   },
@@ -175,7 +178,7 @@ export default defineNuxtConfig({
 
   vite: {
     build: {
-      target: 'esnext', // Modern JS for smaller bundles
+      target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'], // Modern browsers only, no transpilation
       cssCodeSplit: true, // Split CSS par route pour réduire le bundle initial
       minify: 'esbuild', // Minification rapide avec esbuild
       cssMinify: 'esbuild',

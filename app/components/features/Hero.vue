@@ -11,6 +11,7 @@
               <video
                 :src="videoUrl"
                 controls
+                preload="metadata"
                 class="w-full h-full object-cover"
                 aria-label="Vidéo de présentation de Marie Leroy, copywriter professionnelle"
                 title="Vidéo de présentation">

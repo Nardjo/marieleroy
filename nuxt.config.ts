@@ -184,7 +184,6 @@ export default defineNuxtConfig({
             rollupOptions: {
                 output: {
                     manualChunks: {
-                        'nuxt-ui': ['@nuxt/ui'],
                         'motion': ['@vueuse/motion'],
                     },
                 },

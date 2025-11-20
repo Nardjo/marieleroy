@@ -1,5 +1,3 @@
-const isDev = process.env.NODE_ENV !== 'production'
-
 const cspDirectives = [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://eu-assets.i.posthog.com",
@@ -59,9 +57,13 @@ export default defineNuxtConfig({
         },
     },
 
-    ui: {
-        colorMode: true,
+    colorMode: {
+        preference: 'light', // Default to light mode (prevents dark mode flash on SSR)
+        fallback: 'light',
+        classSuffix: '',
+    },
 
+    ui: {
         // Optimisations Nuxt UI
         fonts: false, // On utilise déjà @nuxt/fonts
         content: false, // Pas de @nuxt/content

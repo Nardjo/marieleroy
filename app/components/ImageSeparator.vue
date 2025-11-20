@@ -11,28 +11,24 @@
         :src="mobileImage"
         alt="Séparateur"
         class="block md:hidden w-full h-full object-cover"
-        loading="eager"
-        fetchpriority="high"
+        loading="lazy"
         width="640"
         height="280"
         preset="separator"
         sizes="sm:640px"
-        format="webp"
-        quality="80" />
+        format="webp" />
       <!-- Desktop image (shown on medium and larger screens) -->
       <NuxtImg
         v-if="desktopImage"
         :src="desktopImage"
         alt="Séparateur"
         class="hidden md:block w-full h-full object-cover"
-        loading="eager"
-        fetchpriority="high"
+        loading="lazy"
         width="1920"
         height="500"
         preset="separator"
         sizes="md:768px lg:1024px xl:1920px"
-        format="webp"
-        quality="80" />
+        format="webp" />
     </div>
   </section>
 </template>

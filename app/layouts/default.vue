@@ -34,11 +34,11 @@
   }
   const ctaLink = computed(() => settings.value?.site?.ctaLink || undefined)
 
-  // Set theme attribute on html element to prevent flicker
   useHead({
     htmlAttrs: {
       'data-theme': 'vitrine',
     },
+    titleTemplate: computed(() => siteName.value),
   })
 
   // SEO meta tags

@@ -173,16 +173,16 @@
       <slot />
     </main>
 
-    <footer class="bg-primary-100 py-12 border-t">
+    <footer class="bg-primary-100 py-8 md:py-10 border-t">
       <UContainer class="max-w-7xl">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center md:text-left">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 text-center md:text-left">
           <div>
-            <h3 class="font-semibold text-gray-800 mb-4">Navigation</h3>
-            <ul class="space-y-2">
+            <h3 class="font-semibold text-gray-800 mb-3 md:mb-4">Navigation</h3>
+            <ul class="space-y-0">
               <li v-for="link in items" :key="link.label">
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px]"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-0 !px-4 min-h-[44px]"
                   @click="link.onClick">
                   {{ link.label }}
                 </UButton>
@@ -190,7 +190,7 @@
               <li>
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px]"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-0 !px-4 min-h-[44px]"
                   @click="navigateTo('/admin')">
                   Administration
                 </UButton>
@@ -199,7 +199,7 @@
           </div>
 
           <div class="flex flex-col items-center md:items-start">
-            <h3 class="font-semibold text-gray-800 mb-4">Réseaux Sociaux</h3>
+            <h3 class="font-semibold text-gray-800 mb-3 md:mb-4">Réseaux Sociaux</h3>
             <div class="flex gap-4 justify-center md:justify-start">
               <UButton
                 v-for="link in socialLinks"

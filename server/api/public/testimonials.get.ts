@@ -3,6 +3,7 @@ export default defineEventHandler(async () => {
     select: {
       id: true,
       title: true,
+      subtitle: true,
       quote: true,
       embedUrl: true,
     },

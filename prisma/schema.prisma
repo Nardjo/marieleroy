@@ -44,6 +44,7 @@ model Faq {
 model Testimonial {
   id           String   @id @default(cuid())
   title        String
+  subtitle     String?
   quote        String   @db.Text
   embedUrl     String
   displayOrder Int      @default(0)

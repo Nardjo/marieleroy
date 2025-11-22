@@ -18,6 +18,7 @@
 
   const form = reactive({
     title: '',
+    subtitle: '',
     quote: '',
     embedUrl: '',
     displayOrder: 0,
@@ -140,6 +141,13 @@
         <div class="space-y-6">
           <UFormField label="Titre / Nom du client" required>
             <UInput v-model="form.title" size="lg" placeholder="Ex: Marie, Jessica..." />
+          </UFormField>
+
+          <UFormField label="Fonction / Poste">
+            <UInput v-model="form.subtitle" size="lg" placeholder="Ex: Coach sportif, Entrepreneur..." />
+            <template #help>
+              <p class="text-sm text-gray-500 mt-1">Optionnel - Le métier ou la fonction du client</p>
+            </template>
           </UFormField>
 
           <UFormField label="Citation / Témoignage" required>

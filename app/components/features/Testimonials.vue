@@ -29,17 +29,22 @@
           :initial="{ opacity: 0, y: 50 }"
           :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: index * 200 } }"
           class="overflow-hidden shadow-xl !bg-primary-200">
-          <!-- Vidéo (Lazy loaded) -->
+          <!-- Vidéo en haut -->
           <div class="mb-6">
             <YouTubeEmbed :embed-url="testimonial.embedUrl" :title="testimonial.title" />
           </div>
 
-          <!-- Contenu en dessous -->
-          <div class="px-2 pb-2">
-            <h3 class="text-3xl font-bold text-primary-900 mb-4">
+          <!-- Titre et citation en dessous (centrés) -->
+          <div class="text-center px-2">
+            <h3 class="text-4xl md:text-5xl font-bold text-primary-900 mb-2">
               {{ testimonial.title }}
             </h3>
-            <p class="text-lg text-primary-700 italic leading-relaxed">"{{ testimonial.quote }}"</p>
+            <p v-if="testimonial.subtitle" class="text-xl text-primary-600 mb-4">
+              {{ testimonial.subtitle }}
+            </p>
+            <p class="text-xl md:text-2xl text-primary-700 italic leading-relaxed" :class="{ 'mt-4': !testimonial.subtitle }">
+              "{{ testimonial.quote }}"
+            </p>
           </div>
         </UCard>
       </div>

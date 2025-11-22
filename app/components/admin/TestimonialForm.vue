@@ -2,6 +2,7 @@
   interface Testimonial {
     id?: string
     title: string
+    subtitle?: string
     quote: string
     embedUrl: string
     displayOrder: number
@@ -45,6 +46,17 @@
               @update:model-value="updateField('title', $event)"
               size="lg"
               placeholder="Marie" />
+          </UFormField>
+
+          <UFormField label="Fonction / Poste">
+            <UInput
+              :model-value="localForm.subtitle"
+              @update:model-value="updateField('subtitle', $event)"
+              size="lg"
+              placeholder="Coach sportif, Entrepreneur..." />
+            <template #hint>
+              <span class="text-xs text-gray-500">Optionnel - Le métier ou la fonction du client</span>
+            </template>
           </UFormField>
 
           <UFormField label="Citation" required>

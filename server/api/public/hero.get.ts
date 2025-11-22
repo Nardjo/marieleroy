@@ -6,6 +6,7 @@ export default defineEventHandler(async () => {
       videoUrl: true,
       avatars: true,
       clientsText: true,
+      additionalClientsCount: true,
     },
   })
 
@@ -16,6 +17,7 @@ export default defineEventHandler(async () => {
       videoUrl: null,
       avatars: [],
       clientsText: 'clients satisfaits',
+      additionalClientsCount: 0,
     }
   }
 

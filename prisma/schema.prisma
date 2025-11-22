@@ -56,13 +56,14 @@ model Testimonial {
 
 // Hero Section model
 model HeroSection {
-  id          String   @id @default(cuid())
-  subtitle    String
-  description String   @db.Text
-  videoUrl    String?
-  clientsText String   @default("clients satisfaits")
-  avatars     Json     @default("[]")
-  updatedAt   DateTime @updatedAt
+  id                     String   @id @default(cuid())
+  subtitle               String
+  description            String   @db.Text
+  videoUrl               String?
+  clientsText            String   @default("clients satisfaits")
+  avatars                Json     @default("[]")
+  additionalClientsCount Int      @default(0)
+  updatedAt              DateTime @updatedAt
 
   @@map("hero_section")
 }

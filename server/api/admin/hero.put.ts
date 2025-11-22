@@ -17,6 +17,7 @@ export default defineEventHandler(async event => {
       description: body.description,
       videoUrl: body.videoUrl || null,
       avatars: body.avatars || [],
+      additionalClientsCount: body.additionalClientsCount ?? 0,
     },
   })
 

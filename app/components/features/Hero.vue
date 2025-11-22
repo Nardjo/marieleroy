@@ -51,7 +51,10 @@
 
               <!-- Avatars clients -->
               <div class="mt-6">
-                <AvatarGroup :avatars="avatars" :clients-text="clientsText" />
+                <AvatarGroup
+                  :avatars="avatars"
+                  :clients-text="clientsText"
+                  :additional-clients-count="additionalClientsCount" />
               </div>
             </template>
 
@@ -103,6 +106,7 @@
   const videoUrl = computed(() => hero.value?.videoUrl || null)
   const avatars = computed(() => hero.value?.avatars || [])
   const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
+  const additionalClientsCount = computed(() => hero.value?.additionalClientsCount || 0)
   const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
 </script>
 

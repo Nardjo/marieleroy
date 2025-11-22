@@ -25,6 +25,7 @@
     description: '',
     videoUrl: '',
     avatars: [] as Avatar[],
+    additionalClientsCount: 0,
   })
 
   const loadHero = async () => {
@@ -52,9 +53,9 @@
   const saveContent = async () => {
     try {
       // Garder uniquement les avatars avec au minimum prénom, nom et sous-titre
-      const filteredAvatars = form.avatars.filter(
-        avatar => avatar.firstName?.trim() && avatar.lastName?.trim() && avatar.subtitle?.trim(),
-      )
+      const filteredAvatars = form.avatars
+        .filter(avatar => avatar.firstName?.trim() && avatar.lastName?.trim() && avatar.subtitle?.trim())
+        .slice(0, 5) // Limiter à 5 avatars maximum
 
       const payload = {
         subtitle: form.subtitle,
@@ -62,6 +63,7 @@
         videoUrl:
           form.videoUrl && typeof form.videoUrl === 'string' && form.videoUrl.trim() !== '' ? form.videoUrl : null,
         avatars: filteredAvatars,
+        additionalClientsCount: form.additionalClientsCount,
       }
 
       await updateHero(payload)
@@ -155,8 +157,15 @@
       <UCard>
         <template #header>
           <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold">Avatars clients</h3>
-            <UButton color="neutral" size="sm" icon="i-lucide-plus" @click="addAvatar">Ajouter un avatar</UButton>
+            <h3 class="text-lg font-semibold">Avatars clients (5 maximum)</h3>
+            <UButton
+              color="neutral"
+              size="sm"
+              icon="i-lucide-plus"
+              :disabled="form.avatars.length >= 5"
+              @click="addAvatar">
+              Ajouter un avatar
+            </UButton>
           </div>
         </template>
         <div class="space-y-4">
@@ -213,9 +222,28 @@
 
           <!-- Bouton en bas de la liste -->
           <div class="flex justify-end pt-4">
-            <UButton color="neutral" size="lg" icon="i-lucide-plus" @click="addAvatar">Ajouter un avatar</UButton>
+            <UButton
+              color="neutral"
+              size="lg"
+              icon="i-lucide-plus"
+              :disabled="form.avatars.length >= 5"
+              @click="addAvatar">
+              Ajouter un avatar
+            </UButton>
           </div>
         </div>
+      </UCard>
+
+      <!-- Compteur clients additionnels -->
+      <UCard>
+        <template #header>
+          <h3 class="text-lg font-semibold">Nombre de clients additionnels</h3>
+        </template>
+        <UFormField
+          label='Nombre affiché dans le "+X"'
+          hint="Ce nombre s'affichera après les 5 avatars (ex: +10 pour afficher '+10')">
+          <UInput v-model.number="form.additionalClientsCount" type="number" min="0" size="lg" placeholder="0" />
+        </UFormField>
       </UCard>
 
       <!-- Bouton Enregistrer en bas (desktop seulement) -->

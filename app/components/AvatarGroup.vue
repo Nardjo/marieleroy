@@ -3,10 +3,10 @@
     <div v-if="displayAvatars.length > 0" class="flex flex-row items-center">
       <AnimatedTooltip :items="displayAvatars" />
       <div
-        v-if="avatars.length > 5"
+        v-if="additionalClientsCount > 0"
         class="group relative -mr-4 h-14 w-14 rounded-full border-2 border-white bg-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-md cursor-default"
         style="z-index: 0">
-        +{{ avatars.length - 5 }}
+        +{{ additionalClientsCount }}
       </div>
     </div>
     <p class="text-lg text-primary-700 font-medium md:ml-2">{{ clientsText }}</p>
@@ -24,11 +24,13 @@
   interface Props {
     avatars?: Avatar[]
     clientsText?: string
+    additionalClientsCount?: number
   }
 
   const props = withDefaults(defineProps<Props>(), {
     avatars: () => [],
     clientsText: 'clients satisfaits',
+    additionalClientsCount: 0,
   })
 
   // Transformer les avatars pour AnimatedTooltip

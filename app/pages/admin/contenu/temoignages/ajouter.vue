@@ -15,7 +15,7 @@
   const form = ref({
     title: '',
     quote: '',
-    embedUrl: '',
+    embedUrl: 'https://www.youtube.com/embed/',
     displayOrder: 0,
   })
 

@@ -14,7 +14,7 @@
   const toast = useToast()
 
   const isNew = computed(() => route.params.id === 'nouveau')
-  const testimonialId = computed(() => (isNew.value ? null : route.params.id as string))
+  const testimonialId = computed(() => (isNew.value ? null : (route.params.id as string)))
 
   const form = reactive({
     title: '',
@@ -26,6 +26,7 @@
   const loadTestimonial = async () => {
     if (isNew.value) {
       // For new testimonials, set displayOrder to the count of existing testimonials
+      form.embedUrl = 'https://www.youtube.com/embed/'
       try {
         const testimonials = await fetchTestimonials()
         form.displayOrder = testimonials.length
@@ -42,7 +43,7 @@
       if (!testimonial) {
         toast.add({
           title: 'Témoignage introuvable',
-          description: 'Ce témoignage n\'existe pas',
+          description: "Ce témoignage n'existe pas",
           color: 'error',
           icon: 'i-lucide-alert-circle',
           duration: 5000,
@@ -149,11 +150,11 @@
             <UInput
               v-model="form.embedUrl"
               size="lg"
-              placeholder="Ex: https://youtube.com/embed/xxxxx"
+              placeholder="Ex: https://www.youtube.com/embed/xxxxx"
               type="url" />
             <template #help>
               <p class="text-sm text-gray-500 mt-1">
-                Utilisez l'URL d'embed YouTube (format: https://youtube.com/embed/VIDEO_ID)
+                Utilisez l'URL d'embed YouTube (format: https://www.youtube.com/embed/VIDEO_ID)
               </p>
             </template>
           </UFormField>
@@ -166,7 +167,7 @@
           </UFormField>
 
           <!-- Preview -->
-          <div v-if="form.embedUrl" class="border-t pt-6">
+          <div v-if="form.embedUrl && form.embedUrl !== 'https://www.youtube.com/embed/'" class="border-t pt-6">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Aperçu de la vidéo :</p>
             <div class="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
               <iframe

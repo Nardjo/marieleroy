@@ -86,7 +86,9 @@
         <template #header>
           <h3 class="text-lg font-semibold">Aperçu vidéo</h3>
         </template>
-        <div v-if="localForm.embedUrl" class="aspect-video rounded-lg overflow-hidden bg-gray-100">
+        <div
+          v-if="localForm.embedUrl && localForm.embedUrl !== 'https://www.youtube.com/embed/'"
+          class="aspect-video rounded-lg overflow-hidden bg-gray-100">
           <iframe
             :src="localForm.embedUrl"
             class="w-full h-full"

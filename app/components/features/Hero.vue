@@ -27,21 +27,21 @@
               base: 'py-0',
               wrapper: '!py-0',
               container: '!gap-2',
+              title: '!-mt-20',
             }">
             <template #title>
               <div class="flex flex-col items-center">
-                <Logo :size="100" class="mb-0 scale-50 sm:scale-75 md:scale-100" />
+                <UCard class="mb-10 md:mb-20 !bg-orange-600/10">
+                  <span class="text-orange-600/80 text-3xl md:text-5xl italic font-light">{{ description }}</span>
+                </UCard>
+                <Logo :size="100" class="scale-50 sm:scale-75 md:scale-100" />
+                <h2 class="text-4xl md:text-6xl font-light text-primary-800 font-dancing-script">{{ subtitle }}</h2>
               </div>
             </template>
 
             <template #description>
-              <div class="flex flex-col gap-3">
-                <h2 class="text-2xl md:text-5xl text-primary-800 font-dancing-script">{{ subtitle }}</h2>
-                <span class="text-orange-600/80 text-5xl my-10 italic font-light">{{ description }}</span>
-              </div>
-
               <!-- Avatars clients -->
-              <div class="mt-6">
+              <div class="mt-10">
                 <AvatarGroup :avatars :clients-text :additional-clients-count />
               </div>
             </template>

@@ -6,7 +6,7 @@
         <h3 class="text-2xl font-bold text-primary-900 mb-4">
           {{ title }}
         </h3>
-        <p class="text-primary-700 mb-6">
+        <p class="text-xl text-primary-700 italic mb-6">
           {{ description }}
         </p>
         <CTAButton

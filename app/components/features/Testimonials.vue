@@ -16,7 +16,7 @@
           <span v-if="header.subtitle" class="text-primary-700">{{ header.subtitle }}</span>
         </h2>
         <div v-if="header.description"
-           class="tiptap-content text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto"
+           class="tiptap-content text-2xl md:text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto"
            v-html="header.description" />
       </div>
 
@@ -41,7 +41,7 @@
             </h3>
             <p
               v-if="testimonial.subtitle"
-              class="text-4xl font-semibold text-orange-600/80 mb-4 md:mb-10 font-dancing-script">
+              class="text-3xl md:text-4xl font-semibold text-orange-600/80 mb-4 md:mb-10 font-dancing-script">
               {{ testimonial.subtitle }}
             </p>
             <p

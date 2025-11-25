@@ -15,7 +15,10 @@
           {{ header.title }}
           <span v-if="header.subtitle" class="text-primary-700">{{ header.subtitle }}</span>
         </h2>
-        <div v-if="header.description" class="tiptap-content text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto" v-html="header.description" />
+        <div
+          v-if="header.description"
+          class="tiptap-content text-2xl md:text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto"
+          v-html="header.description" />
       </div>
 
       <UCard

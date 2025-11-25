@@ -17,7 +17,7 @@
         </h2>
         <div
           v-if="headerDescription"
-          class="tiptap-content text-xl font-medium italic text-orange-600/80 max-w-3xl mx-auto"
+          class="tiptap-content text-2xl md:text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto"
           v-html="headerDescription" />
       </div>
 

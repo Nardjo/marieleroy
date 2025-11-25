@@ -24,7 +24,6 @@
           <UPageHero
             orientation="vertical"
             :ui="{
-              base: 'py-0',
               wrapper: '!py-0',
               container: '!gap-2',
               title: '!-mt-20',
@@ -32,7 +31,9 @@
             <template #title>
               <div class="flex flex-col items-center">
                 <UCard class="mb-10 md:mb-20 !bg-orange-600/10">
-                  <div class="tiptap-content text-orange-600/80 text-3xl md:text-5xl italic font-light" v-html="description" />
+                  <div
+                    class="tiptap-content text-orange-600/80 text-3xl md:text-4xl italic font-medium"
+                    v-html="description" />
                 </UCard>
                 <Logo :size="100" class="scale-50 sm:scale-75 md:scale-100" />
                 <h2 class="text-4xl md:text-6xl font-light text-primary-800 font-dancing-script">{{ subtitle }}</h2>
@@ -81,14 +82,15 @@
 <script setup lang="ts">
   const { animatedCurvePath } = useCurvedAnimation()
   const { scrollToSection } = useSmoothScroll()
+  const { sanitize } = useSanitize()
 
   // Fetch hero data
   const { data: hero } = await usePublicHero()
   const { data: settings } = await usePublicSettings()
 
   const subtitle = computed(() => hero.value?.subtitle || 'Copywriter Professionnelle')
-  const description = computed(
-    () => hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.',
+  const description = computed(() =>
+    sanitize(hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.'),
   )
   const videoUrl = computed(() => hero.value?.videoUrl || null)
   const avatars = computed(() => hero.value?.avatars || [])

@@ -39,6 +39,7 @@
     "dotenv": "^17.2.3",
     "eslint": "^9.38.0",
     "import-in-the-middle": "^2.0.0",
+    "isomorphic-dompurify": "^2.33.0",
     "nuxt": "^4.2.0",
     "nuxt-auth-utils": "^0.5.25",
     "nuxt-posthog": "^1.6.3",

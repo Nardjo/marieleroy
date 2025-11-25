@@ -189,13 +189,6 @@
                 </UFormField>
               </div>
             </UCard>
-
-            <!-- Bouton Enregistrer en bas (desktop seulement) -->
-            <div class="hidden md:flex justify-end pt-6 pb-6">
-              <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveContent">
-                Enregistrer
-              </UButton>
-            </div>
           </div>
 
           <!-- Avatars Tab -->
@@ -269,13 +262,6 @@
                 <UInput v-model.number="form.additionalClientsCount" type="number" min="0" size="lg" placeholder="0" />
               </UFormField>
             </UCard>
-
-            <!-- Bouton Enregistrer en bas (desktop seulement) -->
-            <div class="hidden md:flex justify-end pt-6 pb-6">
-              <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveContent">
-                Enregistrer
-              </UButton>
-            </div>
           </div>
         </template>
       </UTabs>

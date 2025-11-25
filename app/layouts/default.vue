@@ -198,7 +198,7 @@
               <li v-for="link in items" :key="link.label">
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-0 !px-4 min-h-[44px]"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4  min-h-[40px]"
                   @click="link.onClick">
                   {{ link.label }}
                 </UButton>
@@ -206,7 +206,7 @@
               <li>
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-0 !px-4 min-h-[44px]"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4  min-h-[40px]"
                   @click="navigateTo('/admin')">
                   Administration
                 </UButton>
@@ -229,7 +229,6 @@
                 class="text-gray-600 hover:bg-primary-200 transition-all" />
             </div>
             <h3 class="font-semibold text-gray-800 mt-3 md:mt-8">Une question ?</h3>
-<!--            <span class="italic">contactez moi par mail</span>-->
             <UButton
               variant="link"
               icon="i-lucide-mail"

@@ -75,18 +75,23 @@
 </template>
 
 <script setup lang="ts">
+  const { sanitize } = useSanitize()
+
   // Fetch testimonials from API
   const { data: testimonialsData } = await usePublicTestimonials()
   const { data: settings } = await usePublicSettings()
 
-  const header = computed(
-    () =>
-      testimonialsData.value?.header || {
-        title: 'Ce que disent mes clients,',
-        subtitle: 'leurs résultats',
-        description: "Découvrez comment j'ai aidé mes clients à transformer leurs idées en contenus percutants",
-      },
-  )
+  const header = computed(() => {
+    const h = testimonialsData.value?.header || {
+      title: 'Ce que disent mes clients,',
+      subtitle: 'leurs résultats',
+      description: "Découvrez comment j'ai aidé mes clients à transformer leurs idées en contenus percutants",
+    }
+    return {
+      ...h,
+      description: sanitize(h.description),
+    }
+  })
   const testimonials = computed(() => testimonialsData.value?.testimonials || [])
   const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
 </script>

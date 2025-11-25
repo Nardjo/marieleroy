@@ -59,6 +59,7 @@
         class="mt-12">
         <CTASection
           title="Une question avant de te lancer ?"
+          description="N'hésite pas à me contacter directement par email. Je serai ravie de t'aider !"
           button-text="Envoyer un message"
           :button-to="contactEmail"
           :button-external="true"
@@ -71,21 +72,29 @@
 </template>
 
 <script setup lang="ts">
+  const { sanitize } = useSanitize()
+
   // Fetch FAQ from API
   const { data: faqData } = await usePublicFaq()
   const { data: settings } = await usePublicSettings()
 
-  const header = computed(() => faqData.value?.header || {
-    title: 'Vos questions,',
-    subtitle: 'mes réponses',
-    description: 'Retrouvez les réponses aux questions les plus courantes sur mes services de copywriting',
+  const header = computed(() => {
+    const h = faqData.value?.header || {
+      title: 'Vos questions,',
+      subtitle: 'mes réponses',
+      description: 'Retrouvez les réponses aux questions les plus courantes sur mes services de copywriting',
+    }
+    return {
+      ...h,
+      description: sanitize(h.description),
+    }
   })
 
   const faqItems = computed(() => {
     const items = faqData.value?.items || []
     return items.map(item => ({
       label: item.question,
-      content: item.answer,
+      content: sanitize(item.answer),
     }))
   })
 

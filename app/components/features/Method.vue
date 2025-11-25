@@ -72,7 +72,7 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="mt-16">
         <CTASection
-          title="Besoin d’un regard expert sur ton marketing ?"
+          title="Tu as besoin d’un regard expert sur ton marketing ?"
           description="On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions."
           button-text="Obtenir un audit gratuit"
           :button-to="ctaLink"
@@ -86,6 +86,7 @@
 </template>
 
 <script setup>
+  const { sanitize } = useSanitize()
   const activeStep = ref(0)
   const sectionRef = ref(null)
 
@@ -96,10 +97,11 @@
   const header = computed(() => methodData.value?.header || {})
   const headerTitle = computed(() => header.value.title || 'Comment je travaille')
   const headerSubtitle = computed(() => header.value.subtitle || 'étape par étape')
-  const headerDescription = computed(
-    () =>
+  const headerDescription = computed(() =>
+    sanitize(
       header.value.description ||
-      'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
+        'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
+    ),
   )
 
   const steps = computed(() => {
@@ -107,7 +109,7 @@
     return dbSteps.map(step => ({
       id: step.id,
       title: step.title,
-      text: step.description,
+      text: sanitize(step.description),
     }))
   })
 

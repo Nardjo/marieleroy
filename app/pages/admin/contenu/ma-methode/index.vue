@@ -260,13 +260,6 @@
                 </UFormField>
               </div>
             </UCard>
-
-            <!-- Bouton Enregistrer en bas (desktop seulement) -->
-            <div class="hidden md:flex justify-end pt-6 pb-6">
-              <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveHeader">
-                Enregistrer
-              </UButton>
-            </div>
           </div>
 
           <!-- Steps Tab -->

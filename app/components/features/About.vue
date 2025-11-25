@@ -1,9 +1,10 @@
 <script setup lang="ts">
+  const { sanitize } = useSanitize()
   const { data: about } = await usePublicAbout()
 
   const title = computed(() => about.value?.title || 'Marie Leroy')
   const subtitle = computed(() => about.value?.subtitle || 'mon parcours')
-  const description = computed(() => about.value?.description || '')
+  const description = computed(() => sanitize(about.value?.description || ''))
   const imageUrl = useFullImageUrl(() => about.value?.imageUrl)
 </script>
 

@@ -32,7 +32,7 @@
             <template #title>
               <div class="flex flex-col items-center">
                 <UCard class="mb-10 md:mb-20 !bg-orange-600/10">
-                  <span class="text-orange-600/80 text-3xl md:text-5xl italic font-light">{{ description }}</span>
+                  <div class="tiptap-content text-orange-600/80 text-3xl md:text-5xl italic font-light" v-html="description" />
                 </UCard>
                 <Logo :size="100" class="scale-50 sm:scale-75 md:scale-100" />
                 <h2 class="text-4xl md:text-6xl font-light text-primary-800 font-dancing-script">{{ subtitle }}</h2>

@@ -182,10 +182,10 @@
           </UFormField>
 
           <UFormField label="Description" description="Optionnel - Texte d'introduction">
-            <UTextarea
+            <AdminRichTextEditor
               v-model="headerForm.description"
-              :rows="4"
-              placeholder="Décrivez votre approche et méthode de travail..." />
+              placeholder="Décrivez votre approche et méthode de travail..."
+              min-height="120px" />
           </UFormField>
         </div>
       </UCard>

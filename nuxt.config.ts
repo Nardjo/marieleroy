@@ -49,7 +49,12 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
     '@sentry/nuxt/module',
     'nuxt-posthog',
+    'nuxt-tiptap-editor',
   ],
+
+  tiptap: {
+    prefix: 'Tiptap',
+  },
 
   runtimeConfig: {
     posthogProjectId: process.env.POSTHOG_PROJECT_ID,

@@ -15,9 +15,7 @@
           {{ header.title }}
           <span v-if="header.subtitle" class="text-primary-700">{{ header.subtitle }}</span>
         </h2>
-        <p v-if="header.description" class="text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto">
-          {{ header.description }}
-        </p>
+        <div v-if="header.description" class="tiptap-content text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto" v-html="header.description" />
       </div>
 
       <UCard
@@ -47,9 +45,7 @@
 
           <template #content="{ item }">
             <div class="px-6 pb-6">
-              <p v-if="item.content" class="text-primary-700 leading-relaxed whitespace-pre-line">
-                {{ item.content }}
-              </p>
+              <div v-if="item.content" class="tiptap-content text-primary-700 leading-relaxed" v-html="item.content" />
             </div>
           </template>
         </UAccordion>

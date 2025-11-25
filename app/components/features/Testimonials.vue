@@ -15,10 +15,9 @@
           {{ header.title }}
           <span v-if="header.subtitle" class="text-primary-700">{{ header.subtitle }}</span>
         </h2>
-        <p v-if="header.description"
-           class="text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto">
-          {{ header.description }}
-        </p>
+        <div v-if="header.description"
+           class="tiptap-content text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto"
+           v-html="header.description" />
       </div>
 
       <!-- Liste des témoignages vidéo -->

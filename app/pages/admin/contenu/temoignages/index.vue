@@ -131,10 +131,10 @@
           </UFormField>
 
           <UFormField label="Description" description="Optionnel - Texte d'introduction">
-            <UTextarea
+            <AdminRichTextEditor
               v-model="headerForm.description"
-              :rows="3"
-              placeholder="Décrivez la section témoignages..." />
+              placeholder="Décrivez la section témoignages..."
+              min-height="120px" />
           </UFormField>
         </div>
       </UCard>

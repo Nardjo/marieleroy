@@ -15,11 +15,10 @@
           {{ headerTitle }},
           <span class="text-primary-700">{{ headerSubtitle }}</span>
         </h2>
-        <p
+        <div
           v-if="headerDescription"
-          class="text-xl font-medium italic text-orange-600/80 max-w-3xl mx-auto">
-          {{ headerDescription }}
-        </p>
+          class="tiptap-content text-xl font-medium italic text-orange-600/80 max-w-3xl mx-auto"
+          v-html="headerDescription" />
       </div>
 
       <!-- Timeline verticale -->
@@ -59,9 +58,7 @@
                 <h3 class="text-xl font-bold text-primary-900 mb-3">
                   {{ step.title }}
                 </h3>
-                <p class="text-primary-700 leading-relaxed">
-                  {{ step.text }}
-                </p>
+                <div class="tiptap-content text-primary-700 leading-relaxed" v-html="step.text" />
               </div>
             </UCard>
           </div>

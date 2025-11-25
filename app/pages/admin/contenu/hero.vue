@@ -148,7 +148,7 @@
           </UFormField>
 
           <UFormField label="Description" required>
-            <UTextarea v-model="form.description" :rows="4" placeholder="Phrase d'accroche..." />
+            <AdminRichTextEditor v-model="form.description" placeholder="Phrase d'accroche..." />
           </UFormField>
         </div>
       </UCard>

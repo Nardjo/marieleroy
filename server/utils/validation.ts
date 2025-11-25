@@ -34,6 +34,13 @@ export const faqCreateSchema = z.object({
 
 export const faqUpdateSchema = faqCreateSchema.partial()
 
+// FAQ Header Schema
+export const faqHeaderSchema = z.object({
+  title: z.string().min(1),
+  subtitle: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+})
+
 // Testimonial Schemas
 export const testimonialCreateSchema = z.object({
   title: z.string().min(1, 'Title is required'),

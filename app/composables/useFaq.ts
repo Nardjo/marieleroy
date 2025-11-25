@@ -2,6 +2,42 @@ export const useFaq = () => {
   const loading = ref(false)
   const error = ref<string | null>(null)
 
+  // Header operations
+  const fetchHeader = async () => {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await $fetch('/api/admin/faq/header')
+      return data
+    } catch (err: any) {
+      error.value = err.message || 'Erreur lors du chargement de l\'en-tête'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const updateHeader = async (header: {
+    title: string
+    subtitle?: string | null
+    description?: string | null
+  }) => {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await $fetch('/api/admin/faq/header', {
+        method: 'PUT',
+        body: header,
+      })
+      return data
+    } catch (err: any) {
+      error.value = err.message || 'Erreur lors de la mise à jour de l\'en-tête'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   // Récupérer toutes les questions
   const fetchFaqs = async () => {
     loading.value = true
@@ -88,6 +124,8 @@ export const useFaq = () => {
   return {
     loading: readonly(loading),
     error: readonly(error),
+    fetchHeader,
+    updateHeader,
     fetchFaqs,
     fetchFaq,
     createFaq,

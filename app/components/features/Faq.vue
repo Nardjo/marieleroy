@@ -15,7 +15,7 @@
           Vos questions,
           <span class="text-primary-700">mes réponses</span>
         </h2>
-        <p class="text-primary-700 max-w-2xl mx-auto">
+        <p class="text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto">
           Retrouvez les réponses aux questions les plus courantes sur mes services de copywriting
         </p>
       </div>
@@ -65,7 +65,7 @@
           title="Vous avez d'autres questions ?"
           description="N'hésitez pas à me contacter pour un échange personnalisé. Je suis là pour vous accompagner dans votre projet."
           button-text="Poser ma question"
-          :button-to="ctaLink"
+          :button-to="contactEmail"
           :button-external="true"
           icon="i-lucide-message-circle"
           tracking-name="ask_question_cta"
@@ -88,5 +88,8 @@
     }))
   })
 
-  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const contactEmail = computed(() => {
+    const email = settings.value?.site?.email
+    return email ? `mailto:${email}?subject=Questions pour Marie Leroy` : '#'
+  })
 </script>

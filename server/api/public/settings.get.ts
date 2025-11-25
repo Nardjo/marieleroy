@@ -41,6 +41,7 @@ export default defineEventHandler(async () => {
       name: settingsObj.siteName || 'Marie Leroy',
       description: settingsObj.siteDescription || '',
       email: settingsObj.email || '',
+      contactEmail: settingsObj.email || '',
       phone: settingsObj.phone || '',
       address: settingsObj.address || '',
       ctaLink: settingsObj.cta_link || '',

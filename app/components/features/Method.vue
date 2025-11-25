@@ -15,7 +15,9 @@
           {{ headerTitle }},
           <span class="text-primary-700">{{ headerSubtitle }}</span>
         </h2>
-        <p v-if="headerDescription" class="text-primary-700 max-w-2xl mx-auto">
+        <p
+          v-if="headerDescription"
+          class="text-xl font-medium italic text-orange-600/80 max-w-3xl mx-auto">
           {{ headerDescription }}
         </p>
       </div>
@@ -48,8 +50,7 @@
                   ? 'bg-gradient-to-br from-primary-600 to-primary-800 text-white scale-110'
                   : 'bg-white text-primary-400 scale-100',
               ]">
-              <Icon v-if="index < activeStep" name="i-lucide-check" class="w-4 h-4" />
-              <span v-else>{{ index + 1 }}</span>
+              {{ index + 1 }}
             </div>
 
             <!-- Card de l'étape -->
@@ -74,12 +75,12 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="mt-16">
         <CTASection
-          title="Prêt à transformer votre contenu ?"
-          description="Découvrez comment ma méthode peut vous aider à atteindre vos objectifs de conversion et d'engagement."
-          button-text="Démarrer mon projet"
+          title="Besoin d’un regard expert sur ton marketing ?"
+          description="On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions."
+          button-text="Obtenir un audit gratuit"
           :button-to="ctaLink"
           :button-external="true"
-          icon="i-lucide-rocket"
+          icon="i-lucide-eye"
           tracking-name="start_project_cta"
           tracking-section="method" />
       </div>
@@ -153,7 +154,8 @@
       const stepsLength = steps.value.length
       const newStep = Math.min(Math.floor(acceleratedProgress * stepsLength), stepsLength - 1)
 
-      if (newStep !== activeStep.value) {
+      // Une fois affichée, une étape reste visible (on ne diminue jamais activeStep)
+      if (newStep > activeStep.value) {
         activeStep.value = newStep
       }
     }

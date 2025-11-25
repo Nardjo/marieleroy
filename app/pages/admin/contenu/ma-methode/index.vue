@@ -21,6 +21,20 @@
     description: '',
   })
 
+  // Tabs
+  const route = useRoute()
+  const router = useRouter()
+  const tabs = [
+    { label: 'En-tête', value: 'header', icon: 'i-lucide-heading' },
+    { label: 'Les étapes', value: 'steps', icon: 'i-lucide-list-ordered' },
+  ]
+  const activeTab = ref((route.query.tab as string) || 'header')
+
+  // Sync tab with URL
+  watch(activeTab, (newTab) => {
+    router.replace({ query: { ...route.query, tab: newTab } })
+  })
+
   const loadSteps = async () => {
     try {
       steps.value = await fetchSteps()
@@ -151,11 +165,26 @@
     <!-- Page Header -->
     <AdminPageHeader title="Ma méthode" description="Gérer votre processus de travail étape par étape">
       <template #actions>
-        <UButton color="primary" size="lg" icon="i-lucide-save" @click="saveHeader" :loading="loading">
+        <UButton
+          v-if="activeTab === 'header'"
+          color="primary"
+          size="lg"
+          icon="i-lucide-save"
+          :loading="loading"
+          @click="saveHeader">
           Enregistrer
+        </UButton>
+        <UButton
+          v-else
+          color="neutral"
+          size="lg"
+          icon="i-lucide-plus"
+          @click="addStep">
+          Ajouter une étape
         </UButton>
       </template>
     </AdminPageHeader>
+
     <!-- Loading State -->
     <template v-if="loading">
       <UCard>
@@ -166,103 +195,121 @@
           </div>
         </div>
       </UCard>
-      <AdminSkeletonCardList :count="3" />
     </template>
 
-    <!-- Content -->
+    <!-- Content with Tabs -->
     <template v-else>
-      <UCard>
-        <div class="space-y-6">
-          <UFormField label="Titre principal" required>
-            <UInput v-model="headerForm.title" size="lg" placeholder="Ex: Comment je travaille" />
-          </UFormField>
+      <UTabs v-model="activeTab" :items="tabs" class="w-full">
+        <template #content="{ item }">
+          <!-- Header Tab -->
+          <div v-if="item.value === 'header'" class="space-y-6 pt-6">
+            <UCard>
+              <div class="space-y-6">
+                <UFormField label="Titre principal" required>
+                  <UInput v-model="headerForm.title" size="lg" placeholder="Ex: Comment je travaille" />
+                </UFormField>
 
-          <UFormField label="Sous-titre" description="Optionnel - Affiché sous le titre principal">
-            <UInput v-model="headerForm.subtitle" size="lg" placeholder="Ex: étape par étape" />
-          </UFormField>
+                <UFormField label="Sous-titre" description="Optionnel - Affiché sous le titre principal">
+                  <UInput v-model="headerForm.subtitle" size="lg" placeholder="Ex: étape par étape" />
+                </UFormField>
 
-          <UFormField label="Description" description="Optionnel - Texte d'introduction">
-            <AdminRichTextEditor
-              v-model="headerForm.description"
-              placeholder="Décrivez votre approche et méthode de travail..."
-              min-height="120px" />
-          </UFormField>
-        </div>
-      </UCard>
-
-      <!-- Steps List -->
-      <div class="space-y-4">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Les étapes</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Personnalisez Les étapes de votre méthode de travail
-            </p>
-          </div>
-          <UButton color="neutral" size="lg" icon="i-lucide-plus" class="w-full sm:w-auto" @click="addStep">
-            Ajouter une étape
-          </UButton>
-        </div>
-
-        <!-- Empty State -->
-        <AdminEmptyState
-          v-if="steps.length === 0"
-          icon="i-lucide-list-ordered"
-          title="Aucune étape"
-          description="Commencez par ajouter votre première étape"
-          button-label="Ajouter une étape"
-          button-icon="i-lucide-plus"
-          @action="addStep" />
-
-        <!-- Steps Cards -->
-        <draggable
-          v-else
-          v-model="steps"
-          item-key="id"
-          handle=".drag-handle"
-          animation="200"
-          @start="onDragStart"
-          @end="onDragEnd">
-          <template #item="{ element: step, index }">
-            <UCard class="shadow-sm mb-4" :class="{ 'opacity-50': isDragging }">
-              <div class="flex items-start gap-4">
-                <!-- Drag Handle & Number -->
-                <div class="flex items-center gap-3">
-                  <UIcon
-                    name="i-lucide-grip-vertical"
-                    class="drag-handle cursor-move text-gray-400 hover:text-gray-600 transition-colors" />
-                  <div
-                    class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
-                    <span class="text-sm font-bold text-primary-600 dark:text-primary-400">
-                      {{ index + 1 }}
-                    </span>
-                  </div>
-                </div>
-
-                <!-- Content -->
-                <div class="flex-1">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ step.title }}
-                  </h3>
-                  <p class="text-gray-600 dark:text-gray-400 mt-1">
-                    {{ step.description }}
-                  </p>
-                </div>
-
-                <!-- Actions -->
-                <AdminCrudActions @edit="editStep(step)" @delete="handleDelete(step.id)" />
+                <UFormField label="Description" description="Optionnel - Texte d'introduction">
+                  <AdminRichTextEditor
+                    v-model="headerForm.description"
+                    placeholder="Décrivez votre approche et méthode de travail..."
+                    min-height="120px" />
+                </UFormField>
               </div>
             </UCard>
-          </template>
-        </draggable>
-      </div>
 
-      <!-- Bouton Enregistrer en bas (desktop seulement) -->
-      <div class="hidden md:flex justify-end pt-6 pb-6">
-        <UButton color="primary" size="lg" icon="i-lucide-save" @click="saveHeader" :loading="loading">
-          Enregistrer
-        </UButton>
-      </div>
+            <!-- Bouton Enregistrer en bas (desktop seulement) -->
+            <div class="hidden md:flex justify-end pt-6 pb-6">
+              <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveHeader">
+                Enregistrer
+              </UButton>
+            </div>
+          </div>
+
+          <!-- Steps Tab -->
+          <div v-else-if="item.value === 'steps'" class="space-y-6 pt-6">
+            <!-- Empty State -->
+            <AdminEmptyState
+              v-if="steps.length === 0"
+              icon="i-lucide-list-ordered"
+              title="Aucune étape"
+              description="Commencez par ajouter votre première étape"
+              button-label="Ajouter une étape"
+              button-icon="i-lucide-plus"
+              @action="addStep" />
+
+            <!-- Steps Table with Drag & Drop -->
+            <UCard v-else>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th class="w-12 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"></th>
+                      <th class="w-16 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ordre</th>
+                      <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Titre</th>
+                      <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
+                      <th class="w-24 px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                    </tr>
+                  </thead>
+                  <draggable
+                    v-model="steps"
+                    tag="tbody"
+                    item-key="id"
+                    handle=".drag-handle"
+                    animation="200"
+                    @start="onDragStart"
+                    @end="onDragEnd">
+                    <template #item="{ element: step, index }">
+                      <tr
+                        class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                        :class="{ 'opacity-50': isDragging }">
+                        <td class="px-4 py-3">
+                          <UIcon
+                            name="i-lucide-grip-vertical"
+                            class="drag-handle cursor-move text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" />
+                        </td>
+                        <td class="px-4 py-3">
+                          <span class="font-medium text-gray-900 dark:text-white">{{ index + 1 }}</span>
+                        </td>
+                        <td class="px-4 py-3">
+                          <span class="font-semibold text-gray-900 dark:text-white">{{ step.title }}</span>
+                        </td>
+                        <td class="px-4 py-3">
+                          <p class="text-gray-600 dark:text-gray-400 line-clamp-2 max-w-md">
+                            {{ step.description }}
+                          </p>
+                        </td>
+                        <td class="px-4 py-3">
+                          <div class="flex items-center justify-end gap-2">
+                            <UButton
+                              color="neutral"
+                              variant="ghost"
+                              size="sm"
+                              class="cursor-pointer"
+                              icon="i-lucide-pencil"
+                              @click="editStep(step)" />
+                            <UButton
+                              color="error"
+                              variant="ghost"
+                              size="sm"
+                              class="cursor-pointer"
+                              icon="i-lucide-trash-2"
+                              @click="handleDelete(step.id)" />
+                          </div>
+                        </td>
+                      </tr>
+                    </template>
+                  </draggable>
+                </table>
+              </div>
+            </UCard>
+          </div>
+        </template>
+      </UTabs>
     </template>
   </div>
 </template>

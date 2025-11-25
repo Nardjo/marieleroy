@@ -85,6 +85,21 @@ export const useTestimonials = () => {
     }
   }
 
+  const reorderTestimonials = async (
+    testimonials: Array<{ id: string; displayOrder: number }>,
+  ) => {
+    try {
+      loading.value = true
+      const response = await $fetch('/api/admin/testimonials/reorder', {
+        method: 'PUT',
+        body: { testimonials },
+      })
+      return response
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     loading,
     fetchHeader,
@@ -93,5 +108,6 @@ export const useTestimonials = () => {
     createTestimonial,
     updateTestimonial,
     deleteTestimonial,
+    reorderTestimonials,
   }
 }

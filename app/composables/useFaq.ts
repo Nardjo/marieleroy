@@ -121,6 +121,24 @@ export const useFaq = () => {
     }
   }
 
+  // Réordonner les questions
+  const reorderFaqs = async (faqs: Array<{ id: string; displayOrder: number }>) => {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await $fetch('/api/admin/faq/reorder', {
+        method: 'PUT',
+        body: { faqs },
+      })
+      return data
+    } catch (err: any) {
+      error.value = err.message || 'Erreur lors du réordonnancement des questions'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     loading: readonly(loading),
     error: readonly(error),
@@ -131,5 +149,6 @@ export const useFaq = () => {
     createFaq,
     updateFaq,
     deleteFaq,
+    reorderFaqs,
   }
 }

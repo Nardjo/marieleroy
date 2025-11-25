@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import draggable from 'vuedraggable'
+  import { useSortable } from '@vueuse/integrations/useSortable'
 
   useHead({
     title: 'Témoignages',
@@ -16,7 +16,6 @@
   const toast = useToast()
 
   const testimonials = ref<any[]>([])
-  const isDragging = ref(false)
   const headerForm = reactive({
     title: '',
     subtitle: '',
@@ -32,18 +31,67 @@
   const activeTab = ref((route.query.tab as string) || 'header')
 
   // Sync tab with URL
-  watch(activeTab, (newTab) => {
+  watch(activeTab, newTab => {
     router.replace({ query: { ...route.query, tab: newTab } })
   })
 
-  // Pagination
-  const page = ref(1)
-  const pageSize = 10
+  // Table columns
+  const columns = [
+    { id: 'order', header: 'Ordre' },
+    { id: 'title', header: 'Titre' },
+    { id: 'quote', header: 'Citation' },
+    { id: 'actions', header: 'Actions' },
+  ]
 
-  const paginatedTestimonials = computed(() => {
-    const start = (page.value - 1) * pageSize
-    const end = start + pageSize
-    return testimonials.value.slice(start, end)
+  // Drag and drop
+  let currentTbody: HTMLElement | null = null
+  let sortableInstance: ReturnType<typeof useSortable> | null = null
+
+  const initSortable = () => {
+    if (activeTab.value !== 'testimonials' || testimonials.value.length === 0) return
+
+    const tbody = document.querySelector('.testimonials-tbody') as HTMLElement | null
+    if (!tbody) return
+
+    if (tbody !== currentTbody) {
+      if (sortableInstance) {
+        sortableInstance.stop()
+      }
+
+      currentTbody = tbody
+      // Ne pas passer testimonials pour éviter les conflits de réactivité Vue
+      sortableInstance = useSortable(tbody, [], {
+        animation: 150,
+        onEnd: (evt: any) => {
+          const { oldIndex, newIndex } = evt
+          if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
+            // Réordonner manuellement le tableau
+            const items = [...testimonials.value]
+            const [moved] = items.splice(oldIndex, 1)
+            items.splice(newIndex, 0, moved)
+            testimonials.value = items
+
+            saveOrder()
+          }
+        },
+      })
+    }
+  }
+
+  watch([activeTab, () => testimonials.value.length], () => {
+    nextTick(() => setTimeout(initSortable, 50))
+  }, { immediate: true })
+
+  onUpdated(() => {
+    if (activeTab.value === 'testimonials' && testimonials.value.length > 0) {
+      nextTick(initSortable)
+    }
+  })
+
+  onUnmounted(() => {
+    if (sortableInstance) {
+      sortableInstance.stop()
+    }
   })
 
   const loadHeader = async () => {
@@ -118,15 +166,8 @@
     router.push(`/admin/contenu/temoignages/${id}`)
   }
 
-  // Gestion du drag & drop pour réordonner
-  const onDragStart = () => {
-    isDragging.value = true
-  }
-
-  const onDragEnd = async () => {
-    isDragging.value = false
-
-    // Sauvegarder l'ordre après un drag
+  // Sauvegarder l'ordre après un drag
+  const saveOrder = async () => {
     const reorderedTestimonials = testimonials.value.map((testimonial, index) => ({
       id: testimonial.id,
       displayOrder: index + 1,
@@ -149,7 +190,7 @@
         color: 'error',
         duration: 3000,
       })
-      await loadTestimonials() // Recharger l'ordre original
+      await loadTestimonials()
     }
   }
 
@@ -208,11 +249,11 @@
                   <UInput v-model="headerForm.title" size="lg" placeholder="Ex: Ce que disent mes clients," />
                 </UFormField>
 
-                <UFormField label="Sous-titre" description="Optionnel - Affiché sous le titre principal">
+                <UFormField label="Sous-titre">
                   <UInput v-model="headerForm.subtitle" size="lg" placeholder="Ex: leurs résultats" />
                 </UFormField>
 
-                <UFormField label="Description" description="Optionnel - Texte d'introduction">
+                <UFormField label="Description">
                   <AdminRichTextEditor
                     v-model="headerForm.description"
                     placeholder="Décrivez la section témoignages..."
@@ -233,79 +274,43 @@
           <div v-else-if="item.value === 'testimonials'" class="space-y-6 pt-6">
             <!-- Testimonials Table with Drag & Drop -->
             <UCard v-if="testimonials.length > 0">
-              <div class="overflow-x-auto">
-                <table class="w-full">
-                  <thead>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                      <th class="w-12 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"></th>
-                      <th class="w-16 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ordre</th>
-                      <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Titre</th>
-                      <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Citation</th>
-                      <th class="w-24 px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
-                    </tr>
-                  </thead>
-                  <draggable
-                    v-model="testimonials"
-                    tag="tbody"
-                    item-key="id"
-                    handle=".drag-handle"
-                    animation="200"
-                    @start="onDragStart"
-                    @end="onDragEnd">
-                    <template #item="{ element: testimonial, index }">
-                      <tr
-                        class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                        :class="{ 'opacity-50': isDragging }">
-                        <td class="px-4 py-3">
-                          <UIcon
-                            name="i-lucide-grip-vertical"
-                            class="drag-handle cursor-move text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" />
-                        </td>
-                        <td class="px-4 py-3">
-                          <span class="font-medium text-gray-900 dark:text-white">{{ index + 1 }}</span>
-                        </td>
-                        <td class="px-4 py-3">
-                          <div class="flex flex-col">
-                            <span class="font-semibold text-gray-900 dark:text-white">{{ testimonial.title }}</span>
-                            <span v-if="testimonial.subtitle" class="text-sm text-gray-500">{{ testimonial.subtitle }}</span>
-                          </div>
-                        </td>
-                        <td class="px-4 py-3">
-                          <p class="text-gray-600 dark:text-gray-400 italic line-clamp-2 max-w-md">
-                            "{{ testimonial.quote }}"
-                          </p>
-                        </td>
-                        <td class="px-4 py-3">
-                          <div class="flex items-center justify-end gap-2">
-                            <UButton
-                              color="neutral"
-                              variant="ghost"
-                              size="sm"
-                              class="cursor-pointer"
-                              icon="i-lucide-pencil"
-                              @click="editTestimonial(testimonial.id)" />
-                            <UButton
-                              color="error"
-                              variant="ghost"
-                              size="sm"
-                              class="cursor-pointer"
-                              icon="i-lucide-trash-2"
-                              @click="confirmDelete(testimonial.id, testimonial.title)" />
-                          </div>
-                        </td>
-                      </tr>
-                    </template>
-                  </draggable>
-                </table>
-              </div>
+              <UTable :data="testimonials" :columns="columns" :ui="{ tbody: 'testimonials-tbody' }">
+                <template #order-cell="{ row }">
+                  <span class="font-medium text-gray-900 dark:text-white">{{ testimonials.indexOf(row.original) + 1 }}</span>
+                </template>
 
-              <!-- Pagination -->
-              <div v-if="testimonials.length > pageSize" class="flex justify-between items-center mt-4 px-4 pb-4">
-                <p class="text-sm text-gray-500">
-                  {{ (page - 1) * pageSize + 1 }} - {{ Math.min(page * pageSize, testimonials.length) }} sur {{ testimonials.length }}
-                </p>
-                <UPagination v-model:page="page" :total="testimonials.length" :items-per-page="pageSize" />
-              </div>
+                <template #title-cell="{ row }">
+                  <div class="flex flex-col">
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ row.original.title }}</span>
+                    <span v-if="row.original.subtitle" class="text-sm text-gray-500">{{ row.original.subtitle }}</span>
+                  </div>
+                </template>
+
+                <template #quote-cell="{ row }">
+                  <p class="text-gray-600 dark:text-gray-400 italic line-clamp-2 max-w-md">
+                    "{{ row.original.quote }}"
+                  </p>
+                </template>
+
+                <template #actions-cell="{ row }">
+                  <div class="flex items-center justify-end gap-2">
+                    <UButton
+                      color="neutral"
+                      variant="ghost"
+                      size="sm"
+                      class="cursor-pointer"
+                      icon="i-lucide-pencil"
+                      @click="editTestimonial(row.original.id)" />
+                    <UButton
+                      color="error"
+                      variant="ghost"
+                      size="sm"
+                      class="cursor-pointer"
+                      icon="i-lucide-trash-2"
+                      @click="confirmDelete(row.original.id, row.original.title)" />
+                  </div>
+                </template>
+              </UTable>
             </UCard>
 
             <!-- Empty State -->

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import draggable from 'vuedraggable'
+  import { useSortable } from '@vueuse/integrations/useSortable'
 
   useHead({
     title: 'Ma méthode',
@@ -13,8 +13,7 @@
   const { refreshMethod } = useRefreshPublicData()
   const toast = useToast()
 
-  const steps = ref([])
-  const isDragging = ref(false)
+  const steps = ref<any[]>([])
   const headerForm = reactive({
     title: '',
     subtitle: '',
@@ -31,8 +30,67 @@
   const activeTab = ref((route.query.tab as string) || 'header')
 
   // Sync tab with URL
-  watch(activeTab, (newTab) => {
+  watch(activeTab, newTab => {
     router.replace({ query: { ...route.query, tab: newTab } })
+  })
+
+  // Table columns
+  const columns = [
+    { id: 'order', header: 'Ordre' },
+    { id: 'title', header: 'Titre' },
+    { id: 'description', header: 'Description' },
+    { id: 'actions', header: 'Actions' },
+  ]
+
+  // Drag and drop
+  let currentTbody: HTMLElement | null = null
+  let sortableInstance: ReturnType<typeof useSortable> | null = null
+
+  const initSortable = () => {
+    if (activeTab.value !== 'steps' || steps.value.length === 0) return
+
+    const tbody = document.querySelector('.steps-tbody') as HTMLElement | null
+    if (!tbody) return
+
+    if (tbody !== currentTbody) {
+      if (sortableInstance) {
+        sortableInstance.stop()
+      }
+
+      currentTbody = tbody
+      // Ne pas passer steps pour éviter les conflits de réactivité Vue
+      sortableInstance = useSortable(tbody, [], {
+        animation: 150,
+        onEnd: (evt: any) => {
+          const { oldIndex, newIndex } = evt
+          if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
+            // Réordonner manuellement le tableau
+            const items = [...steps.value]
+            const [moved] = items.splice(oldIndex, 1)
+            items.splice(newIndex, 0, moved)
+            steps.value = items
+
+            saveOrder()
+          }
+        },
+      })
+    }
+  }
+
+  watch([activeTab, () => steps.value.length], () => {
+    nextTick(() => setTimeout(initSortable, 50))
+  }, { immediate: true })
+
+  onUpdated(() => {
+    if (activeTab.value === 'steps' && steps.value.length > 0) {
+      nextTick(initSortable)
+    }
+  })
+
+  onUnmounted(() => {
+    if (sortableInstance) {
+      sortableInstance.stop()
+    }
   })
 
   const loadSteps = async () => {
@@ -61,7 +119,6 @@
   const saveHeader = async () => {
     try {
       await updateHeader(headerForm)
-      // Invalidate public method cache to show updated data
       await refreshMethod()
       toast.add({
         title: 'En-tête enregistré',
@@ -80,15 +137,6 @@
     }
   }
 
-  onMounted(() => {
-    loadHeader()
-    loadSteps()
-  })
-
-  const editHeader = () => {
-    navigateTo('/admin/contenu/ma-methode/header')
-  }
-
   const addStep = () => {
     navigateTo('/admin/contenu/ma-methode/ajouter')
   }
@@ -102,7 +150,6 @@
 
     try {
       await deleteStep(id)
-      // Invalidate public method cache to show updated data
       await refreshMethod()
       toast.add({
         title: 'Étape supprimée',
@@ -123,15 +170,8 @@
     }
   }
 
-  // Gestion du drag & drop pour réordonner
-  const onDragStart = () => {
-    isDragging.value = true
-  }
-
-  const onDragEnd = async () => {
-    isDragging.value = false
-
-    // Toujours sauvegarder l'ordre après un drag, car vuedraggable a déjà mis à jour le tableau
+  // Sauvegarder l'ordre après un drag
+  const saveOrder = async () => {
     const reorderedSteps = steps.value.map((step, index) => ({
       id: step.id,
       stepOrder: index + 1,
@@ -139,7 +179,6 @@
 
     try {
       await reorderSteps(reorderedSteps)
-      // Invalidate public method cache to show updated data
       await refreshMethod()
       toast.add({
         title: 'Ordre mis à jour',
@@ -155,9 +194,14 @@
         color: 'error',
         duration: 3000,
       })
-      await loadSteps() // Recharger l'ordre original
+      await loadSteps()
     }
   }
+
+  onMounted(() => {
+    loadHeader()
+    loadSteps()
+  })
 </script>
 
 <template>
@@ -174,12 +218,7 @@
           @click="saveHeader">
           Enregistrer
         </UButton>
-        <UButton
-          v-else
-          color="neutral"
-          size="lg"
-          icon="i-lucide-plus"
-          @click="addStep">
+        <UButton v-else color="neutral" size="lg" icon="i-lucide-plus" @click="addStep">
           Ajouter une étape
         </UButton>
       </template>
@@ -209,11 +248,11 @@
                   <UInput v-model="headerForm.title" size="lg" placeholder="Ex: Comment je travaille" />
                 </UFormField>
 
-                <UFormField label="Sous-titre" description="Optionnel - Affiché sous le titre principal">
+                <UFormField label="Sous-titre">
                   <UInput v-model="headerForm.subtitle" size="lg" placeholder="Ex: étape par étape" />
                 </UFormField>
 
-                <UFormField label="Description" description="Optionnel - Texte d'introduction">
+                <UFormField label="Description">
                   <AdminRichTextEditor
                     v-model="headerForm.description"
                     placeholder="Décrivez votre approche et méthode de travail..."
@@ -244,68 +283,40 @@
 
             <!-- Steps Table with Drag & Drop -->
             <UCard v-else>
-              <div class="overflow-x-auto">
-                <table class="w-full">
-                  <thead>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                      <th class="w-12 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"></th>
-                      <th class="w-16 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ordre</th>
-                      <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Titre</th>
-                      <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-                      <th class="w-24 px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
-                    </tr>
-                  </thead>
-                  <draggable
-                    v-model="steps"
-                    tag="tbody"
-                    item-key="id"
-                    handle=".drag-handle"
-                    animation="200"
-                    @start="onDragStart"
-                    @end="onDragEnd">
-                    <template #item="{ element: step, index }">
-                      <tr
-                        class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                        :class="{ 'opacity-50': isDragging }">
-                        <td class="px-4 py-3">
-                          <UIcon
-                            name="i-lucide-grip-vertical"
-                            class="drag-handle cursor-move text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" />
-                        </td>
-                        <td class="px-4 py-3">
-                          <span class="font-medium text-gray-900 dark:text-white">{{ index + 1 }}</span>
-                        </td>
-                        <td class="px-4 py-3">
-                          <span class="font-semibold text-gray-900 dark:text-white">{{ step.title }}</span>
-                        </td>
-                        <td class="px-4 py-3">
-                          <p class="text-gray-600 dark:text-gray-400 line-clamp-2 max-w-md">
-                            {{ step.description }}
-                          </p>
-                        </td>
-                        <td class="px-4 py-3">
-                          <div class="flex items-center justify-end gap-2">
-                            <UButton
-                              color="neutral"
-                              variant="ghost"
-                              size="sm"
-                              class="cursor-pointer"
-                              icon="i-lucide-pencil"
-                              @click="editStep(step)" />
-                            <UButton
-                              color="error"
-                              variant="ghost"
-                              size="sm"
-                              class="cursor-pointer"
-                              icon="i-lucide-trash-2"
-                              @click="handleDelete(step.id)" />
-                          </div>
-                        </td>
-                      </tr>
-                    </template>
-                  </draggable>
-                </table>
-              </div>
+              <UTable :data="steps" :columns="columns" :ui="{ tbody: 'steps-tbody' }">
+                <template #order-cell="{ row }">
+                  <span class="font-medium text-gray-900 dark:text-white">{{ steps.indexOf(row.original) + 1 }}</span>
+                </template>
+
+                <template #title-cell="{ row }">
+                  <span class="font-semibold text-gray-900 dark:text-white">{{ row.original.title }}</span>
+                </template>
+
+                <template #description-cell="{ row }">
+                  <p class="text-gray-600 dark:text-gray-400 line-clamp-2 max-w-md">
+                    {{ row.original.description }}
+                  </p>
+                </template>
+
+                <template #actions-cell="{ row }">
+                  <div class="flex items-center justify-end gap-2">
+                    <UButton
+                      color="neutral"
+                      variant="ghost"
+                      size="sm"
+                      class="cursor-pointer"
+                      icon="i-lucide-pencil"
+                      @click="editStep(row.original)" />
+                    <UButton
+                      color="error"
+                      variant="ghost"
+                      size="sm"
+                      class="cursor-pointer"
+                      icon="i-lucide-trash-2"
+                      @click="handleDelete(row.original.id)" />
+                  </div>
+                </template>
+              </UTable>
             </UCard>
           </div>
         </template>

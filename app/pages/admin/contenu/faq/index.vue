@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import draggable from 'vuedraggable'
+  import type { TableColumn } from '@nuxt/ui'
+  import { useSortable } from '@vueuse/integrations/useSortable'
 
   useHead({
     title: 'FAQ',
@@ -14,7 +15,6 @@
   const toast = useToast()
 
   const faqItems = ref<any[]>([])
-  const isDragging = ref(false)
   const headerForm = reactive({
     title: '',
     subtitle: '',
@@ -31,8 +31,69 @@
   const activeTab = ref((route.query.tab as string) || 'header')
 
   // Sync tab with URL
-  watch(activeTab, (newTab) => {
+  watch(activeTab, newTab => {
     router.replace({ query: { ...route.query, tab: newTab } })
+  })
+
+  // Table columns
+  const columns: TableColumn<any>[] = [
+    { id: 'order', header: 'Ordre' },
+    { id: 'question', header: 'Question' },
+    { id: 'answer', header: 'Réponse' },
+    { id: 'actions', header: 'Actions' },
+  ]
+
+  // Drag and drop
+  let currentTbody: HTMLElement | null = null
+  let sortableInstance: ReturnType<typeof useSortable> | null = null
+
+  const initSortable = () => {
+    if (activeTab.value !== 'questions' || faqItems.value.length === 0) return
+
+    const tbody = document.querySelector('.faq-tbody') as HTMLElement | null
+    if (!tbody) return
+
+    // Ne réinitialiser que si le tbody a changé
+    if (tbody !== currentTbody) {
+      // Détruire l'ancienne instance
+      if (sortableInstance) {
+        sortableInstance.stop()
+      }
+
+      currentTbody = tbody
+      // Ne pas passer faqItems pour éviter les conflits de réactivité Vue
+      sortableInstance = useSortable(tbody, [], {
+        animation: 150,
+        onEnd: (evt: any) => {
+          const { oldIndex, newIndex } = evt
+          if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
+            // Réordonner manuellement le tableau
+            const items = [...faqItems.value]
+            const [moved] = items.splice(oldIndex, 1)
+            items.splice(newIndex, 0, moved)
+            faqItems.value = items
+
+            saveOrder()
+          }
+        },
+      })
+    }
+  }
+
+  watch([activeTab, () => faqItems.value.length], () => {
+    nextTick(() => setTimeout(initSortable, 50))
+  }, { immediate: true })
+
+  onUpdated(() => {
+    if (activeTab.value === 'questions' && faqItems.value.length > 0) {
+      nextTick(initSortable)
+    }
+  })
+
+  onUnmounted(() => {
+    if (sortableInstance) {
+      sortableInstance.stop()
+    }
   })
 
   const loadHeader = async () => {
@@ -120,22 +181,15 @@
     }
   }
 
-  // Gestion du drag & drop pour réordonner
-  const onDragStart = () => {
-    isDragging.value = true
-  }
-
-  const onDragEnd = async () => {
-    isDragging.value = false
-
-    // Sauvegarder l'ordre après un drag
-    const reorderedFaqs = faqItems.value.map((faq, index) => ({
+  // Sauvegarder l'ordre après un drag
+  const saveOrder = async () => {
+    const reorderedFaqItems = faqItems.value.map((faq, index) => ({
       id: faq.id,
       displayOrder: index + 1,
     }))
 
     try {
-      await reorderFaqs(reorderedFaqs)
+      await reorderFaqs(reorderedFaqItems)
       await refreshFaq()
       toast.add({
         title: 'Ordre mis à jour',
@@ -151,7 +205,7 @@
         color: 'error',
         duration: 3000,
       })
-      await loadFaqs() // Recharger l'ordre original
+      await loadFaqs()
     }
   }
 </script>
@@ -170,12 +224,7 @@
           @click="saveHeader">
           Enregistrer
         </UButton>
-        <UButton
-          v-else
-          color="neutral"
-          size="lg"
-          icon="i-lucide-plus"
-          @click="addFaqItem">
+        <UButton v-else color="neutral" size="lg" icon="i-lucide-plus" @click="addFaqItem">
           Ajouter une question
         </UButton>
       </template>
@@ -205,11 +254,11 @@
                   <UInput v-model="headerForm.title" size="lg" placeholder="Ex: Vos questions," />
                 </UFormField>
 
-                <UFormField label="Sous-titre" description="Optionnel - Affiché sous le titre principal">
+                <UFormField label="Sous-titre">
                   <UInput v-model="headerForm.subtitle" size="lg" placeholder="Ex: mes réponses" />
                 </UFormField>
 
-                <UFormField label="Description" description="Optionnel - Texte d'introduction">
+                <UFormField label="Description">
                   <AdminRichTextEditor
                     v-model="headerForm.description"
                     placeholder="Décrivez la section FAQ..."
@@ -240,68 +289,44 @@
 
             <!-- FAQ Table with Drag & Drop -->
             <UCard v-else>
-              <div class="overflow-x-auto">
-                <table class="w-full">
-                  <thead>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                      <th class="w-12 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"></th>
-                      <th class="w-16 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ordre</th>
-                      <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Question</th>
-                      <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Réponse</th>
-                      <th class="w-24 px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
-                    </tr>
-                  </thead>
-                  <draggable
-                    v-model="faqItems"
-                    tag="tbody"
-                    item-key="id"
-                    handle=".drag-handle"
-                    animation="200"
-                    @start="onDragStart"
-                    @end="onDragEnd">
-                    <template #item="{ element: faq, index }">
-                      <tr
-                        class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                        :class="{ 'opacity-50': isDragging }">
-                        <td class="px-4 py-3">
-                          <UIcon
-                            name="i-lucide-grip-vertical"
-                            class="drag-handle cursor-move text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" />
-                        </td>
-                        <td class="px-4 py-3">
-                          <span class="font-medium text-gray-900 dark:text-white">{{ index + 1 }}</span>
-                        </td>
-                        <td class="px-4 py-3">
-                          <span class="font-semibold text-gray-900 dark:text-white line-clamp-2">{{ faq.question }}</span>
-                        </td>
-                        <td class="px-4 py-3">
-                          <p class="text-gray-600 dark:text-gray-400 line-clamp-2 max-w-md">
-                            {{ faq.answer }}
-                          </p>
-                        </td>
-                        <td class="px-4 py-3">
-                          <div class="flex items-center justify-end gap-2">
-                            <UButton
-                              color="neutral"
-                              variant="ghost"
-                              size="sm"
-                              class="cursor-pointer"
-                              icon="i-lucide-pencil"
-                              @click="editFaqItem(faq)" />
-                            <UButton
-                              color="error"
-                              variant="ghost"
-                              size="sm"
-                              class="cursor-pointer"
-                              icon="i-lucide-trash-2"
-                              @click="handleDelete(faq.id)" />
-                          </div>
-                        </td>
-                      </tr>
-                    </template>
-                  </draggable>
-                </table>
-              </div>
+              <UTable ref="table" :data="faqItems" :columns="columns" :ui="{ tbody: 'faq-tbody' }" class="flex-1">
+                <template #order-cell="{ row }">
+                  <span class="font-medium text-gray-900 dark:text-white">
+                    {{ faqItems.indexOf(row.original) + 1 }}
+                  </span>
+                </template>
+
+                <template #question-cell="{ row }">
+                  <span class="font-semibold text-gray-900 dark:text-white line-clamp-2">
+                    {{ row.original.question }}
+                  </span>
+                </template>
+
+                <template #answer-cell="{ row }">
+                  <p class="text-gray-600 dark:text-gray-400 line-clamp-2 max-w-md">
+                    {{ row.original.answer }}
+                  </p>
+                </template>
+
+                <template #actions-cell="{ row }">
+                  <div class="flex items-center justify-end gap-2">
+                    <UButton
+                      color="neutral"
+                      variant="ghost"
+                      size="sm"
+                      class="cursor-pointer"
+                      icon="i-lucide-pencil"
+                      @click="editFaqItem(row.original)" />
+                    <UButton
+                      color="error"
+                      variant="ghost"
+                      size="sm"
+                      class="cursor-pointer"
+                      icon="i-lucide-trash-2"
+                      @click="handleDelete(row.original.id)" />
+                  </div>
+                </template>
+              </UTable>
             </UCard>
           </div>
         </template>

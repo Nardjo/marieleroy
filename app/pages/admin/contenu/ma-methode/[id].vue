@@ -105,11 +105,10 @@
         </UFormField>
 
         <UFormField label="Description" required>
-          <UTextarea
+          <AdminRichTextEditor
             v-model="form.description"
-            :rows="4"
             placeholder="Décrivez cette étape en détail..."
-            :disabled="loading" />
+            min-height="150px" />
         </UFormField>
       </div>
     </UCard>

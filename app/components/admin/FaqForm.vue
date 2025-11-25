@@ -46,11 +46,11 @@
         </UFormField>
 
         <UFormField label="Réponse" required>
-          <UTextarea
+          <AdminRichTextEditor
             :model-value="localForm.answer"
             @update:model-value="updateField('answer', $event)"
-            :rows="6"
-            placeholder="La réponse à cette question..." />
+            placeholder="La réponse à cette question..."
+            min-height="150px" />
         </UFormField>
 
         <UFormField label="Ordre d'affichage" required>

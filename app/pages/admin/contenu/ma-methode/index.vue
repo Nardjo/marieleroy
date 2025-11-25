@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import draggable from 'vuedraggable'
+  import { useSortable } from '@vueuse/integrations/useSortable'
 
   useHead({
     title: 'Ma méthode',
@@ -13,12 +13,84 @@
   const { refreshMethod } = useRefreshPublicData()
   const toast = useToast()
 
-  const steps = ref([])
-  const isDragging = ref(false)
+  const steps = ref<any[]>([])
   const headerForm = reactive({
     title: '',
     subtitle: '',
     description: '',
+  })
+
+  // Tabs
+  const route = useRoute()
+  const router = useRouter()
+  const tabs = [
+    { label: 'En-tête', value: 'header', icon: 'i-lucide-heading' },
+    { label: 'Les étapes', value: 'steps', icon: 'i-lucide-list-ordered' },
+  ]
+  const activeTab = ref((route.query.tab as string) || 'header')
+
+  // Sync tab with URL
+  watch(activeTab, newTab => {
+    router.replace({ query: { ...route.query, tab: newTab } })
+  })
+
+  // Table columns
+  const columns = [
+    { id: 'order', header: 'Ordre' },
+    { id: 'title', header: 'Titre' },
+    { id: 'description', header: 'Description' },
+    { id: 'actions', header: 'Actions' },
+  ]
+
+  // Drag and drop
+  let currentTbody: HTMLElement | null = null
+  let sortableInstance: ReturnType<typeof useSortable> | null = null
+
+  const initSortable = () => {
+    if (activeTab.value !== 'steps' || steps.value.length === 0) return
+
+    const tbody = document.querySelector('.steps-tbody') as HTMLElement | null
+    if (!tbody) return
+
+    if (tbody !== currentTbody) {
+      if (sortableInstance) {
+        sortableInstance.stop()
+      }
+
+      currentTbody = tbody
+      // Ne pas passer steps pour éviter les conflits de réactivité Vue
+      sortableInstance = useSortable(tbody, [], {
+        animation: 150,
+        onEnd: (evt: any) => {
+          const { oldIndex, newIndex } = evt
+          if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
+            // Réordonner manuellement le tableau
+            const items = [...steps.value]
+            const [moved] = items.splice(oldIndex, 1)
+            items.splice(newIndex, 0, moved)
+            steps.value = items
+
+            saveOrder()
+          }
+        },
+      })
+    }
+  }
+
+  watch([activeTab, () => steps.value.length], () => {
+    nextTick(() => setTimeout(initSortable, 50))
+  }, { immediate: true })
+
+  onUpdated(() => {
+    if (activeTab.value === 'steps' && steps.value.length > 0) {
+      nextTick(initSortable)
+    }
+  })
+
+  onUnmounted(() => {
+    if (sortableInstance) {
+      sortableInstance.stop()
+    }
   })
 
   const loadSteps = async () => {
@@ -47,7 +119,6 @@
   const saveHeader = async () => {
     try {
       await updateHeader(headerForm)
-      // Invalidate public method cache to show updated data
       await refreshMethod()
       toast.add({
         title: 'En-tête enregistré',
@@ -66,15 +137,6 @@
     }
   }
 
-  onMounted(() => {
-    loadHeader()
-    loadSteps()
-  })
-
-  const editHeader = () => {
-    navigateTo('/admin/contenu/ma-methode/header')
-  }
-
   const addStep = () => {
     navigateTo('/admin/contenu/ma-methode/ajouter')
   }
@@ -88,7 +150,6 @@
 
     try {
       await deleteStep(id)
-      // Invalidate public method cache to show updated data
       await refreshMethod()
       toast.add({
         title: 'Étape supprimée',
@@ -109,15 +170,8 @@
     }
   }
 
-  // Gestion du drag & drop pour réordonner
-  const onDragStart = () => {
-    isDragging.value = true
-  }
-
-  const onDragEnd = async () => {
-    isDragging.value = false
-
-    // Toujours sauvegarder l'ordre après un drag, car vuedraggable a déjà mis à jour le tableau
+  // Sauvegarder l'ordre après un drag
+  const saveOrder = async () => {
     const reorderedSteps = steps.value.map((step, index) => ({
       id: step.id,
       stepOrder: index + 1,
@@ -125,7 +179,6 @@
 
     try {
       await reorderSteps(reorderedSteps)
-      // Invalidate public method cache to show updated data
       await refreshMethod()
       toast.add({
         title: 'Ordre mis à jour',
@@ -141,9 +194,14 @@
         color: 'error',
         duration: 3000,
       })
-      await loadSteps() // Recharger l'ordre original
+      await loadSteps()
     }
   }
+
+  onMounted(() => {
+    loadHeader()
+    loadSteps()
+  })
 </script>
 
 <template>
@@ -151,11 +209,21 @@
     <!-- Page Header -->
     <AdminPageHeader title="Ma méthode" description="Gérer votre processus de travail étape par étape">
       <template #actions>
-        <UButton color="primary" size="lg" icon="i-lucide-save" @click="saveHeader" :loading="loading">
+        <UButton
+          v-if="activeTab === 'header'"
+          color="primary"
+          size="lg"
+          icon="i-lucide-save"
+          :loading="loading"
+          @click="saveHeader">
           Enregistrer
+        </UButton>
+        <UButton v-else color="neutral" size="lg" icon="i-lucide-plus" @click="addStep">
+          Ajouter une étape
         </UButton>
       </template>
     </AdminPageHeader>
+
     <!-- Loading State -->
     <template v-if="loading">
       <UCard>
@@ -166,103 +234,86 @@
           </div>
         </div>
       </UCard>
-      <AdminSkeletonCardList :count="3" />
     </template>
 
-    <!-- Content -->
+    <!-- Content with Tabs -->
     <template v-else>
-      <UCard>
-        <div class="space-y-6">
-          <UFormField label="Titre principal" required>
-            <UInput v-model="headerForm.title" size="lg" placeholder="Ex: Comment je travaille" />
-          </UFormField>
+      <UTabs v-model="activeTab" :items="tabs" class="w-full">
+        <template #content="{ item }">
+          <!-- Header Tab -->
+          <div v-if="item.value === 'header'" class="space-y-6 pt-6">
+            <UCard>
+              <div class="space-y-6">
+                <UFormField label="Titre principal" required>
+                  <UInput v-model="headerForm.title" size="lg" placeholder="Ex: Comment je travaille" />
+                </UFormField>
 
-          <UFormField label="Sous-titre" description="Optionnel - Affiché sous le titre principal">
-            <UInput v-model="headerForm.subtitle" size="lg" placeholder="Ex: étape par étape" />
-          </UFormField>
+                <UFormField label="Sous-titre">
+                  <UInput v-model="headerForm.subtitle" size="lg" placeholder="Ex: étape par étape" />
+                </UFormField>
 
-          <UFormField label="Description" description="Optionnel - Texte d'introduction">
-            <UTextarea
-              v-model="headerForm.description"
-              :rows="4"
-              placeholder="Décrivez votre approche et méthode de travail..." />
-          </UFormField>
-        </div>
-      </UCard>
-
-      <!-- Steps List -->
-      <div class="space-y-4">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Les étapes</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Personnalisez Les étapes de votre méthode de travail
-            </p>
-          </div>
-          <UButton color="neutral" size="lg" icon="i-lucide-plus" class="w-full sm:w-auto" @click="addStep">
-            Ajouter une étape
-          </UButton>
-        </div>
-
-        <!-- Empty State -->
-        <AdminEmptyState
-          v-if="steps.length === 0"
-          icon="i-lucide-list-ordered"
-          title="Aucune étape"
-          description="Commencez par ajouter votre première étape"
-          button-label="Ajouter une étape"
-          button-icon="i-lucide-plus"
-          @action="addStep" />
-
-        <!-- Steps Cards -->
-        <draggable
-          v-else
-          v-model="steps"
-          item-key="id"
-          handle=".drag-handle"
-          animation="200"
-          @start="onDragStart"
-          @end="onDragEnd">
-          <template #item="{ element: step, index }">
-            <UCard class="shadow-sm mb-4" :class="{ 'opacity-50': isDragging }">
-              <div class="flex items-start gap-4">
-                <!-- Drag Handle & Number -->
-                <div class="flex items-center gap-3">
-                  <UIcon
-                    name="i-lucide-grip-vertical"
-                    class="drag-handle cursor-move text-gray-400 hover:text-gray-600 transition-colors" />
-                  <div
-                    class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
-                    <span class="text-sm font-bold text-primary-600 dark:text-primary-400">
-                      {{ index + 1 }}
-                    </span>
-                  </div>
-                </div>
-
-                <!-- Content -->
-                <div class="flex-1">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ step.title }}
-                  </h3>
-                  <p class="text-gray-600 dark:text-gray-400 mt-1">
-                    {{ step.description }}
-                  </p>
-                </div>
-
-                <!-- Actions -->
-                <AdminCrudActions @edit="editStep(step)" @delete="handleDelete(step.id)" />
+                <UFormField label="Description">
+                  <AdminRichTextEditor
+                    v-model="headerForm.description"
+                    placeholder="Décrivez votre approche et méthode de travail..."
+                    min-height="120px" />
+                </UFormField>
               </div>
             </UCard>
-          </template>
-        </draggable>
-      </div>
+          </div>
 
-      <!-- Bouton Enregistrer en bas (desktop seulement) -->
-      <div class="hidden md:flex justify-end pt-6 pb-6">
-        <UButton color="primary" size="lg" icon="i-lucide-save" @click="saveHeader" :loading="loading">
-          Enregistrer
-        </UButton>
-      </div>
+          <!-- Steps Tab -->
+          <div v-else-if="item.value === 'steps'" class="space-y-6 pt-6">
+            <!-- Empty State -->
+            <AdminEmptyState
+              v-if="steps.length === 0"
+              icon="i-lucide-list-ordered"
+              title="Aucune étape"
+              description="Commencez par ajouter votre première étape"
+              button-label="Ajouter une étape"
+              button-icon="i-lucide-plus"
+              @action="addStep" />
+
+            <!-- Steps Table with Drag & Drop -->
+            <UCard v-else>
+              <UTable :data="steps" :columns="columns" :ui="{ tbody: 'steps-tbody' }">
+                <template #order-cell="{ row }">
+                  <span class="font-medium text-gray-900 dark:text-white">{{ steps.indexOf(row.original) + 1 }}</span>
+                </template>
+
+                <template #title-cell="{ row }">
+                  <span class="font-semibold text-gray-900 dark:text-white">{{ row.original.title }}</span>
+                </template>
+
+                <template #description-cell="{ row }">
+                  <p class="text-gray-600 dark:text-gray-400 line-clamp-2 max-w-md">
+                    {{ row.original.description }}
+                  </p>
+                </template>
+
+                <template #actions-cell="{ row }">
+                  <div class="flex items-center justify-end gap-2">
+                    <UButton
+                      color="neutral"
+                      variant="ghost"
+                      size="sm"
+                      class="cursor-pointer"
+                      icon="i-lucide-pencil"
+                      @click="editStep(row.original)" />
+                    <UButton
+                      color="error"
+                      variant="ghost"
+                      size="sm"
+                      class="cursor-pointer"
+                      icon="i-lucide-trash-2"
+                      @click="handleDelete(row.original.id)" />
+                  </div>
+                </template>
+              </UTable>
+            </UCard>
+          </div>
+        </template>
+      </UTabs>
     </template>
   </div>
 </template>

@@ -15,9 +15,10 @@
           {{ headerTitle }},
           <span class="text-primary-700">{{ headerSubtitle }}</span>
         </h2>
-        <p v-if="headerDescription" class="text-primary-700 max-w-2xl mx-auto">
-          {{ headerDescription }}
-        </p>
+        <div
+          v-if="headerDescription"
+          class="tiptap-content text-xl font-medium italic text-orange-600/80 max-w-3xl mx-auto"
+          v-html="headerDescription" />
       </div>
 
       <!-- Timeline verticale -->
@@ -48,8 +49,7 @@
                   ? 'bg-gradient-to-br from-primary-600 to-primary-800 text-white scale-110'
                   : 'bg-white text-primary-400 scale-100',
               ]">
-              <Icon v-if="index < activeStep" name="i-lucide-check" class="w-4 h-4" />
-              <span v-else>{{ index + 1 }}</span>
+              {{ index + 1 }}
             </div>
 
             <!-- Card de l'étape -->
@@ -58,9 +58,7 @@
                 <h3 class="text-xl font-bold text-primary-900 mb-3">
                   {{ step.title }}
                 </h3>
-                <p class="text-primary-700 leading-relaxed">
-                  {{ step.text }}
-                </p>
+                <div class="tiptap-content text-primary-700 leading-relaxed" v-html="step.text" />
               </div>
             </UCard>
           </div>
@@ -74,12 +72,12 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="mt-16">
         <CTASection
-          title="Prêt à transformer votre contenu ?"
-          description="Découvrez comment ma méthode peut vous aider à atteindre vos objectifs de conversion et d'engagement."
-          button-text="Démarrer mon projet"
+          title="Tu as besoin d’un regard expert sur ton marketing ?"
+          description="On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions."
+          button-text="Obtenir un audit gratuit"
           :button-to="ctaLink"
           :button-external="true"
-          icon="i-lucide-rocket"
+          icon="i-lucide-eye"
           tracking-name="start_project_cta"
           tracking-section="method" />
       </div>
@@ -88,6 +86,7 @@
 </template>
 
 <script setup>
+  const { sanitize } = useSanitize()
   const activeStep = ref(0)
   const sectionRef = ref(null)
 
@@ -98,10 +97,11 @@
   const header = computed(() => methodData.value?.header || {})
   const headerTitle = computed(() => header.value.title || 'Comment je travaille')
   const headerSubtitle = computed(() => header.value.subtitle || 'étape par étape')
-  const headerDescription = computed(
-    () =>
+  const headerDescription = computed(() =>
+    sanitize(
       header.value.description ||
-      'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
+        'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
+    ),
   )
 
   const steps = computed(() => {
@@ -109,7 +109,7 @@
     return dbSteps.map(step => ({
       id: step.id,
       title: step.title,
-      text: step.description,
+      text: sanitize(step.description),
     }))
   })
 
@@ -153,7 +153,8 @@
       const stepsLength = steps.value.length
       const newStep = Math.min(Math.floor(acceleratedProgress * stepsLength), stepsLength - 1)
 
-      if (newStep !== activeStep.value) {
+      // Une fois affichée, une étape reste visible (on ne diminue jamais activeStep)
+      if (newStep > activeStep.value) {
         activeStep.value = newStep
       }
     }

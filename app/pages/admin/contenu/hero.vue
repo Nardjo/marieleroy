@@ -9,9 +9,23 @@
     layout: 'admin',
   })
 
+  const route = useRoute()
+  const router = useRouter()
   const { loading, fetchHero, updateHero } = useHero()
   const { refreshHero } = useRefreshPublicData()
   const toast = useToast()
+
+  // Tabs
+  const tabs = [
+    { label: 'Section Hero', value: 'hero', icon: 'i-lucide-layout' },
+    { label: 'Avatars clients', value: 'avatars', icon: 'i-lucide-users' },
+  ]
+  const activeTab = ref((route.query.tab as string) || 'hero')
+
+  // Sync tab with URL
+  watch(activeTab, newTab => {
+    router.replace({ query: { ...route.query, tab: newTab } })
+  })
 
   interface Avatar {
     firstName: string
@@ -123,135 +137,134 @@
     <!-- Page Header -->
     <AdminPageHeader title="Hero" description="Gérer le contenu de la section Hero (page d'accueil)">
       <template #actions>
+        <UButton
+          v-if="activeTab === 'avatars'"
+          color="neutral"
+          size="lg"
+          icon="i-lucide-plus"
+          :disabled="form.avatars.length >= 5"
+          @click="addAvatar">
+          Ajouter un avatar
+        </UButton>
         <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveContent">
           Enregistrer
         </UButton>
       </template>
     </AdminPageHeader>
 
-    <!-- Form -->
-    <AdminSkeletonForm v-if="loading" :fields="5" />
-
-    <div v-else class="space-y-6">
+    <!-- Loading State -->
+    <template v-if="loading">
       <UCard>
         <div class="space-y-4">
-          <!-- Video Upload Field -->
-          <AdminVideoUploadField
-            v-model="form.videoUrl"
-            label="Vidéo Hero"
-            name="videoUrl"
-            required
-            hint="Formats acceptés: MP4, WebM, OGG, MOV. Taille maximale: 50MB" />
-
-          <UFormField label="Sous-titre" required>
-            <UInput v-model="form.subtitle" size="lg" placeholder="Ex: Copywriter Professionnelle" />
-          </UFormField>
-
-          <UFormField label="Description" required>
-            <UTextarea v-model="form.description" :rows="4" placeholder="Phrase d'accroche..." />
-          </UFormField>
+          <div v-for="i in 4" :key="i">
+            <USkeleton class="h-4 w-24 mb-2" />
+            <USkeleton class="h-10 w-full" />
+          </div>
         </div>
       </UCard>
+    </template>
 
-      <!-- Avatars Section -->
-      <UCard>
-        <template #header>
-          <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold">Avatars clients (5 maximum)</h3>
-            <UButton
-              color="neutral"
-              size="sm"
-              icon="i-lucide-plus"
-              :disabled="form.avatars.length >= 5"
-              @click="addAvatar">
-              Ajouter un avatar
-            </UButton>
+    <!-- Content with Tabs -->
+    <template v-else>
+      <UTabs v-model="activeTab" :items="tabs" class="w-full">
+        <template #content="{ item }">
+          <!-- Hero Section Tab -->
+          <div v-if="item.value === 'hero'" class="space-y-6 pt-6">
+            <UCard>
+              <div class="space-y-4">
+                <!-- Video Upload Field -->
+                <AdminVideoUploadField
+                  v-model="form.videoUrl"
+                  label="Vidéo Hero"
+                  name="videoUrl"
+                  required
+                  hint="Formats acceptés: MP4, WebM, OGG, MOV. Taille maximale: 50MB" />
+
+                <UFormField label="Sous-titre" required>
+                  <UInput v-model="form.subtitle" size="lg" placeholder="Ex: Copywriter Professionnelle" />
+                </UFormField>
+
+                <UFormField label="Description" required>
+                  <AdminRichTextEditor v-model="form.description" placeholder="Phrase d'accroche..." />
+                </UFormField>
+              </div>
+            </UCard>
           </div>
-        </template>
-        <div class="space-y-4">
-          <draggable
-            v-if="form.avatars.length > 0"
-            v-model="form.avatars"
-            item-key="index"
-            class="space-y-6"
-            handle=".drag-handle"
-            :animation="200">
-            <template #item="{ element: avatar, index }">
-              <UCard class="!bg-gray-200 dark:!bg-gray-950">
-                <template #header>
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                      <div class="drag-handle cursor-move text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                        <Icon name="i-lucide-grip-vertical" class="w-5 h-5" />
+
+          <!-- Avatars Tab -->
+          <div v-else-if="item.value === 'avatars'" class="space-y-6 pt-6">
+            <!-- Empty State -->
+            <AdminEmptyState
+              v-if="form.avatars.length === 0"
+              icon="i-lucide-users"
+              title="Aucun avatar"
+              description="Ajoutez des avatars clients pour la section Hero"
+              button-label="Ajouter un avatar"
+              button-icon="i-lucide-plus"
+              @action="addAvatar" />
+
+            <!-- Avatar Edit Cards -->
+            <draggable
+              v-else
+              v-model="form.avatars"
+              item-key="index"
+              class="space-y-4"
+              handle=".drag-handle"
+              :animation="200">
+              <template #item="{ element: avatar, index }">
+                <UCard class="!bg-gray-100 dark:!bg-gray-900">
+                  <template #header>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-3">
+                        <div class="drag-handle cursor-move text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                          <Icon name="i-lucide-grip-vertical" class="w-5 h-5" />
+                        </div>
+                        <h4 class="font-medium">Avatar {{ index + 1 }}</h4>
                       </div>
-                      <h4 class="font-medium">Avatar {{ index + 1 }}</h4>
+                      <UButton color="error" variant="soft" size="sm" icon="i-lucide-trash" @click="removeAvatar(index)">
+                        Supprimer
+                      </UButton>
                     </div>
-                    <UButton color="error" variant="soft" size="sm" icon="i-lucide-trash" @click="removeAvatar(index)">
-                      Supprimer
-                    </UButton>
-                  </div>
-                </template>
-                <div class="space-y-4">
-                  <AdminImageUploadField
-                    v-model="form.avatars[index].imageUrl"
-                    label="Photo"
-                    :name="`avatar-image-${index}`"
-                    hint="Format recommandé: 100x100px (image carrée)" />
+                  </template>
+                  <div class="space-y-4">
+                    <AdminImageUploadField
+                      v-model="form.avatars[index].imageUrl"
+                      label="Photo"
+                      :name="`avatar-image-${index}`"
+                      hint="Format recommandé: 100x100px (image carrée)" />
 
-                  <div class="grid grid-cols-2 gap-4">
-                    <UFormField label="Prénom" required>
-                      <UInput v-model="form.avatars[index].firstName" placeholder="Marie" />
+                    <div class="grid grid-cols-2 gap-4">
+                      <UFormField label="Prénom" required>
+                        <UInput v-model="form.avatars[index].firstName" placeholder="Marie" />
+                      </UFormField>
+
+                      <UFormField label="Nom" required>
+                        <UInput v-model="form.avatars[index].lastName" placeholder="Dupont" />
+                      </UFormField>
+                    </div>
+
+                    <UFormField label="Sous-titre" required>
+                      <UInput v-model="form.avatars[index].subtitle" placeholder="Entrepreneure" />
                     </UFormField>
-
-                    <UFormField label="Nom" required>
-                      <UInput v-model="form.avatars[index].lastName" placeholder="Dupont" />
-                    </UFormField>
                   </div>
+                </UCard>
+              </template>
+            </draggable>
 
-                  <UFormField label="Sous-titre" required>
-                    <UInput v-model="form.avatars[index].subtitle" placeholder="Entrepreneure" />
-                  </UFormField>
-                </div>
-              </UCard>
-            </template>
-          </draggable>
-
-          <div v-else class="text-center py-8 text-gray-500">
-            Aucun avatar ajouté. Cliquez sur "Ajouter un avatar" pour commencer.
+            <!-- Compteur clients additionnels -->
+            <UCard>
+              <template #header>
+                <h3 class="text-lg font-semibold">Nombre de clients additionnels</h3>
+              </template>
+              <UFormField
+                label='Nombre affiché dans le "+X"'
+                hint="Ce nombre s'affichera après les avatars (ex: +10 pour afficher '+10')">
+                <UInput v-model.number="form.additionalClientsCount" type="number" min="0" size="lg" placeholder="0" />
+              </UFormField>
+            </UCard>
           </div>
-
-          <!-- Bouton en bas de la liste -->
-          <div class="flex justify-end pt-4">
-            <UButton
-              color="neutral"
-              size="lg"
-              icon="i-lucide-plus"
-              :disabled="form.avatars.length >= 5"
-              @click="addAvatar">
-              Ajouter un avatar
-            </UButton>
-          </div>
-        </div>
-      </UCard>
-
-      <!-- Compteur clients additionnels -->
-      <UCard>
-        <template #header>
-          <h3 class="text-lg font-semibold">Nombre de clients additionnels</h3>
         </template>
-        <UFormField
-          label='Nombre affiché dans le "+X"'
-          hint="Ce nombre s'affichera après les 5 avatars (ex: +10 pour afficher '+10')">
-          <UInput v-model.number="form.additionalClientsCount" type="number" min="0" size="lg" placeholder="0" />
-        </UFormField>
-      </UCard>
-
-      <!-- Bouton Enregistrer en bas (desktop seulement) -->
-      <div class="hidden md:flex justify-end pt-6 pb-6">
-        <UButton color="primary" size="lg" icon="i-lucide-save" :loading="loading" @click="saveContent">
-          Enregistrer
-        </UButton>
-      </div>
-    </div>
+      </UTabs>
+    </template>
   </div>
 </template>

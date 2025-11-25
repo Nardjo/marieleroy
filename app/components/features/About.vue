@@ -1,9 +1,10 @@
 <script setup lang="ts">
+  const { sanitize } = useSanitize()
   const { data: about } = await usePublicAbout()
 
   const title = computed(() => about.value?.title || 'Marie Leroy')
   const subtitle = computed(() => about.value?.subtitle || 'mon parcours')
-  const description = computed(() => about.value?.description || '')
+  const description = computed(() => sanitize(about.value?.description || ''))
   const imageUrl = useFullImageUrl(() => about.value?.imageUrl)
 </script>
 
@@ -33,14 +34,7 @@
         <UPageCard spotlight class="shadow-lg !bg-primary-100 [--spotlight-color:#8b6239] [--spotlight-size:600px]">
           <div class="flex flex-col-reverse md:flex-row gap-8 md:gap-12 items-center p-6">
             <!-- Texte à gauche -->
-            <div class="flex-1 space-y-6">
-              <p
-                v-for="(paragraph, index) in description.split('\n\n')"
-                :key="index"
-                class="text-primary-700 leading-relaxed whitespace-pre-line">
-                {{ paragraph }}
-              </p>
-            </div>
+            <div class="flex-1 tiptap-content text-primary-700 leading-relaxed" v-html="description" />
 
             <!-- Avatar à droite -->
             <div v-if="imageUrl" class="flex- shrink-0">

@@ -12,12 +12,12 @@
           Témoignages
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
-          Ce que disent mes clients,
-          <span class="text-primary-700">leurs résultats</span>
+          {{ header.title }}
+          <span v-if="header.subtitle" class="text-primary-700">{{ header.subtitle }}</span>
         </h2>
-        <p class="text-primary-700 max-w-2xl mx-auto">
-          Découvrez comment j'ai aidé mes clients à transformer leurs idées en contenus percutants
-        </p>
+        <div v-if="header.description"
+           class="tiptap-content text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto"
+           v-html="header.description" />
       </div>
 
       <!-- Liste des témoignages vidéo -->
@@ -36,13 +36,17 @@
 
           <!-- Titre et citation en dessous (centrés) -->
           <div class="text-center px-2">
-            <h3 class="text-4xl md:text-5xl font-bold text-primary-900 mb-2">
+            <h3 class="text-4xl md:text-5xl font-bold text-primary-900 mb-2 md:mb-8">
               {{ testimonial.title }}
             </h3>
-            <p v-if="testimonial.subtitle" class="text-xl text-primary-600 mb-4">
+            <p
+              v-if="testimonial.subtitle"
+              class="text-4xl font-semibold text-orange-600/80 mb-4 md:mb-10 font-dancing-script">
               {{ testimonial.subtitle }}
             </p>
-            <p class="text-xl md:text-2xl text-primary-700 italic leading-relaxed" :class="{ 'mt-4': !testimonial.subtitle }">
+            <p
+              class="text-xl md:text-2xl text-primary-700 italic leading-relaxed"
+              :class="{ 'mt-4': !testimonial.subtitle }">
               "{{ testimonial.quote }}"
             </p>
           </div>
@@ -56,9 +60,9 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="mt-12">
         <CTASection
-          title="Prêt à transformer votre communication ?"
-          description="Discutons ensemble de votre projet et voyons comment je peux vous aider à atteindre vos objectifs."
-          button-text="Démarrer un projet"
+          title="Tu veux faire passer ton business au niveau supérieur ?"
+          description="Parle-moi de ton projet et on voit ensemble comment augmenter tes conversions sans t’épuiser."
+          button-text="Réserve ton appel offert"
           :button-to="ctaLink"
           :button-external="true"
           icon="i-lucide-rocket"
@@ -71,10 +75,23 @@
 </template>
 
 <script setup lang="ts">
+  const { sanitize } = useSanitize()
+
   // Fetch testimonials from API
   const { data: testimonialsData } = await usePublicTestimonials()
   const { data: settings } = await usePublicSettings()
 
-  const testimonials = computed(() => testimonialsData.value || [])
+  const header = computed(() => {
+    const h = testimonialsData.value?.header || {
+      title: 'Ce que disent mes clients,',
+      subtitle: 'leurs résultats',
+      description: "Découvrez comment j'ai aidé mes clients à transformer leurs idées en contenus percutants",
+    }
+    return {
+      ...h,
+      description: sanitize(h.description),
+    }
+  })
+  const testimonials = computed(() => testimonialsData.value?.testimonials || [])
   const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
 </script>

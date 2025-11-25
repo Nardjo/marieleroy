@@ -40,6 +40,17 @@ model Faq {
   @@map("faq_items")
 }
 
+// FAQ Header model
+model FaqHeader {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  description String?  @db.Text
+  updatedAt   DateTime @updatedAt
+
+  @@map("faq_header")
+}
+
 // Testimonial model
 model Testimonial {
   id           String   @id @default(cuid())
@@ -52,6 +63,17 @@ model Testimonial {
   updatedAt    DateTime @updatedAt
 
   @@map("testimonials")
+}
+
+// Testimonials Header model
+model TestimonialsHeader {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  description String?  @db.Text
+  updatedAt   DateTime @updatedAt
+
+  @@map("testimonials_header")
 }
 
 // Hero Section model

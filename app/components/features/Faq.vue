@@ -12,12 +12,10 @@
           Questions Fréquentes
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
-          Vos questions,
-          <span class="text-primary-700">mes réponses</span>
+          {{ header.title }}
+          <span v-if="header.subtitle" class="text-primary-700">{{ header.subtitle }}</span>
         </h2>
-        <p class="text-primary-700 max-w-2xl mx-auto">
-          Retrouvez les réponses aux questions les plus courantes sur mes services de copywriting
-        </p>
+        <div v-if="header.description" class="tiptap-content text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto" v-html="header.description" />
       </div>
 
       <UCard
@@ -47,9 +45,7 @@
 
           <template #content="{ item }">
             <div class="px-6 pb-6">
-              <p v-if="item.content" class="text-primary-700 leading-relaxed whitespace-pre-line">
-                {{ item.content }}
-              </p>
+              <div v-if="item.content" class="tiptap-content text-primary-700 leading-relaxed" v-html="item.content" />
             </div>
           </template>
         </UAccordion>
@@ -62,10 +58,10 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="mt-12">
         <CTASection
-          title="Vous avez d'autres questions ?"
-          description="N'hésitez pas à me contacter pour un échange personnalisé. Je suis là pour vous accompagner dans votre projet."
-          button-text="Poser ma question"
-          :button-to="ctaLink"
+          title="Une question avant de te lancer ?"
+          description="N'hésite pas à me contacter directement par email. Je serai ravie de t'aider !"
+          button-text="Envoyer un message"
+          :button-to="contactEmail"
           :button-external="true"
           icon="i-lucide-message-circle"
           tracking-name="ask_question_cta"
@@ -76,17 +72,34 @@
 </template>
 
 <script setup lang="ts">
+  const { sanitize } = useSanitize()
+
   // Fetch FAQ from API
   const { data: faqData } = await usePublicFaq()
   const { data: settings } = await usePublicSettings()
 
+  const header = computed(() => {
+    const h = faqData.value?.header || {
+      title: 'Vos questions,',
+      subtitle: 'mes réponses',
+      description: 'Retrouvez les réponses aux questions les plus courantes sur mes services de copywriting',
+    }
+    return {
+      ...h,
+      description: sanitize(h.description),
+    }
+  })
+
   const faqItems = computed(() => {
-    const items = faqData.value || []
+    const items = faqData.value?.items || []
     return items.map(item => ({
       label: item.question,
-      content: item.answer,
+      content: sanitize(item.answer),
     }))
   })
 
-  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const contactEmail = computed(() => {
+    const email = settings.value?.site?.email
+    return email ? `mailto:${email}?subject=Questions pour Marie Leroy` : '#'
+  })
 </script>

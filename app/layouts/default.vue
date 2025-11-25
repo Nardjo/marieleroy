@@ -21,11 +21,11 @@
   })
 
   const socialIconMap: Record<string, string> = {
-    instagram: 'i-lucide-instagram',
-    facebook: 'i-lucide-facebook',
-    twitter: 'i-lucide-twitter',
-    linkedin: 'i-lucide-linkedin',
-    youtube: 'i-lucide-youtube',
+    instagram: 'i-simple-icons-instagram',
+    facebook: 'i-simple-icons-facebook',
+    twitter: 'i-simple-icons-x',
+    linkedin: 'i-simple-icons-linkedin',
+    youtube: 'i-simple-icons-youtube',
     tiktok: 'i-simple-icons-tiktok',
   }
 
@@ -46,16 +46,28 @@
   const siteUrl = config.public.siteUrl
 
   useSeoMeta({
-    description: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent. Découvrez mes services de copywriting pour transformer votre contenu.'),
+    description: computed(
+      () =>
+        seoSettings.value?.metaDescription ||
+        'Des mots qui convertissent, des messages qui résonnent. Découvrez mes services de copywriting pour transformer votre contenu.',
+    ),
     ogTitle: computed(() => seoSettings.value?.metaTitle || 'Marie Leroy | Copywriter Professionnelle'),
-    ogDescription: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent.'),
-    ogImage: computed(() => seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`),
+    ogDescription: computed(
+      () => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent.',
+    ),
+    ogImage: computed(() =>
+      seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`,
+    ),
     ogUrl: siteUrl,
     ogType: 'website',
     twitterCard: 'summary_large_image',
     twitterTitle: computed(() => seoSettings.value?.metaTitle || 'Marie Leroy | Copywriter Professionnelle'),
-    twitterDescription: computed(() => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent.'),
-    twitterImage: computed(() => seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`),
+    twitterDescription: computed(
+      () => seoSettings.value?.metaDescription || 'Des mots qui convertissent, des messages qui résonnent.',
+    ),
+    twitterImage: computed(() =>
+      seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`,
+    ),
   })
 
   // Structured data for SEO (Schema.org JSON-LD) - Dynamic from database
@@ -63,29 +75,33 @@
     script: [
       {
         type: 'application/ld+json',
-        children: computed(() => JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'ProfessionalService',
-          name: seoSettings.value?.metaTitle || 'Marie Leroy',
-          description: seoSettings.value?.metaDescription || 'Copywriter professionnelle spécialisée dans la création de contenus qui convertissent',
-          url: siteUrl,
-          image: seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`,
-          priceRange: '$$',
-          address: {
-            '@type': 'PostalAddress',
-            addressCountry: 'FR',
-          },
-          areaServed: {
-            '@type': 'Country',
-            name: 'France',
-          },
-          serviceType: 'Copywriting',
-          provider: {
-            '@type': 'Person',
-            name: siteName.value,
-            jobTitle: 'Copywriter Professionnelle',
-          },
-        })),
+        children: computed(() =>
+          JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ProfessionalService',
+            'name': seoSettings.value?.metaTitle || 'Marie Leroy',
+            'description':
+              seoSettings.value?.metaDescription ||
+              'Copywriter professionnelle spécialisée dans la création de contenus qui convertissent',
+            'url': siteUrl,
+            'image': seoSettings.value?.ogImage ? `${siteUrl}${seoSettings.value.ogImage}` : `${siteUrl}/og-image.jpg`,
+            'priceRange': '$$',
+            'address': {
+              '@type': 'PostalAddress',
+              'addressCountry': 'FR',
+            },
+            'areaServed': {
+              '@type': 'Country',
+              'name': 'France',
+            },
+            'serviceType': 'Copywriting',
+            'provider': {
+              '@type': 'Person',
+              'name': siteName.value,
+              'jobTitle': 'Copywriter Professionnelle',
+            },
+          }),
+        ),
       },
     ],
   })
@@ -182,7 +198,7 @@
               <li v-for="link in items" :key="link.label">
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-0 !px-4 min-h-[44px]"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4  min-h-[40px]"
                   @click="link.onClick">
                   {{ link.label }}
                 </UButton>
@@ -190,7 +206,7 @@
               <li>
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 !py-0 !px-4 min-h-[44px]"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4  min-h-[40px]"
                   @click="navigateTo('/admin')">
                   Administration
                 </UButton>
@@ -205,14 +221,21 @@
                 v-for="link in socialLinks"
                 :key="link.platform"
                 :icon="getSocialIcon(link.platform)"
-                color="neutral"
-                variant="ghost"
                 size="xl"
                 :to="link.url"
                 target="_blank"
                 :aria-label="link.platform"
-                class="text-gray-600 hover:text-gray-800" />
+                variant="ghost"
+                class="text-gray-600 hover:bg-primary-200 transition-all" />
             </div>
+            <h3 class="font-semibold text-gray-800 mt-3 md:mt-8">Une question ?</h3>
+            <UButton
+              variant="link"
+              icon="i-lucide-mail"
+              class="text-lg text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 min-h-[44px]"
+              :to="`mailto:${settings?.site?.contactEmail || ''}?subject=Question pour Marie Leroy`">
+              {{ settings?.site?.contactEmail || ' ' }}
+            </UButton>
           </div>
 
           <div class="flex flex-col items-center md:items-start gap-4">

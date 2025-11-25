@@ -1,6 +1,35 @@
 export const useTestimonials = () => {
   const loading = ref(false)
 
+  // Header operations
+  const fetchHeader = async () => {
+    try {
+      loading.value = true
+      const response = await $fetch('/api/admin/testimonials/header')
+      return response
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const updateHeader = async (header: {
+    title: string
+    subtitle?: string | null
+    description?: string | null
+  }) => {
+    try {
+      loading.value = true
+      const response = await $fetch('/api/admin/testimonials/header', {
+        method: 'PUT',
+        body: header,
+      })
+      return response
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Testimonials operations
   const fetchTestimonials = async () => {
     try {
       loading.value = true
@@ -56,11 +85,29 @@ export const useTestimonials = () => {
     }
   }
 
+  const reorderTestimonials = async (
+    testimonials: Array<{ id: string; displayOrder: number }>,
+  ) => {
+    try {
+      loading.value = true
+      const response = await $fetch('/api/admin/testimonials/reorder', {
+        method: 'PUT',
+        body: { testimonials },
+      })
+      return response
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     loading,
+    fetchHeader,
+    updateHeader,
     fetchTestimonials,
     createTestimonial,
     updateTestimonial,
     deleteTestimonial,
+    reorderTestimonials,
   }
 }

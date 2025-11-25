@@ -78,12 +78,6 @@
       ],
     },
     {
-      label: 'Voir le site',
-      icon: 'i-lucide-external-link',
-      to: '/',
-      target: '_blank',
-    },
-    {
       label: 'Paramètres',
       icon: 'i-lucide-settings',
       children: [
@@ -113,6 +107,11 @@
   const userMenuItems = [
     [
       {
+        label: 'Voir le site',
+        icon: 'i-lucide-external-link',
+        slot: 'voir-site' as const,
+      },
+      {
         label: 'Mode sombre',
         icon: 'i-lucide-palette',
         slot: 'color-mode' as const,
@@ -138,7 +137,7 @@
     <!-- Desktop Layout -->
     <div class="hidden md:block">
       <UDashboardGroup>
-        <UDashboardSidebar resizable :min-size="8" :default-size="10" :max-size="11" class="bg-card">
+        <UDashboardSidebar resizable :min-size="8" :default-size="15" :max-size="16" class="bg-card">
           <template #header>
             <div class="flex items-center justify-between">
               <NuxtLink to="/admin" class="flex items-center gap-2 flex-1 min-w-0">
@@ -174,6 +173,16 @@
                   </span>
                   <UIcon name="i-lucide-chevron-up" class="ml-auto group-data-[collapsible=icon]:hidden" />
                 </UButton>
+
+                <template #voir-site>
+                  <NuxtLink
+                    to="/"
+                    target="_blank"
+                    class="flex items-center justify-center gap-2 w-full px-2 py-1.5 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <UIcon name="i-lucide-external-link" class="w-4 h-4" />
+                    <span>Voir le site</span>
+                  </NuxtLink>
+                </template>
 
                 <template #mon-compte>
                   <NuxtLink
@@ -235,6 +244,16 @@
             :popper="{ strategy: 'fixed', placement: 'bottom-end' }"
             :ui="{ content: 'w-50' }">
             <UButton color="neutral" variant="ghost" icon="i-lucide-user" size="xl" />
+
+            <template #voir-site>
+              <NuxtLink
+                to="/"
+                target="_blank"
+                class="flex items-center justify-center gap-2 w-full px-2 py-1.5 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <UIcon name="i-lucide-external-link" class="w-4 h-4" />
+                <span>Voir le site</span>
+              </NuxtLink>
+            </template>
 
             <template #mon-compte>
               <NuxtLink

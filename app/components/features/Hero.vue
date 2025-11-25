@@ -3,8 +3,8 @@
     <div class="hero-section bg-gradient-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
       <div class="container mx-auto pt-16 md:pt-24">
         <div class="space-y-4">
-          <!-- Video or placeholder -->
-          <div class="max-w-3xl mx-auto px-4 md:px-0">
+          <!-- Video -->
+          <div class="max-w-7xl mx-auto px-4 md:px-0">
             <div
               v-if="videoUrl"
               class="video-container w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-black">
@@ -15,17 +15,8 @@
                 class="w-full h-full object-cover"
                 aria-label="Vidéo de présentation de Marie Leroy, copywriter professionnelle"
                 title="Vidéo de présentation">
-                <!-- TODO: Add <track> element for captions when available -->
                 Votre navigateur ne supporte pas la vidéo.
               </video>
-            </div>
-            <div
-              v-else
-              class="w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-gradient-to-br from-primary-200 to-primary-400 flex items-center justify-center">
-              <div class="text-center text-primary-800">
-                <Icon name="i-lucide-video" class="w-16 h-16 mb-2 mx-auto opacity-50" />
-                <p class="text-sm font-medium">Vidéo à venir</p>
-              </div>
             </div>
           </div>
 
@@ -46,15 +37,14 @@
             <template #description>
               <div class="flex flex-col gap-3">
                 <h2 class="text-2xl md:text-3xl text-primary-800">{{ subtitle }}</h2>
-                <span class="text-primary-700">{{ description }}</span>
+                <span
+                  class="text-orange-600/80 text-4xl my-10 italic font-light">{{
+                    description }}</span>
               </div>
 
               <!-- Avatars clients -->
               <div class="mt-6">
-                <AvatarGroup
-                  :avatars="avatars"
-                  :clients-text="clientsText"
-                  :additional-clients-count="additionalClientsCount" />
+                <AvatarGroup :avatars :clients-text :additional-clients-count />
               </div>
             </template>
 
@@ -64,7 +54,6 @@
                 size="xl"
                 icon="i-lucide-arrow-down"
                 text="Témoignages"
-                to="#testimonials"
                 tracking-name="scroll_to_testimonials"
                 tracking-section="hero"
                 @click="scrollToSection('testimonials')" />

@@ -54,6 +54,17 @@ model Testimonial {
   @@map("testimonials")
 }
 
+// Testimonials Header model
+model TestimonialsHeader {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  description String?  @db.Text
+  updatedAt   DateTime @updatedAt
+
+  @@map("testimonials_header")
+}
+
 // Hero Section model
 model HeroSection {
   id                     String   @id @default(cuid())

@@ -36,10 +36,8 @@
 
             <template #description>
               <div class="flex flex-col gap-3">
-                <h2 class="text-2xl md:text-3xl text-primary-800">{{ subtitle }}</h2>
-                <span
-                  class="text-orange-600/80 text-4xl my-10 italic font-light">{{
-                    description }}</span>
+                <h2 class="text-2xl md:text-5xl text-primary-800 font-dancing-script">{{ subtitle }}</h2>
+                <span class="text-orange-600/80 text-5xl my-10 italic font-light">{{ description }}</span>
               </div>
 
               <!-- Avatars clients -->

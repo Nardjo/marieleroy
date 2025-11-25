@@ -12,11 +12,11 @@
           Témoignages
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
-          Ce que disent mes clients,
-          <span class="text-primary-700">leurs résultats</span>
+          {{ header.title }}
+          <span v-if="header.subtitle" class="text-primary-700">{{ header.subtitle }}</span>
         </h2>
-        <p class="text-primary-700 max-w-2xl mx-auto">
-          Découvrez comment j'ai aidé mes clients à transformer leurs idées en contenus percutants
+        <p v-if="header.description" class="text-primary-700 max-w-2xl mx-auto">
+          {{ header.description }}
         </p>
       </div>
 
@@ -75,6 +75,11 @@
   const { data: testimonialsData } = await usePublicTestimonials()
   const { data: settings } = await usePublicSettings()
 
-  const testimonials = computed(() => testimonialsData.value || [])
+  const header = computed(() => testimonialsData.value?.header || {
+    title: 'Ce que disent mes clients,',
+    subtitle: 'leurs résultats',
+    description: 'Découvrez comment j\'ai aidé mes clients à transformer leurs idées en contenus percutants',
+  })
+  const testimonials = computed(() => testimonialsData.value?.testimonials || [])
   const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
 </script>

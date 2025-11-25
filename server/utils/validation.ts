@@ -66,6 +66,13 @@ export const methodHeaderSchema = z.object({
   description: z.string().nullable().optional(),
 })
 
+// Testimonials Header Schema
+export const testimonialsHeaderSchema = z.object({
+  title: z.string().min(1),
+  subtitle: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+})
+
 export const methodStepSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),

@@ -1,4 +1,14 @@
 export default defineEventHandler(async () => {
+  // Récupérer le header
+  const header = await prisma.testimonialsHeader.findFirst({
+    select: {
+      title: true,
+      subtitle: true,
+      description: true,
+    },
+  })
+
+  // Récupérer les témoignages triés par ordre
   const testimonials = await prisma.testimonial.findMany({
     select: {
       id: true,
@@ -12,5 +22,12 @@ export default defineEventHandler(async () => {
     },
   })
 
-  return testimonials || []
+  return {
+    header: header || {
+      title: 'Ce que disent mes clients,',
+      subtitle: 'leurs résultats',
+      description: 'Découvrez comment j\'ai aidé mes clients à transformer leurs idées en contenus percutants',
+    },
+    testimonials: testimonials || [],
+  }
 })

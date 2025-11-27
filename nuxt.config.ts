@@ -99,10 +99,11 @@ export default defineNuxtConfig({
       {
         name: 'Dancing Script',
         provider: 'google',
-        weights: [400],
+        weights: [400, 700],
         styles: ['normal'],
         subsets: ['latin'],
         display: 'swap', // Affiche le fallback puis swap vers Dancing Script
+        preload: true,
       },
     ],
   },

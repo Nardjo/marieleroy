@@ -192,13 +192,20 @@
     <footer class="bg-primary-100 py-8 md:py-10 border-t">
       <UContainer class="max-w-7xl">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 text-center md:text-left">
-          <div>
+          <!-- Logo en premier sur mobile, en dernier sur desktop -->
+          <div class="flex flex-col items-center md:items-start gap-4 order-first md:order-last">
+            <button class="cursor-pointer" size="lg" aria-label="Remonter en haut de la page" @click="scrollToTop">
+              <Logo :size="100" class="scale-50 -mt-10" />
+            </button>
+          </div>
+
+          <div class="order-2 md:order-first">
             <h3 class="font-semibold text-gray-800 mb-3 md:mb-4">Navigation</h3>
             <ul class="space-y-0">
               <li v-for="link in items" :key="link.label">
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4  min-h-[40px]"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 min-h-[40px]"
                   @click="link.onClick">
                   {{ link.label }}
                 </UButton>
@@ -206,7 +213,7 @@
               <li>
                 <UButton
                   variant="link"
-                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4  min-h-[40px]"
+                  class="text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 min-h-[40px]"
                   @click="navigateTo('/admin')">
                   Administration
                 </UButton>
@@ -214,7 +221,7 @@
             </ul>
           </div>
 
-          <div class="flex flex-col items-center md:items-start">
+          <div class="flex flex-col items-center md:items-start order-3 md:order-2">
             <h3 class="font-semibold text-gray-800 mb-3 md:mb-4">Réseaux Sociaux</h3>
             <div class="flex gap-4 justify-center md:justify-start">
               <UButton
@@ -228,7 +235,7 @@
                 variant="ghost"
                 class="text-gray-600 hover:bg-primary-200 transition-all" />
             </div>
-            <h3 class="font-semibold text-gray-800 mt-3 md:mt-8">Une question ?</h3>
+            <h3 class="font-semibold text-gray-800 mt-6 md:mt-8">Une question ?</h3>
             <UButton
               variant="link"
               icon="i-lucide-mail"
@@ -237,21 +244,14 @@
               {{ settings?.site?.contactEmail || ' ' }}
             </UButton>
           </div>
-
-          <div class="flex flex-col items-center md:items-start gap-4">
-            <button class="cursor-pointer" size="lg" aria-label="Remonter en haut de la page" @click="scrollToTop">
-              <Logo :size="100" class="scale-50 -mt-10" />
-            </button>
-          </div>
         </div>
 
         <div class="mt-12 pt-8 border-t border-gray-200/30 text-center">
           <p class="text-sm text-gray-600">
-            © {{ currentYear }} {{ siteName }}. Tous droits réservés. Site réalisé par
-            <ULink
-              to="https://www.jordanbastin.fr"
-              target="_blank"
-              class="underline hover:text-gray-800 transition-colors">
+            © {{ currentYear }} {{ siteName }}. Tous droits réservés.
+            <br class="md:hidden" />
+            Site réalisé par
+            <ULink to="https://jordbastin.fr" target="_blank" class="underline hover:text-gray-800 transition-colors">
               Jordan Bastin
             </ULink>
           </p>

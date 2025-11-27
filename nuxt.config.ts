@@ -102,7 +102,7 @@ export default defineNuxtConfig({
         weights: [400],
         styles: ['normal'],
         subsets: ['latin'],
-        display: 'optional', // Optional pour le logo uniquement
+        display: 'swap', // Affiche le fallback puis swap vers Dancing Script
       },
     ],
   },

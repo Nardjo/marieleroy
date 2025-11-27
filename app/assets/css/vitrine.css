@@ -161,7 +161,7 @@
 @layer utilities {
   /* Font utilitaires */
   .font-dancing-script {
-    font-family: var(--font-dancing-script);
+    font-family: 'Dancing Script', cursive;
   }
 
   /* Gradients pour la vitrine */

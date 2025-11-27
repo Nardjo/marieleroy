@@ -1,25 +1,5 @@
 {
   "workbench.colorTheme": "Tokyo Night",
   "workbench.preferredDarkColorTheme": "Tokyo Night",
-  "workbench.preferredLightColorTheme": "Tomorrow",
-  "workbench.colorCustomizations": {
-    "activityBar.activeBackground": "#fa904d",
-    "activityBar.background": "#fa904d",
-    "activityBar.foreground": "#15202b",
-    "activityBar.inactiveForeground": "#15202b99",
-    "activityBarBadge.background": "#e0feec",
-    "activityBarBadge.foreground": "#15202b",
-    "commandCenter.border": "#15202b99",
-    "sash.hoverBorder": "#fa904d",
-    "statusBar.background": "#f9711b",
-    "statusBar.foreground": "#15202b",
-    "statusBarItem.hoverBackground": "#db5806",
-    "statusBarItem.remoteBackground": "#f9711b",
-    "statusBarItem.remoteForeground": "#15202b",
-    "titleBar.activeBackground": "#f9711b",
-    "titleBar.activeForeground": "#15202b",
-    "titleBar.inactiveBackground": "#f9711b99",
-    "titleBar.inactiveForeground": "#15202b99"
-  },
-  "peacock.color": "#F9711B"
+  "workbench.preferredLightColorTheme": "Tomorrow"
 }

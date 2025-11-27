@@ -30,11 +30,9 @@
             }">
             <template #title>
               <div class="flex flex-col items-center">
-                <UCard class="mb-10 md:mb-20 !bg-orange-600/10">
-                  <div
-                    class="tiptap-content text-orange-600/80 text-3xl md:text-4xl italic font-medium"
-                    v-html="description" />
-                </UCard>
+                <div
+                  class="mb-10 md:mb-20 tiptap-content text-3xl md:text-5xl italic font-extralight bg-gradient-to-r from-primary-600 to-orange-600 bg-clip-text text-transparent"
+                  v-html="description" />
                 <Logo :size="100" class="scale-50 sm:scale-75 md:scale-100" />
                 <h2 class="text-4xl md:text-6xl font-light text-primary-800 font-dancing-script">{{ subtitle }}</h2>
               </div>

@@ -28,9 +28,7 @@ export default defineNuxtConfig({
         'lang': 'fr',
         'data-theme': 'vitrine', // Default theme for SSR
       },
-      link: [
-        { rel: 'dns-prefetch', href: 'https://eu.i.posthog.com' },
-      ],
+      link: [{ rel: 'dns-prefetch', href: 'https://eu.i.posthog.com' }],
     },
   },
 
@@ -90,7 +88,7 @@ export default defineNuxtConfig({
     },
     families: [
       {
-        name: 'Open Sans',
+        name: 'Barlow',
         provider: 'google',
         weights: [400, 500, 600, 700],
         styles: ['normal', 'italic'],
@@ -101,10 +99,10 @@ export default defineNuxtConfig({
       {
         name: 'Dancing Script',
         provider: 'google',
-        weights: [400], // Réduit: seulement regular (rarement utilisé)
+        weights: [400],
         styles: ['normal'],
         subsets: ['latin'],
-        display: 'optional', // Optional: n'attend pas le chargement si trop long
+        display: 'optional', // Optional pour le logo uniquement
       },
     ],
   },

@@ -15,9 +15,10 @@
           {{ header.title }}
           <span v-if="header.subtitle" class="text-primary-700">{{ header.subtitle }}</span>
         </h2>
-        <div v-if="header.description"
-           class="tiptap-content text-2xl md:text-3xl font-semibold text-orange-600/80 font-dancing-script max-w-2xl mx-auto"
-           v-html="header.description" />
+        <div
+          v-if="header.description"
+          class="tiptap-content text-xl md:text-2xl italic font-extralight  text-orange-600/80 font-sans max-w-2xl mx-auto"
+          v-html="header.description" />
       </div>
 
       <!-- Liste des témoignages vidéo -->
@@ -41,7 +42,7 @@
             </h3>
             <p
               v-if="testimonial.subtitle"
-              class="text-3xl md:text-4xl font-semibold text-orange-600/80 mb-4 md:mb-10 font-dancing-script">
+              class="text-xl md:text-3xl font-extralight italic text-orange-600/80 mb-4 md:mb-10 font-sans">
               {{ testimonial.subtitle }}
             </p>
             <p

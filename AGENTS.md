@@ -14,15 +14,27 @@
 **IMPORTANT: Always use `pnpm` instead of `npm` for this project**
 
 ```bash
-pnpm dev           # Start dev server on http://localhost:3000
-pnpm build         # Build for production
-pnpm preview       # Preview production build
-pnpm nuxt typecheck # Type checking (no script defined)
-pnpm exec prettier --write . # Format code
-pnpm exec eslint . --fix     # Fix linting issues
-```
+# Development
+pnpm dev                        # Start dev server on http://localhost:3000
+pnpm build                      # Build for production (runs migrations + prisma generate)
+pnpm preview                    # Preview production build
 
-No test suite currently configured. Prettier/ESLint configured but no lint script in package.json.
+# Database
+pnpm db:migrate                 # Run Prisma migrations (dev)
+pnpm db:push                    # Push schema to DB without migration
+pnpm db:generate                # Generate Prisma client
+pnpm db:studio                  # Open Prisma Studio GUI
+pnpm db:seed                    # Seed database with initial data
+pnpm user:create                # Create admin user (interactive script)
+
+# Code Quality
+pnpm exec prettier --write .    # Format all files
+pnpm exec eslint . --fix        # Fix linting issues
+pnpm nuxt typecheck             # Run TypeScript type checking
+
+# Testing
+# No test suite currently configured (@nuxt/test-utils is installed but not configured)
+```
 
 ## Code Style Guidelines
 
@@ -86,3 +98,6 @@ No test suite currently configured. Prettier/ESLint configured but no lint scrip
 - Admin panel pages are UI-only - backend APIs NOT implemented yet
 - Database schema in `docker/init-scripts/01-init.sql` - Prisma NOT used for queries yet
 - Authentication planned but not implemented - no middleware protection yet
+- Prisma is configured with PostgreSQL - use Prisma Client for all database queries
+- Uses Zod for schema validation in API routes (`z.object()` pattern)
+- Authentication via `nuxt-auth-utils` with `useUserSession()` and `setUserSession()`

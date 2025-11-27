@@ -87,7 +87,7 @@
 
 <script setup>
   const { sanitize } = useSanitize()
-  const activeStep = ref(0)
+  const activeStep = ref(-1)
   const sectionRef = ref(null)
 
   // Fetch method data

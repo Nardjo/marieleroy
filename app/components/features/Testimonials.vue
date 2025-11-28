@@ -59,7 +59,7 @@
 
           <!-- Titre et citation en dessous (centrés) -->
           <div class="text-center px-2">
-            <h3 class="text-4xl md:text-5xl font-bold text-primary-900 mb-2 md:mb-8">
+            <h3 class="text-4xl md:text-5xl font-bold text-primary-900 mb-6 md:mb-8">
               {{ testimonial.title }}
             </h3>
             <p

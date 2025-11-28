@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { TableColumn } from '@nuxt/ui'
-  import { useSortable } from '@vueuse/integrations/useSortable'
+import { useSortable } from '@vueuse/integrations/useSortable'
 
   useHead({
     title: 'FAQ',
@@ -39,7 +39,6 @@
   const columns: TableColumn<any>[] = [
     { id: 'order', header: 'Ordre' },
     { id: 'question', header: 'Question' },
-    { id: 'answer', header: 'Réponse' },
     { id: 'actions', header: 'Actions' },
   ]
 
@@ -293,12 +292,6 @@
                   <span class="font-semibold text-gray-900 dark:text-white line-clamp-2">
                     {{ row.original.question }}
                   </span>
-                </template>
-
-                <template #answer-cell="{ row }">
-                  <p class="text-gray-600 dark:text-gray-400 line-clamp-2 max-w-md">
-                    {{ row.original.answer }}
-                  </p>
                 </template>
 
                 <template #actions-cell="{ row }">

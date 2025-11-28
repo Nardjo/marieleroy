@@ -12,6 +12,7 @@
     sanitize(hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.'),
   )
   const videoUrl = computed(() => hero.value?.videoUrl || null)
+  const posterUrl = computed(() => hero.value?.posterUrl || undefined)
   const avatars = computed(() => hero.value?.avatars || [])
   const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
   const additionalClientsCount = computed(() => hero.value?.additionalClientsCount || 0)
@@ -20,7 +21,7 @@
 
 <template>
   <section id="hero" class="relative overflow-hidden">
-    <div class="hero-section bg-gradient-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
+    <div class="hero-section bg-linear-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
       <div class="container mx-auto pt-16 md:pt-24">
         <div class="space-y-4">
           <!-- Video -->
@@ -30,6 +31,7 @@
               class="video-container w-full aspect-video rounded-lg border border-black overflow-hidden shadow-xl bg-black">
               <video
                 :src="videoUrl"
+                :poster="posterUrl"
                 controls
                 preload="metadata"
                 class="w-full h-full object-cover"
@@ -46,12 +48,12 @@
             :ui="{
               wrapper: '!py-0',
               container: '!gap-2',
-              title: '!-mt-20',
+              title: '!mt-5',
             }">
             <template #title>
               <div class="flex flex-col items-center">
                 <div
-                  class="mb-10 md:mb-20 tiptap-content text-3xl md:text-5xl italic font-extralight bg-gradient-to-r from-primary-600 to-orange-600 bg-clip-text text-transparent"
+                  class="mb-10 md:mb-20 tiptap-content text-3xl md:text-5xl italic font-extralight bg-linear-to-r from-primary-600 to-orange-600 bg-clip-text text-transparent"
                   v-html="description" />
                 <Logo :size="100" class="scale-50 sm:scale-75 md:scale-100" />
                 <h2 class="text-4xl md:text-6xl font-light text-primary-800 font-dancing-script">{{ subtitle }}</h2>

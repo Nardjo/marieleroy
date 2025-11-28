@@ -232,18 +232,16 @@
                 v-for="link in socialLinks"
                 :key="link.platform"
                 :icon="getSocialIcon(link.platform)"
-                size="xl"
-                :to="link.url"
-                target="_blank"
+                :to="link.url!"
                 :aria-label="link.platform"
-                variant="ghost"
+                variant="link"
                 class="text-gray-600 hover:bg-primary-200 transition-all" />
             </div>
             <h3 class="font-semibold text-gray-800 mt-6 md:mt-8">Une question ?</h3>
             <UButton
               variant="link"
               icon="i-lucide-mail"
-              class="text-lg text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 min-h-[44px]"
+              class="text-lg text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer underline underline-offset-2 hover:underline-offset-4 min-h-11"
               :to="`mailto:${settings?.site?.contactEmail || ''}?subject=Question pour Marie Leroy`">
               {{ settings?.site?.contactEmail || ' ' }}
             </UButton>

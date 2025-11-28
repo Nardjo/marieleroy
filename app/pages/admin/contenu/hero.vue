@@ -38,6 +38,7 @@
     subtitle: '',
     description: '',
     videoUrl: '',
+    posterUrl: '' as string | null,
     avatars: [] as Avatar[],
     additionalClientsCount: 0,
   })
@@ -49,6 +50,9 @@
       // Convert null to empty string/array for inputs
       if (form.videoUrl === null) {
         form.videoUrl = ''
+      }
+      if (form.posterUrl === null) {
+        form.posterUrl = ''
       }
       if (!form.avatars) {
         form.avatars = []
@@ -76,6 +80,8 @@
         description: form.description,
         videoUrl:
           form.videoUrl && typeof form.videoUrl === 'string' && form.videoUrl.trim() !== '' ? form.videoUrl : null,
+        posterUrl:
+          form.posterUrl && typeof form.posterUrl === 'string' && form.posterUrl.trim() !== '' ? form.posterUrl : null,
         avatars: filteredAvatars,
         additionalClientsCount: form.additionalClientsCount,
       }
@@ -180,6 +186,13 @@
                   required
                   hint="Formats acceptés: MP4, WebM, OGG, MOV. Taille maximale: 50MB" />
 
+                <!-- Poster Upload Field -->
+                <AdminImageUploadField
+                  v-model="form.posterUrl"
+                  label="Image poster (mobile)"
+                  name="posterUrl"
+                  hint="Image affichée avant le chargement de la vidéo sur mobile (1920x1080px recommandé)" />
+
                 <UFormField label="Sous-titre" required>
                   <UInput v-model="form.subtitle" size="lg" placeholder="Ex: Copywriter Professionnelle" />
                 </UFormField>
@@ -221,7 +234,12 @@
                         </div>
                         <h4 class="font-medium">Avatar {{ index + 1 }}</h4>
                       </div>
-                      <UButton color="error" variant="soft" size="sm" icon="i-lucide-trash" @click="removeAvatar(index)">
+                      <UButton
+                        color="error"
+                        variant="soft"
+                        size="sm"
+                        icon="i-lucide-trash"
+                        @click="removeAvatar(index)">
                         Supprimer
                       </UButton>
                     </div>

@@ -55,6 +55,7 @@
             activeStep.value = idx
           }
         })
+        
       },
       { threshold: 0.25 },
     )
@@ -132,11 +133,11 @@
       <!-- CTA Section -->
       <div
         v-motion
-        :initial="{ opacity: 0, y: 50 }"
+        :initial="{ opacity: 0, y: 50 }"  
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="mt-16">
         <CTASection
-          title="Besoin d’un regard expert sur ton marketing ?"
+          title="Besoin d'un regard expert sur ton marketing&nbsp;?"
           description="On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions."
           button-text="Obtenir un audit gratuit"
           :button-to="ctaLink"

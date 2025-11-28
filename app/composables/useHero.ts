@@ -15,6 +15,7 @@ export const useHero = () => {
     subtitle: string
     description: string
     videoUrl?: string | null
+    posterUrl?: string | null
     avatars?: Array<{
       firstName: string
       lastName: string

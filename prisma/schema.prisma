@@ -82,6 +82,7 @@ model HeroSection {
   subtitle               String
   description            String   @db.Text
   videoUrl               String?
+  posterUrl              String?
   clientsText            String   @default("clients satisfaits")
   avatars                Json     @default("[]")
   additionalClientsCount Int      @default(0)

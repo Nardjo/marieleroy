@@ -78,6 +78,9 @@
               </span>
             </div>
           </template>
+          <template #content="{ item }">
+            <div class="tiptap-content text-primary-900 px-4 py-4" v-html="item.content" />
+          </template>
         </UAccordion>
       </UCard>
     </div>

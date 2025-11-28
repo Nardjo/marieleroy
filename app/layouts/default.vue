@@ -38,7 +38,7 @@
     htmlAttrs: {
       'data-theme': 'vitrine',
     },
-    titleTemplate: computed(() => siteName.value),
+    title: computed(() => seoSettings.value?.metaTitle || 'Marie Leroy | Copywriter Professionnelle'),
   })
 
   // SEO meta tags
@@ -46,6 +46,7 @@
   const siteUrl = config.public.siteUrl
 
   useSeoMeta({
+    title: computed(() => seoSettings.value?.metaTitle || 'Marie Leroy | Copywriter Professionnelle'),
     description: computed(
       () =>
         seoSettings.value?.metaDescription ||
@@ -143,8 +144,11 @@
   }
 
   onMounted(() => {
-    colorMode.preference = 'light'
-    document.documentElement.classList.remove('dark')
+    // Forcer le mode light après le montage pour éviter les problèmes d'hydration
+    nextTick(() => {
+      colorMode.preference = 'light'
+      document.documentElement.classList.remove('dark')
+    })
     window.addEventListener('scroll', handleScroll, { passive: true })
   })
 

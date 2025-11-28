@@ -1,8 +1,8 @@
 import { prisma } from '../utils/prisma'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
-  const baseUrl = config.public.siteUrl || 'https://marieleroy.fr'
+  const baseUrl = config.public.siteUrl || 'https://marie-leroy.com'
 
   // Static pages
   const staticPages = [
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticPages
   .map(
-    (page) => `  <url>
+    page => `  <url>
     <loc>${page.loc}</loc>
     <lastmod>${page.lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>

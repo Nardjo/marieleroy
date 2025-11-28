@@ -1,3 +1,34 @@
+<script setup lang="ts">
+  interface TooltipItem {
+    id: number
+    name: string
+    designation: string
+    image: string
+  }
+
+  defineProps<{
+    items: TooltipItem[]
+  }>()
+
+  const hoveredIndex = ref<number | null>(null)
+  const translateX = ref(0)
+  const rotate = ref(0)
+
+  const handleMouseMove = (event: MouseEvent, idx: number) => {
+    const target = event.currentTarget as HTMLElement
+    const rect = target.getBoundingClientRect()
+    const halfWidth = rect.width / 2
+    const offsetX = event.clientX - rect.left
+
+    // Calculate offset from center
+    const offset = offsetX - halfWidth
+
+    // Apply spring-like effect with constraints
+    translateX.value = Math.max(-50, Math.min(50, offset * 0.5))
+    rotate.value = Math.max(-45, Math.min(45, offset * 0.45))
+  }
+</script>
+
 <template>
   <div
     v-for="(item, idx) in items"
@@ -40,34 +71,3 @@
       loading="lazy" />
   </div>
 </template>
-
-<script setup lang="ts">
-  interface TooltipItem {
-    id: number
-    name: string
-    designation: string
-    image: string
-  }
-
-  defineProps<{
-    items: TooltipItem[]
-  }>()
-
-  const hoveredIndex = ref<number | null>(null)
-  const translateX = ref(0)
-  const rotate = ref(0)
-
-  const handleMouseMove = (event: MouseEvent, idx: number) => {
-    const target = event.currentTarget as HTMLElement
-    const rect = target.getBoundingClientRect()
-    const halfWidth = rect.width / 2
-    const offsetX = event.clientX - rect.left
-
-    // Calculate offset from center
-    const offset = offsetX - halfWidth
-
-    // Apply spring-like effect with constraints
-    translateX.value = Math.max(-50, Math.min(50, offset * 0.5))
-    rotate.value = Math.max(-45, Math.min(45, offset * 0.45))
-  }
-</script>

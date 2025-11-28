@@ -2,7 +2,10 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 export const useCurvedAnimation = () => {
   const scrollY = ref(0)
-  const screenWidth = ref(0)
+  // Utiliser une valeur par défaut qui correspond au SSR (desktop)
+  // pour éviter les problèmes d'hydration
+  const screenWidth = ref(1024)
+  const isMounted = ref(false)
 
   const curveProgress = computed(() => {
     const maxScroll = 500
@@ -15,8 +18,9 @@ export const useCurvedAnimation = () => {
 
     // Ajuster la courbure selon la largeur d'écran
     // Mobile: 60%, Tablette: 100%, Desktop: 150%
-    const isMobile = screenWidth.value < 768
-    const isTablet = screenWidth.value >= 768 && screenWidth.value < 1024
+    // Note: On utilise une valeur fixe pour SSR puis la vraie valeur après montage
+    const isMobile = isMounted.value && screenWidth.value < 768
+    const isTablet = isMounted.value && screenWidth.value >= 768 && screenWidth.value < 1024
     const maxCurveHeight = isMobile ? 60 : isTablet ? 100 : 150
 
     const curveHeight = progress * maxCurveHeight
@@ -61,6 +65,7 @@ export const useCurvedAnimation = () => {
   }
 
   onMounted(() => {
+    isMounted.value = true
     screenWidth.value = window.innerWidth
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', handleResize, { passive: true })

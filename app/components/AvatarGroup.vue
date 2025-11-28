@@ -1,18 +1,3 @@
-<template>
-  <div class="flex flex-col md:flex-row items-center justify-center w-full gap-3 md:gap-4">
-    <div v-if="displayAvatars.length > 0" class="flex flex-row items-center">
-      <AnimatedTooltip :items="displayAvatars" />
-      <div
-        v-if="additionalClientsCount > 0"
-        class="group relative -mr-4 h-14 w-14 rounded-full border-2 border-white bg-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-md cursor-default"
-        style="z-index: 0">
-        +{{ additionalClientsCount }}
-      </div>
-    </div>
-    <p class="text-lg text-primary-700 font-medium md:ml-2">{{ clientsText }}</p>
-  </div>
-</template>
-
 <script setup lang="ts">
   interface Avatar {
     firstName: string
@@ -44,3 +29,18 @@
     }))
   })
 </script>
+
+<template>
+  <div class="flex flex-col md:flex-row items-center justify-center w-full gap-3 md:gap-4">
+    <div v-if="displayAvatars.length > 0" class="flex flex-row items-center">
+      <AnimatedTooltip :items="displayAvatars" />
+      <div
+        v-if="additionalClientsCount > 0"
+        class="group relative -mr-4 h-14 w-14 rounded-full border-2 border-white bg-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-md cursor-default"
+        style="z-index: 0">
+        +{{ additionalClientsCount }}
+      </div>
+    </div>
+    <p class="text-lg text-primary-700 font-medium md:ml-2">{{ clientsText }}</p>
+  </div>
+</template>

@@ -1,3 +1,12 @@
+<script setup lang="ts">
+  // Fetch separator images from API
+  const { data: separatorData } = await usePublicImageSeparator()
+
+  const desktopImage = useFullImageUrl(() => separatorData.value?.desktopImage)
+  const mobileImage = useFullImageUrl(() => separatorData.value?.mobileImage)
+  const hasImages = computed(() => !!(desktopImage.value || mobileImage.value))
+</script>
+
 <template>
   <section v-if="hasImages" class="w-full">
     <div
@@ -32,12 +41,3 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-  // Fetch separator images from API
-  const { data: separatorData } = await usePublicImageSeparator()
-
-  const desktopImage = useFullImageUrl(() => separatorData.value?.desktopImage)
-  const mobileImage = useFullImageUrl(() => separatorData.value?.mobileImage)
-  const hasImages = computed(() => !!(desktopImage.value || mobileImage.value))
-</script>

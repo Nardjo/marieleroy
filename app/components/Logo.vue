@@ -1,12 +1,3 @@
-<template>
-  <h2
-    class="font-dancing-script drop-shadow-md text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-700"
-    :class="{ 'min-w-fit min-h-30 whitespace-nowrap': !compact, 'leading-none': compact }"
-    :style="{ fontSize: props.size + 'px' }">
-    {{ minimal ? 'ML' : 'Marie Leroy' }}
-  </h2>
-</template>
-
 <script setup lang="ts">
   const props = defineProps({
     size: {
@@ -23,3 +14,12 @@
     },
   })
 </script>
+
+<template>
+  <h2
+    class="font-dancing-script drop-shadow-md text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-700"
+    :class="{ 'min-w-fit min-h-30 whitespace-nowrap': !compact, 'leading-none': compact }"
+    :style="{ fontSize: props.size + 'px' }">
+    {{ minimal ? 'ML' : 'Marie Leroy' }}
+  </h2>
+</template>

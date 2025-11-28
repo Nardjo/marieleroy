@@ -1,3 +1,25 @@
+<script setup lang="ts">
+  const { sanitize } = useSanitize()
+
+  // Fetch testimonials from API
+  const { data: testimonialsData } = await usePublicTestimonials()
+  const { data: settings } = await usePublicSettings()
+
+  const header = computed(() => {
+    const h = testimonialsData.value?.header || {
+      title: 'Ce que disent mes clients,',
+      subtitle: 'leurs résultats',
+      description: "Découvrez comment j'ai aidé mes clients à transformer leurs idées en contenus percutants",
+    }
+    return {
+      ...h,
+      description: sanitize(h.description),
+    }
+  })
+  const testimonials = computed(() => testimonialsData.value?.testimonials || [])
+  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
+</script>
+
 <template>
   <section id="testimonials" class="py-16 bg-white">
     <div class="container mx-auto px-4 max-w-6xl">
@@ -17,7 +39,7 @@
         </h2>
         <div
           v-if="header.description"
-          class="tiptap-content text-xl md:text-2xl italic font-extralight  text-orange-600/80 font-sans max-w-2xl mx-auto"
+          class="tiptap-content text-xl md:text-2xl italic font-semibold text-orange-600/80 font-sans max-w-2xl mx-auto"
           v-html="header.description" />
       </div>
 
@@ -74,25 +96,3 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-  const { sanitize } = useSanitize()
-
-  // Fetch testimonials from API
-  const { data: testimonialsData } = await usePublicTestimonials()
-  const { data: settings } = await usePublicSettings()
-
-  const header = computed(() => {
-    const h = testimonialsData.value?.header || {
-      title: 'Ce que disent mes clients,',
-      subtitle: 'leurs résultats',
-      description: "Découvrez comment j'ai aidé mes clients à transformer leurs idées en contenus percutants",
-    }
-    return {
-      ...h,
-      description: sanitize(h.description),
-    }
-  })
-  const testimonials = computed(() => testimonialsData.value?.testimonials || [])
-  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
-</script>

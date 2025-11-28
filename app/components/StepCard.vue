@@ -1,27 +1,3 @@
-<template>
-  <div :id="id" class="mb-16 md:mb-24">
-    <div class="flex flex-col md:flex-row items-center" :class="{ 'md:flex-row-reverse': reverse }">
-      <div class="w-full md:w-1/2 p-6 flex flex-col justify-center">
-        <h3 class="text-xl font-semibold !text-primary-400 mb-3">{{ title }}</h3>
-        <p class="">{{ text }}</p>
-      </div>
-
-      <div v-if="img" class="w-full md:w-1/2 aspect-video">
-        <NuxtImg
-          class="w-full h-full object-cover rounded-lg"
-          :src="img"
-          :alt="title"
-          loading="lazy"
-          width="800"
-          height="450"
-          format="webp"
-          quality="80"
-          sizes="sm:640px md:384px lg:512px xl:640px" />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
   defineProps({
     id: {
@@ -47,3 +23,27 @@
     },
   })
 </script>
+
+<template>
+  <div :id="id" class="mb-16 md:mb-24">
+    <div class="flex flex-col md:flex-row items-center" :class="{ 'md:flex-row-reverse': reverse }">
+      <div class="w-full md:w-1/2 p-6 flex flex-col justify-center">
+        <h3 class="text-xl font-semibold !text-primary-400 mb-3">{{ title }}</h3>
+        <p class="">{{ text }}</p>
+      </div>
+
+      <div v-if="img" class="w-full md:w-1/2 aspect-video">
+        <NuxtImg
+          class="w-full h-full object-cover rounded-lg"
+          :src="img"
+          :alt="title"
+          loading="lazy"
+          width="800"
+          height="450"
+          format="webp"
+          quality="80"
+          sizes="sm:640px md:384px lg:512px xl:640px" />
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,3 +1,14 @@
+<script setup lang="ts">
+  withDefaults(
+    defineProps<{
+      count?: number
+    }>(),
+    {
+      count: 3,
+    },
+  )
+</script>
+
 <template>
   <div class="space-y-4">
     <UCard v-for="i in count" :key="i" class="shadow-sm">
@@ -13,14 +24,3 @@
     </UCard>
   </div>
 </template>
-
-<script setup lang="ts">
-withDefaults(
-  defineProps<{
-    count?: number
-  }>(),
-  {
-    count: 3,
-  },
-)
-</script>

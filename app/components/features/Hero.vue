@@ -1,3 +1,23 @@
+<script setup lang="ts">
+  const { animatedCurvePath } = useCurvedAnimation()
+  const { scrollToSection } = useSmoothScroll()
+  const { sanitize } = useSanitize()
+
+  // Fetch hero data
+  const { data: hero } = await usePublicHero()
+  const { data: settings } = await usePublicSettings()
+
+  const subtitle = computed(() => hero.value?.subtitle || 'Copywriter Professionnelle')
+  const description = computed(() =>
+    sanitize(hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.'),
+  )
+  const videoUrl = computed(() => hero.value?.videoUrl || null)
+  const avatars = computed(() => hero.value?.avatars || [])
+  const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
+  const additionalClientsCount = computed(() => hero.value?.additionalClientsCount || 0)
+  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
+</script>
+
 <template>
   <section id="hero" class="relative overflow-hidden">
     <div class="hero-section bg-gradient-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
@@ -76,26 +96,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-  const { animatedCurvePath } = useCurvedAnimation()
-  const { scrollToSection } = useSmoothScroll()
-  const { sanitize } = useSanitize()
-
-  // Fetch hero data
-  const { data: hero } = await usePublicHero()
-  const { data: settings } = await usePublicSettings()
-
-  const subtitle = computed(() => hero.value?.subtitle || 'Copywriter Professionnelle')
-  const description = computed(() =>
-    sanitize(hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.'),
-  )
-  const videoUrl = computed(() => hero.value?.videoUrl || null)
-  const avatars = computed(() => hero.value?.avatars || [])
-  const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
-  const additionalClientsCount = computed(() => hero.value?.additionalClientsCount || 0)
-  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
-</script>
 
 <style scoped>
   .hero-section {

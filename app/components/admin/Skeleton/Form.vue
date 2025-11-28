@@ -1,3 +1,14 @@
+<script setup lang="ts">
+  withDefaults(
+    defineProps<{
+      fields?: number
+    }>(),
+    {
+      fields: 4,
+    },
+  )
+</script>
+
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Main Content -->
@@ -25,14 +36,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-withDefaults(
-  defineProps<{
-    fields?: number
-  }>(),
-  {
-    fields: 4,
-  },
-)
-</script>

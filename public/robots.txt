@@ -3,4 +3,4 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /connexion
 
-Sitemap: https://marieleroy.fr/sitemap.xml
+Sitemap: https://marie-leroy.com/sitemap.xml

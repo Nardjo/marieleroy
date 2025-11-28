@@ -7,19 +7,27 @@
     layout: 'admin',
   })
 
+  const config = useRuntimeConfig()
   const { loading, fetchSeoSettings, updateSeoSettings } = useSeo()
-  const { uploadImage } = useImageUpload()
   const { refreshSeo } = useRefreshPublicData()
   const toast = useToast()
 
   const form = reactive({
     metaTitle: '',
     metaDescription: '',
-    ogImage: '',
+    ogImage: '' as string | null,
   })
 
-  const selectedFiles = ref<File[]>([])
-  const uploading = ref(false)
+  // URL complète de l'image OG pour l'aperçu (gère les chemins relatifs)
+  const ogImagePreviewUrl = computed(() => {
+    if (!form.ogImage) return null
+    // Si déjà une URL complète, retourner tel quel
+    if (form.ogImage.startsWith('http://') || form.ogImage.startsWith('https://')) {
+      return form.ogImage
+    }
+    // Sinon, ajouter le préfixe du site
+    return `${config.public.siteUrl}${form.ogImage}`
+  })
 
   // Charger les paramètres SEO au montage
   const loadSeoSettings = async () => {
@@ -44,36 +52,6 @@
 
   onMounted(() => {
     loadSeoSettings()
-  })
-
-  // Watcher pour uploader l'image dès qu'elle est sélectionnée
-  watch(selectedFiles, async newFiles => {
-    if (newFiles && newFiles.length > 0) {
-      uploading.value = true
-      try {
-        const result = (await uploadImage(newFiles[0])) as { url: string }
-        form.ogImage = result.url
-        selectedFiles.value = [] // Clear selection
-
-        toast.add({
-          title: 'Image téléchargée',
-          description: "L'image a été uploadée avec succès",
-          color: 'success',
-          icon: 'i-lucide-check',
-          duration: 3000,
-        })
-      } catch (error: any) {
-        toast.add({
-          title: 'Erreur',
-          description: error.message || "Impossible de télécharger l'image",
-          color: 'error',
-          icon: 'i-lucide-alert-circle',
-          duration: 5000,
-        })
-      } finally {
-        uploading.value = false
-      }
-    }
   })
 
   const saveSettings = async () => {
@@ -158,26 +136,11 @@
             <h3 class="text-lg font-semibold">Image de partage</h3>
           </template>
           <div class="space-y-4">
-            <UFormField label="Sélectionner une image">
-              <div class="flex gap-4 items-center">
-                <div class="flex-shrink-0">
-                  <div v-if="form.ogImage" class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                    <img :src="form.ogImage" alt="Image OG" class="w-full h-full object-cover" width="80" height="80" />
-                  </div>
-                  <div v-else class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <UIcon name="i-lucide-image" class="w-6 h-6 text-gray-400" />
-                  </div>
-                </div>
-                <div class="flex-1">
-                  <UFileUpload v-model="selectedFiles" accept="image/*" :loading="uploading" />
-                </div>
-              </div>
-              <template #hint>
-                <span class="text-xs text-gray-500">
-                  Image affichée lors du partage sur les réseaux sociaux (1200x630px recommandé)
-                </span>
-              </template>
-            </UFormField>
+            <AdminImageUploadField
+              v-model="form.ogImage"
+              label="Image Open Graph"
+              name="ogImage"
+              hint="Image affichée lors du partage sur les réseaux sociaux (1200x630px recommandé)" />
           </div>
         </UCard>
       </div>
@@ -194,7 +157,7 @@
               <p class="text-blue-600 dark:text-blue-400 text-sm font-medium truncate">
                 {{ form.metaTitle || 'Titre du site' }}
               </p>
-              <p class="text-green-700 dark:text-green-500 text-xs mt-1">www.marieleroy.fr</p>
+              <p class="text-green-700 dark:text-green-500 text-xs mt-1">www.marie-leroy.com</p>
               <p class="text-gray-600 dark:text-gray-400 text-xs mt-2 line-clamp-2">
                 {{ form.metaDescription || 'Description du site' }}
               </p>
@@ -211,9 +174,11 @@
             <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
               <div class="flex gap-3">
                 <div class="flex-shrink-0">
-                  <div v-if="form.ogImage" class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                  <div
+                    v-if="ogImagePreviewUrl"
+                    class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
                     <img
-                      :src="form.ogImage"
+                      :src="ogImagePreviewUrl"
                       alt="Image de partage"
                       class="w-full h-full object-cover"
                       width="64"
@@ -232,7 +197,7 @@
                   <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
                     {{ form.metaDescription || 'Description du site' }}
                   </p>
-                  <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">www.marieleroy.fr</p>
+                  <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">www.marie-leroy.com</p>
                 </div>
               </div>
             </div>

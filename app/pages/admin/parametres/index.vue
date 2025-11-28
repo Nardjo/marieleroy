@@ -127,7 +127,7 @@
                 v-model="form.email"
                 type="email"
                 size="lg"
-                placeholder="contact@marieleroy.fr"
+                placeholder="contact@marie-leroy.com"
                 icon="i-lucide-mail" />
             </UFormField>
 

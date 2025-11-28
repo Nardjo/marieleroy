@@ -1,3 +1,10 @@
+<script setup lang="ts">
+  defineProps<{
+    title: string
+    description?: string
+  }>()
+</script>
+
 <template>
   <div>
     <!-- Desktop: Title and Actions on same line -->
@@ -27,10 +34,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-  defineProps<{
-    title: string
-    description?: string
-  }>()
-</script>

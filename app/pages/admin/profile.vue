@@ -151,7 +151,7 @@
                 v-model="profileForm.email"
                 type="email"
                 size="lg"
-                placeholder="marie@marieleroy.fr"
+                placeholder="marie@marie-leroy.com"
                 icon="i-lucide-mail" />
             </UFormField>
           </div>

@@ -223,7 +223,7 @@ async function seedSettings() {
       value: 'Copywriter professionnelle - Des mots qui convertissent, des messages qui résonnent',
       type: 'string',
     },
-    { key: 'email', value: 'contact@marieleroy.fr', type: 'string' },
+    { key: 'email', value: 'contact@marie-leroy.com', type: 'string' },
     { key: 'phone', value: '+33 6 12 34 56 78', type: 'string' },
     { key: 'address', value: 'Paris, France', type: 'string' },
   ]

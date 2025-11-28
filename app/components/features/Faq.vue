@@ -83,6 +83,22 @@
           </template>
         </UAccordion>
       </UCard>
+
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="mt-12">
+        <CTASection
+          title="Tu as d'autres questions ?"
+          description="N'hésite pas à me contacter pour un échange personnalisé. Je suis là pour t'accompagner dans ton projet."
+          button-text="Poser ma question"
+          :button-to="contactEmail"
+          :button-external="true"
+          icon="i-lucide-message-circle"
+          tracking-name="ask_question_cta"
+          tracking-section="faq" />
+      </div>
     </div>
   </section>
 </template>

@@ -36,11 +36,10 @@
           <div
             v-for="(step, index) in steps"
             :key="step.id"
-            class="relative pl-20 transition-all duration-500"
-            :class="{
-              'opacity-100 translate-x-0': index <= activeStep,
-              'opacity-0 translate-x-8': index > activeStep,
-            }">
+            :data-index="index"
+            :ref="el => el && (stepRefs[index] = el)"
+            class="relative pl-20 transition-all duration-700 ease-out"
+            :class="index <= activeStep ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-6'">
             <!-- Point sur la ligne -->
             <div
               class="absolute left-4 top-4 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 shadow-lg"
@@ -85,10 +84,11 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
   const { sanitize } = useSanitize()
   const activeStep = ref(-1)
   const sectionRef = ref(null)
+  const stepRefs = ref<HTMLElement[]>([])
 
   // Fetch method data
   const { data: methodData } = await usePublicMethod()
@@ -116,54 +116,35 @@
   const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
 
   const lineProgress = computed(() => {
-    const stepsLength = steps.value.length
-    if (stepsLength === 0) return '0%'
-    const progress = (activeStep.value / (stepsLength - 1)) * 100
-    return `${progress}%`
+    const total = steps.value.length
+    if (!total) return '0%'
+    const shown = Math.max(activeStep.value + 1, 0)
+    return `${(shown / total) * 100}%`
   })
 
   // Détection du scroll pour faire apparaître les étapes progressivement
   onMounted(() => {
-    const handleScroll = () => {
-      if (!sectionRef.value) return
-
-      const section = sectionRef.value
-      const rect = section.getBoundingClientRect()
-      const windowHeight = window.innerHeight
-
-      // Calculer la progression dans la section
-      // La section commence à apparaître quand son top est à 80% de la hauteur de l'écran
-      // Elle termine quand son bottom est à 20% de la hauteur de l'écran
-      const sectionStart = rect.top - windowHeight * 0.8
-      const sectionEnd = rect.bottom - windowHeight * 0.2
-      const sectionHeight = sectionEnd - sectionStart
-
-      // Position actuelle dans la section (de 0 à 1)
-      let progress = 0
-      if (sectionStart < 0 && sectionEnd > 0) {
-        progress = Math.abs(sectionStart) / sectionHeight
-        progress = Math.max(0, Math.min(1, progress))
-      } else if (sectionEnd < 0) {
-        progress = 1
-      }
-
-      // Déterminer l'étape active en fonction de la progression
-      // Utiliser une courbe très accélérée pour faire apparaître toutes les étapes rapidement
-      const acceleratedProgress = Math.pow(progress, 0.5)
-      const stepsLength = steps.value.length
-      const newStep = Math.min(Math.floor(acceleratedProgress * stepsLength), stepsLength - 1)
-
-      // Une fois affichée, une étape reste visible (on ne diminue jamais activeStep)
-      if (newStep > activeStep.value) {
-        activeStep.value = newStep
-      }
+    // Fallback for browsers that don't support IntersectionObserver
+    if (!window.IntersectionObserver) {
+      // For browsers without IntersectionObserver, we can still show all steps
+      // by setting activeStep to the last step when component is mounted
+      activeStep.value = steps.value.length - 1
+      return
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Appel initial
+    const stop = useIntersectionObserver(
+      stepRefs,
+      entries => {
+        entries.forEach(entry => {
+          const idx = Number((entry.target as HTMLElement).dataset.index)
+          if (entry.isIntersecting && idx > activeStep.value) {
+            activeStep.value = idx
+          }
+        })
+      },
+      { threshold: 0.25 },
+    )
 
-    onUnmounted(() => {
-      window.removeEventListener('scroll', handleScroll)
-    })
+    onUnmounted(() => stop?.())
   })
 </script>

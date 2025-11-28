@@ -44,6 +44,7 @@ export default defineNuxtConfig({
     '@sentry/nuxt/module',
     'nuxt-posthog',
     'nuxt-tiptap-editor',
+    '@nuxt/hints',
   ],
 
   tiptap: {

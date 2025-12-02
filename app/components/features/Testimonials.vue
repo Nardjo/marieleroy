@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const { sanitize } = useSanitize()
+  const { fixPunctuation } = useTypography()
 
   // Fetch testimonials from API
   const { data: testimonialsData } = await usePublicTestimonials()
@@ -13,6 +14,8 @@
     }
     return {
       ...h,
+      title: fixPunctuation(h.title),
+      subtitle: fixPunctuation(h.subtitle),
       description: sanitize(h.description),
     }
   })

@@ -1,9 +1,10 @@
 <script setup lang="ts">
   const { sanitize } = useSanitize()
+  const { fixPunctuation } = useTypography()
   const { data: about } = await usePublicAbout()
 
-  const title = computed(() => about.value?.title || 'Marie Leroy')
-  const subtitle = computed(() => about.value?.subtitle || 'mon parcours')
+  const title = computed(() => fixPunctuation(about.value?.title || 'Marie Leroy'))
+  const subtitle = computed(() => fixPunctuation(about.value?.subtitle || 'mon parcours'))
   const description = computed(() => sanitize(about.value?.description || ''))
   const imageUrl = useFullImageUrl(() => about.value?.imageUrl)
 </script>

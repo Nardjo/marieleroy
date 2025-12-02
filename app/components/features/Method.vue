@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const { sanitize } = useSanitize()
+  const { fixPunctuation } = useTypography()
   const activeStep = ref(-1)
   const sectionRef = ref(null)
   const stepRefs = ref<HTMLElement[]>([])
@@ -9,8 +10,8 @@
   const { data: settings } = await usePublicSettings()
 
   const header = computed(() => methodData.value?.header || {})
-  const headerTitle = computed(() => header.value.title || 'Comment je travaille')
-  const headerSubtitle = computed(() => header.value.subtitle || 'étape par étape')
+  const headerTitle = computed(() => fixPunctuation(header.value.title || 'Comment je travaille'))
+  const headerSubtitle = computed(() => fixPunctuation(header.value.subtitle || 'étape par étape'))
   const headerDescription = computed(() =>
     sanitize(
       header.value.description ||

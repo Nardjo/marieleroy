@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const { sanitize } = useSanitize()
+  const { fixPunctuation } = useTypography()
 
   // Fetch FAQ from API
   const { data: faqData } = await usePublicFaq()
@@ -13,6 +14,8 @@
     }
     return {
       ...h,
+      title: fixPunctuation(h.title),
+      subtitle: fixPunctuation(h.subtitle),
       description: sanitize(h.description),
     }
   })
@@ -83,6 +86,22 @@
           </template>
         </UAccordion>
       </UCard>
+
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: 50 }"
+        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
+        class="mt-12">
+        <CTASection
+          title="Une question avant de te lancer&nbsp;?"
+          description="N'hésite pas à me contacter directement par mail. Je serai ravie de t'aider !"
+          button-text="Envoyer un message"
+          :button-to="contactEmail"
+          :button-external="true"
+          icon="i-lucide-mail"
+          tracking-name="cta_faq_email"
+          tracking-section="faq" />
+      </div>
     </div>
   </section>
 </template>

@@ -2,12 +2,13 @@
   const { animatedCurvePath } = useCurvedAnimation()
   const { scrollToSection } = useSmoothScroll()
   const { sanitize } = useSanitize()
+  const { fixPunctuation } = useTypography()
 
   // Fetch hero data
   const { data: hero } = await usePublicHero()
   const { data: settings } = await usePublicSettings()
 
-  const subtitle = computed(() => hero.value?.subtitle || 'Copywriter Professionnelle')
+  const subtitle = computed(() => fixPunctuation(hero.value?.subtitle || 'Copywriter Professionnelle'))
   const description = computed(() =>
     sanitize(hero.value?.description || 'Des mots qui convertissent, des messages qui résonnent.'),
   )

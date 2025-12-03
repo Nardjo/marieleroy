@@ -16,5 +16,6 @@
     <LazyFeaturesMethod />
     <LazyFeaturesAbout />
     <LazyFeaturesFaq />
+    <LazyFeaturesCostOfInaction />
   </div>
 </template>

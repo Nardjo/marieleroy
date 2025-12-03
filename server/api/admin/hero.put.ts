@@ -19,7 +19,10 @@ export default defineEventHandler(async event => {
       videoUrl: body.videoUrl || null,
       posterUrl: body.posterUrl || null,
       avatars: body.avatars || [],
-      additionalClientsCount: body.additionalClientsCount ?? 0,
+      additionalClientsCount: Number(body.additionalClientsCount) || 0,
+      ctaButtonText: body.ctaButtonText || null,
+      ctaButtonUrl: body.ctaButtonUrl || null,
+      ctaUseDefaultUrl: body.ctaUseDefaultUrl ?? true,
     },
   })
 

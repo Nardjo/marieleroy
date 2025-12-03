@@ -4,7 +4,6 @@
 
   // Fetch FAQ from API
   const { data: faqData } = await usePublicFaq()
-  const { data: settings } = await usePublicSettings()
 
   const header = computed(() => {
     const h = faqData.value?.header || {
@@ -27,15 +26,10 @@
       content: sanitize(item.answer),
     }))
   })
-
-  const contactEmail = computed(() => {
-    const email = settings.value?.site?.email
-    return email ? `mailto:${email}?subject=Questions pour Marie Leroy` : '#'
-  })
 </script>
 
 <template>
-  <section id="faq" class="py-16 bg-primary-200">
+  <section id="faq" class="relative py-16 bg-primary-200 pb-20 md:pb-40">
     <div class="container mx-auto px-4 max-w-4xl">
       <div
         v-motion
@@ -87,21 +81,18 @@
         </UAccordion>
       </UCard>
 
-      <div
-        v-motion
-        :initial="{ opacity: 0, y: 50 }"
-        :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
-        class="mt-12">
-        <CTASection
-          title="Une question avant de te lancer&nbsp;?"
-          description="N'hésite pas à me contacter directement par mail. Je serai ravie de t'aider !"
-          button-text="Envoyer un message"
-          :button-to="contactEmail"
-          :button-external="true"
-          icon="i-lucide-mail"
-          tracking-name="cta_faq_email"
-          tracking-section="faq" />
-      </div>
+    </div>
+
+    <!-- Curved bottom border -->
+    <div class="absolute -bottom-px left-0 w-full overflow-hidden leading-none">
+      <!-- Mobile: courbe moins prononcée -->
+      <svg class="block w-full h-20 md:hidden" viewBox="0 0 1440 400" preserveAspectRatio="none">
+        <path d="M0,400 L0,280 Q360,320 720,280 T1440,280 L1440,400 Z" fill="#FFFFFF" />
+      </svg>
+      <!-- Desktop: courbe plus prononcée -->
+      <svg class="hidden md:block w-full h-40" viewBox="0 0 1440 400" preserveAspectRatio="none">
+        <path d="M0,400 L0,200 Q360,350 720,200 T1440,200 L1440,400 Z" fill="#FFFFFF" />
+      </svg>
     </div>
   </section>
 </template>

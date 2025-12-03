@@ -67,11 +67,16 @@ model Testimonial {
 
 // Testimonials Header model
 model TestimonialsHeader {
-  id          String   @id @default(cuid())
-  title       String
-  subtitle    String?
-  description String?  @db.Text
-  updatedAt   DateTime @updatedAt
+  id               String   @id @default(cuid())
+  title            String
+  subtitle         String?
+  description      String?  @db.Text
+  ctaTitle         String?
+  ctaDescription   String?  @db.Text
+  ctaButtonText    String?
+  ctaButtonUrl     String?
+  ctaUseDefaultUrl Boolean  @default(true)
+  updatedAt        DateTime @updatedAt
 
   @@map("testimonials_header")
 }
@@ -87,6 +92,9 @@ model HeroSection {
   clientsText            String   @default("clients satisfaits")
   avatars                Json     @default("[]")
   additionalClientsCount Int      @default(0)
+  ctaButtonText          String?
+  ctaButtonUrl           String?
+  ctaUseDefaultUrl       Boolean  @default(true)
   updatedAt              DateTime @updatedAt
 
   @@map("hero_section")
@@ -106,11 +114,16 @@ model AboutSection {
 
 // Method Header model
 model MethodHeader {
-  id          String   @id @default(cuid())
-  title       String
-  subtitle    String?
-  description String?  @db.Text
-  updatedAt   DateTime @updatedAt
+  id               String   @id @default(cuid())
+  title            String
+  subtitle         String?
+  description      String?  @db.Text
+  ctaTitle         String?
+  ctaDescription   String?  @db.Text
+  ctaButtonText    String?
+  ctaButtonUrl     String?
+  ctaUseDefaultUrl Boolean  @default(true)
+  updatedAt        DateTime @updatedAt
 
   @@map("method_header")
 }
@@ -172,4 +185,26 @@ model ImageSeparator {
   updatedAt    DateTime @updatedAt
 
   @@map("image_separator")
+}
+
+// Cost of Inaction Section model
+model CostOfInactionSection {
+  id                 String   @id @default(cuid())
+  badgeText          String   @default("Coût de ne rien faire")
+  title              String   @default("Ce qui te coûte le plus cher aujourd'hui…")
+  subtitle           String?  @db.Text
+  painPoints         Json     @default("[]")
+  warningTitle       String?  @db.Text
+  warningSubtitle    String?  @db.Text
+  solutionText1      String?  @db.Text
+  solutionText2      String?  @db.Text
+  solutionHighlight  String?  @db.Text
+  ctaTitle           String?
+  ctaDescription     String?  @db.Text
+  ctaButtonText      String?
+  ctaButtonUrl       String?
+  ctaUseDefaultUrl   Boolean  @default(true)
+  updatedAt          DateTime @updatedAt
+
+  @@map("cost_of_inaction_section")
 }

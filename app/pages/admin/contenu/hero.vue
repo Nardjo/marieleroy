@@ -19,6 +19,7 @@
   const tabs = [
     { label: 'Section Hero', value: 'hero', icon: 'i-lucide-layout' },
     { label: 'Avatars clients', value: 'avatars', icon: 'i-lucide-users' },
+    { label: 'CTA', value: 'cta', icon: 'i-lucide-mouse-pointer-click' },
   ]
   const activeTab = ref((route.query.tab as string) || 'hero')
 
@@ -42,6 +43,9 @@
     posterUrl: '' as string | null,
     avatars: [] as Avatar[],
     additionalClientsCount: 0,
+    ctaButtonText: '',
+    ctaButtonUrl: '',
+    ctaUseDefaultUrl: true,
   })
 
   const loadHero = async () => {
@@ -57,6 +61,20 @@
       }
       if (!form.avatars) {
         form.avatars = []
+      }
+      // S'assurer que additionalClientsCount est un nombre valide
+      if (form.additionalClientsCount === null || form.additionalClientsCount === undefined) {
+        form.additionalClientsCount = 0
+      }
+      // CTA fields
+      if (form.ctaButtonText === null) {
+        form.ctaButtonText = ''
+      }
+      if (form.ctaButtonUrl === null) {
+        form.ctaButtonUrl = ''
+      }
+      if (form.ctaUseDefaultUrl === undefined || form.ctaUseDefaultUrl === null) {
+        form.ctaUseDefaultUrl = true
       }
     } catch (err: any) {
       toast.add({
@@ -85,7 +103,10 @@
         posterUrl:
           form.posterUrl && typeof form.posterUrl === 'string' && form.posterUrl.trim() !== '' ? form.posterUrl : null,
         avatars: filteredAvatars,
-        additionalClientsCount: form.additionalClientsCount,
+        additionalClientsCount: Number(form.additionalClientsCount) || 0,
+        ctaButtonText: form.ctaButtonText?.trim() || null,
+        ctaButtonUrl: form.ctaButtonUrl?.trim() || null,
+        ctaUseDefaultUrl: form.ctaUseDefaultUrl,
       }
 
       await updateHero(payload)
@@ -180,6 +201,10 @@
           <div v-if="item.value === 'hero'" class="space-y-6 pt-6">
             <UCard>
               <div class="space-y-4">
+                <UFormField label="Eyebrow" hint="Petite phrase d'accroche au-dessus de la vidéo">
+                  <AdminRichTextEditor v-model="form.eyebrow" placeholder="Ex: Des mots qui convertissent..." />
+                </UFormField>
+
                 <!-- Video Upload Field -->
                 <AdminVideoUploadField
                   v-model="form.videoUrl"
@@ -195,16 +220,12 @@
                   name="posterUrl"
                   hint="Image affichée avant le chargement de la vidéo sur mobile (1920x1080px recommandé)" />
 
+                <UFormField label="Grande promesse" hint="Texte affiché en dessous de la vidéo">
+                  <AdminRichTextEditor v-model="form.bigPromise" placeholder="Votre grande promesse..." />
+                </UFormField>
+
                 <UFormField label="Sous-titre" required>
                   <UInput v-model="form.subtitle" size="lg" placeholder="Ex: Copywriter Professionnelle" />
-                </UFormField>
-
-                <UFormField label="Eyebrow" hint="Petite phrase d'accroche au-dessus du titre">
-                  <AdminRichTextEditor v-model="form.eyebrow" placeholder="Ex: Des mots qui convertissent..." />
-                </UFormField>
-
-                <UFormField label="Grande promesse" hint="Texte principal de la section hero">
-                  <AdminRichTextEditor v-model="form.bigPromise" placeholder="Votre grande promesse..." />
                 </UFormField>
               </div>
             </UCard>
@@ -285,6 +306,28 @@
                 hint="Ce nombre s'affichera après les avatars (ex: +10 pour afficher '+10')">
                 <UInput v-model.number="form.additionalClientsCount" type="number" min="0" size="lg" placeholder="0" />
               </UFormField>
+            </UCard>
+          </div>
+
+          <!-- CTA Tab -->
+          <div v-else-if="item.value === 'cta'" class="space-y-6 pt-6">
+            <UCard>
+              <template #header>
+                <h3 class="text-lg font-semibold">Bouton Call to Action</h3>
+              </template>
+              <div class="space-y-4">
+                <UFormField label="Texte du bouton" hint="Texte affiché sur le bouton principal">
+                  <UInput v-model="form.ctaButtonText" size="lg" placeholder="On discute ?" />
+                </UFormField>
+
+                <UFormField>
+                  <UCheckbox v-model="form.ctaUseDefaultUrl" label="Utiliser le lien CTA par défaut (paramètres)" />
+                </UFormField>
+
+                <UFormField v-if="!form.ctaUseDefaultUrl" label="URL personnalisée" hint="Accepte les liens classiques ou mailto:email@exemple.com">
+                  <UInput v-model="form.ctaButtonUrl" size="lg" placeholder="https://... ou mailto:contact@exemple.com" />
+                </UFormField>
+              </div>
             </UCard>
           </div>
         </template>

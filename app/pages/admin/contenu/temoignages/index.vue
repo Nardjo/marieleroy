@@ -20,6 +20,11 @@
     title: '',
     subtitle: '',
     description: '',
+    ctaTitle: '',
+    ctaDescription: '',
+    ctaButtonText: '',
+    ctaButtonUrl: '',
+    ctaUseDefaultUrl: true,
   })
 
   // Tabs
@@ -27,6 +32,7 @@
   const tabs = [
     { label: 'En-tête', value: 'header', icon: 'i-lucide-heading' },
     { label: 'Témoignages', value: 'testimonials', icon: 'i-lucide-video' },
+    { label: 'CTA', value: 'cta', icon: 'i-lucide-mouse-pointer-click' },
   ]
   const activeTab = ref((route.query.tab as string) || 'header')
 
@@ -97,7 +103,16 @@
   const loadHeader = async () => {
     try {
       const header = await fetchHeader()
-      Object.assign(headerForm, header)
+      Object.assign(headerForm, {
+        title: header.title || '',
+        subtitle: header.subtitle || '',
+        description: header.description || '',
+        ctaTitle: header.ctaTitle || '',
+        ctaDescription: header.ctaDescription || '',
+        ctaButtonText: header.ctaButtonText || '',
+        ctaButtonUrl: header.ctaButtonUrl || '',
+        ctaUseDefaultUrl: header.ctaUseDefaultUrl ?? true,
+      })
     } catch (error) {
       console.error("Erreur lors du chargement de l'en-tête:", error)
     }
@@ -206,7 +221,7 @@
     <AdminPageHeader title="Témoignages" description="Gérer l'en-tête et les témoignages vidéo">
       <template #actions>
         <UButton
-          v-if="activeTab === 'header'"
+          v-if="activeTab === 'header' || activeTab === 'cta'"
           color="primary"
           size="lg"
           icon="i-lucide-save"
@@ -315,6 +330,36 @@
               button-label="Ajouter un témoignage"
               button-icon="i-lucide-plus"
               @action="router.push('/admin/contenu/temoignages/ajouter')" />
+          </div>
+
+          <!-- CTA Tab -->
+          <div v-else-if="item.value === 'cta'" class="space-y-6 pt-6">
+            <UCard>
+              <template #header>
+                <h3 class="text-lg font-semibold">Call to Action</h3>
+              </template>
+              <div class="space-y-4">
+                <UFormField label="Titre du CTA">
+                  <UInput v-model="headerForm.ctaTitle" size="lg" placeholder="Tu veux faire passer ton business au niveau supérieur ?" />
+                </UFormField>
+
+                <UFormField label="Description du CTA">
+                  <UInput v-model="headerForm.ctaDescription" size="lg" placeholder="Parle-moi de ton projet..." />
+                </UFormField>
+
+                <UFormField label="Texte du bouton">
+                  <UInput v-model="headerForm.ctaButtonText" size="lg" placeholder="Réserve ton appel offert" />
+                </UFormField>
+
+                <UFormField>
+                  <UCheckbox v-model="headerForm.ctaUseDefaultUrl" label="Utiliser le lien CTA par défaut (paramètres)" />
+                </UFormField>
+
+                <UFormField v-if="!headerForm.ctaUseDefaultUrl" label="URL personnalisée" hint="Accepte les liens classiques ou mailto:email@exemple.com">
+                  <UInput v-model="headerForm.ctaButtonUrl" size="lg" placeholder="https://... ou mailto:contact@exemple.com" />
+                </UFormField>
+              </div>
+            </UCard>
           </div>
         </template>
       </UTabs>

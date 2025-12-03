@@ -5,6 +5,11 @@ export default defineEventHandler(async () => {
         title: true,
         subtitle: true,
         description: true,
+        ctaTitle: true,
+        ctaDescription: true,
+        ctaButtonText: true,
+        ctaButtonUrl: true,
+        ctaUseDefaultUrl: true,
       },
     })
 
@@ -26,6 +31,11 @@ export default defineEventHandler(async () => {
       title: 'Ma Méthode',
       subtitle: 'Étape par étape',
       description: 'Découvrez comment je travaille',
+      ctaTitle: 'Besoin d\'un regard expert sur ton marketing ?',
+      ctaDescription: 'On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions.',
+      ctaButtonText: 'Obtenir un audit gratuit',
+      ctaButtonUrl: null,
+      ctaUseDefaultUrl: true,
     },
     steps: steps || [],
   }

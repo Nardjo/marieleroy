@@ -11,6 +11,9 @@ export default defineEventHandler(async () => {
           title: 'Comment je travaille',
           subtitle: 'étape par étape',
           description: 'Un processus éprouvé pour créer des contenus qui captivent et convertissent votre audience',
+          ctaTitle: 'Besoin d\'un regard expert sur ton marketing ?',
+          ctaDescription: 'On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions.',
+          ctaButtonText: 'Obtenir un audit gratuit',
         },
       })
     }

@@ -71,6 +71,11 @@ export const methodHeaderSchema = z.object({
   title: z.string().min(1),
   subtitle: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
+  ctaTitle: z.string().nullable().optional(),
+  ctaDescription: z.string().nullable().optional(),
+  ctaButtonText: z.string().nullable().optional(),
+  ctaButtonUrl: z.string().nullable().optional(),
+  ctaUseDefaultUrl: z.boolean().optional(),
 })
 
 // Testimonials Header Schema
@@ -78,6 +83,11 @@ export const testimonialsHeaderSchema = z.object({
   title: z.string().min(1),
   subtitle: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
+  ctaTitle: z.string().nullable().optional(),
+  ctaDescription: z.string().nullable().optional(),
+  ctaButtonText: z.string().nullable().optional(),
+  ctaButtonUrl: z.string().nullable().optional(),
+  ctaUseDefaultUrl: z.boolean().optional(),
 })
 
 export const methodStepSchema = z.object({

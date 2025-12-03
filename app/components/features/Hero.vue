@@ -18,7 +18,16 @@
   const avatars = computed(() => hero.value?.avatars || [])
   const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
   const additionalClientsCount = computed(() => hero.value?.additionalClientsCount || 0)
-  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const ctaButtonText = computed(() => hero.value?.ctaButtonText || 'On discute ?')
+  const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const ctaLink = computed(() => {
+    // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
+    if (hero.value?.ctaUseDefaultUrl !== false) {
+      return defaultCtaLink.value
+    }
+    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
+    return hero.value?.ctaButtonUrl || defaultCtaLink.value
+  })
 </script>
 
 <template>
@@ -90,7 +99,7 @@
               <CTAButton
                 icon="i-lucide-rocket"
                 size="xl"
-                text="On discute ?"
+                :text="ctaButtonText"
                 :to="ctaLink"
                 :external="true"
                 tracking-name="contact_cta"

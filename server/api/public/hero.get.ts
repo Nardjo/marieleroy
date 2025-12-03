@@ -9,6 +9,9 @@ export default defineEventHandler(async () => {
       avatars: true,
       clientsText: true,
       additionalClientsCount: true,
+      ctaButtonText: true,
+      ctaButtonUrl: true,
+      ctaUseDefaultUrl: true,
     },
   })
 
@@ -22,6 +25,9 @@ export default defineEventHandler(async () => {
       avatars: [],
       clientsText: 'clients satisfaits',
       additionalClientsCount: 0,
+      ctaButtonText: 'On discute ?',
+      ctaButtonUrl: null,
+      ctaUseDefaultUrl: true,
     }
   }
 

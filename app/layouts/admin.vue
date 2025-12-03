@@ -75,6 +75,12 @@
           to: '/admin/contenu/faq',
           active: route.path === '/admin/contenu/faq',
         },
+        {
+          label: 'Coût de l\'inaction',
+          icon: 'i-lucide-alert-triangle',
+          to: '/admin/contenu/cout-inaction',
+          active: route.path === '/admin/contenu/cout-inaction',
+        },
       ],
     },
     {

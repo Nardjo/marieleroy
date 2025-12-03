@@ -28,7 +28,19 @@
     }))
   })
 
-  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  // CTA
+  const ctaTitle = computed(() => header.value?.ctaTitle || 'Besoin d\'un regard expert sur ton marketing ?')
+  const ctaDescription = computed(() => header.value?.ctaDescription || 'On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions.')
+  const ctaButtonText = computed(() => header.value?.ctaButtonText || 'Obtenir un audit gratuit')
+  const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const ctaLink = computed(() => {
+    // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
+    if (header.value?.ctaUseDefaultUrl !== false) {
+      return defaultCtaLink.value
+    }
+    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
+    return header.value?.ctaButtonUrl || defaultCtaLink.value
+  })
 
   const lineProgress = computed(() => {
     const total = steps.value.length
@@ -138,9 +150,9 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="mt-16">
         <CTASection
-          title="Besoin d'un regard expert sur ton marketing&nbsp;?"
-          description="On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions."
-          button-text="Obtenir un audit gratuit"
+          :title="ctaTitle"
+          :description="ctaDescription"
+          :button-text="ctaButtonText"
           :button-to="ctaLink"
           :button-external="true"
           icon="i-lucide-eye"

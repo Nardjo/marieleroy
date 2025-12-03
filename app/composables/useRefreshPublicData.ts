@@ -13,6 +13,7 @@ export const useRefreshPublicData = () => {
       refreshNuxtData('public-image-separator'),
       refreshNuxtData('public-settings'),
       refreshNuxtData('public-seo'),
+      refreshNuxtData('public-cost-of-inaction'),
     ])
   }
 
@@ -24,6 +25,7 @@ export const useRefreshPublicData = () => {
   const refreshImageSeparator = () => refreshNuxtData('public-image-separator')
   const refreshSettings = () => refreshNuxtData('public-settings')
   const refreshSeo = () => refreshNuxtData('public-seo')
+  const refreshCostOfInaction = () => refreshNuxtData('public-cost-of-inaction')
 
   return {
     refreshAll,
@@ -35,5 +37,6 @@ export const useRefreshPublicData = () => {
     refreshImageSeparator,
     refreshSettings,
     refreshSeo,
+    refreshCostOfInaction,
   }
 }

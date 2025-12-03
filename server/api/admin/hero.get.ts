@@ -8,6 +8,9 @@ export default defineEventHandler(async () => {
       posterUrl: true,
       avatars: true,
       additionalClientsCount: true,
+      ctaButtonText: true,
+      ctaButtonUrl: true,
+      ctaUseDefaultUrl: true,
     },
   })
 

@@ -10,7 +10,7 @@ export const useNavigation = () => {
   const initActiveSection = () => {
     if (import.meta.client) {
       const hash = window.location.hash.slice(1)
-      if (hash && ['testimonials', 'method', 'about', 'faq'].includes(hash)) {
+      if (hash && ['testimonials', 'method', 'about', 'faq', 'cost-of-inaction'].includes(hash)) {
         activeSection.value = hash
       } else {
         activeSection.value = 'hero'
@@ -20,7 +20,7 @@ export const useNavigation = () => {
 
   const observeSection = () => {
     if (import.meta.client) {
-      const sections = ['hero', 'testimonials', 'method', 'about', 'faq']
+      const sections = ['hero', 'testimonials', 'method', 'about', 'faq', 'cost-of-inaction']
       const observer = new IntersectionObserver(
         entries => {
           // Ignorer les changements pendant le scroll programmé
@@ -111,6 +111,13 @@ export const useNavigation = () => {
         activeSection.value === 'faq' ? 'underline underline-offset-4 !font-extrabold' : '!hover:!text-primary-800'
       }`,
       onClick: () => scrollToSection('faq'),
+    },
+    {
+      label: 'Pourquoi agir',
+      class: `cursor-pointer transition-all !text-primary-900 underline underline-offset-2 hover:underline-offset-4 !py-3 !px-4 min-h-[48px] flex items-center ${
+        activeSection.value === 'cost-of-inaction' ? 'underline underline-offset-4 !font-extrabold' : '!hover:!text-primary-800'
+      }`,
+      onClick: () => scrollToSection('cost-of-inaction'),
     },
   ])
 

@@ -20,7 +20,21 @@
     }
   })
   const testimonials = computed(() => testimonialsData.value?.testimonials || [])
-  const ctaLink = computed(() => settings.value?.site?.ctaLink || '#')
+
+  // CTA
+  const ctaTitle = computed(() => header.value?.ctaTitle || 'Tu veux faire passer ton business au niveau supérieur ?')
+  const ctaDescription = computed(() => header.value?.ctaDescription || 'Parle-moi de ton projet et on voit ensemble comment augmenter tes conversions sans t\'épuiser.')
+  const ctaButtonText = computed(() => header.value?.ctaButtonText || 'Réserve ton appel offert')
+  const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const ctaLink = computed(() => {
+    const h = testimonialsData.value?.header
+    // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
+    if (h?.ctaUseDefaultUrl !== false) {
+      return defaultCtaLink.value
+    }
+    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
+    return h?.ctaButtonUrl || defaultCtaLink.value
+  })
 </script>
 
 <template>
@@ -86,9 +100,9 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="mt-12">
         <CTASection
-          title="Tu veux faire passer ton business au niveau supérieur ?"
-          description="Parle-moi de ton projet et on voit ensemble comment augmenter tes conversions sans t’épuiser."
-          button-text="Réserve ton appel offert"
+          :title="ctaTitle"
+          :description="ctaDescription"
+          :button-text="ctaButtonText"
           :button-to="ctaLink"
           :button-external="true"
           icon="i-lucide-rocket"

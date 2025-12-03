@@ -29,7 +29,7 @@
 </script>
 
 <template>
-  <section id="faq" class="relative py-16 bg-primary-200 pb-20 md:pb-40">
+  <section id="faq" class="relative pt-16 pb-32 md:pb-40 bg-primary-200">
     <div class="container mx-auto px-4 max-w-4xl">
       <div
         v-motion
@@ -83,16 +83,7 @@
 
     </div>
 
-    <!-- Curved bottom border -->
-    <div class="absolute -bottom-px left-0 w-full overflow-hidden leading-none">
-      <!-- Mobile: courbe moins prononcée -->
-      <svg class="block w-full h-20 md:hidden" viewBox="0 0 1440 400" preserveAspectRatio="none">
-        <path d="M0,400 L0,280 Q360,320 720,280 T1440,280 L1440,400 Z" fill="#FFFFFF" />
-      </svg>
-      <!-- Desktop: courbe plus prononcée -->
-      <svg class="hidden md:block w-full h-40" viewBox="0 0 1440 400" preserveAspectRatio="none">
-        <path d="M0,400 L0,200 Q360,350 720,200 T1440,200 L1440,400 Z" fill="#FFFFFF" />
-      </svg>
-    </div>
+    <!-- Gradient transition to white -->
+    <div class="absolute bottom-0 left-0 w-full h-24 md:h-32 bg-gradient-to-b from-transparent to-white"></div>
   </section>
 </template>

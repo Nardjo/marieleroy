@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const { sanitize } = useSanitize()
+  const { fixPunctuation } = useTypography()
 
   // Fetch FAQ from API
   const { data: faqData } = await usePublicFaq()

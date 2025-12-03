@@ -35,18 +35,39 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
 
 export const useSanitize = () => {
   /**
+   * Remove empty paragraphs and line breaks at the start and end of HTML content
+   */
+  const trimEmptyParagraphs = (html: string): string => {
+    if (!html) return ''
+
+    // Pattern pour les paragraphes vides (avec ou sans espaces/nbsp)
+    const emptyParagraphPattern = /<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi
+
+    // Supprimer les paragraphes vides au début
+    let result = html.replace(new RegExp(`^(${emptyParagraphPattern.source}\\s*)+`, 'gi'), '')
+
+    // Supprimer les paragraphes vides à la fin
+    result = result.replace(new RegExp(`(\\s*${emptyParagraphPattern.source})+$`, 'gi'), '')
+
+    return result.trim()
+  }
+
+  /**
    * Sanitize HTML content using DOMPurify
    * Safe to use with v-html
    */
   const sanitize = (dirty: string | null | undefined): string => {
     if (!dirty) return ''
 
-    return DOMPurify.sanitize(dirty, {
+    const sanitized = DOMPurify.sanitize(dirty, {
       ALLOWED_TAGS,
       ALLOWED_ATTR,
       ALLOW_DATA_ATTR: false,
       USE_PROFILES: { html: true },
     })
+
+    // Nettoyer les paragraphes vides au début et à la fin
+    return trimEmptyParagraphs(sanitized)
   }
 
   /**

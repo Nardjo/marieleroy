@@ -80,7 +80,8 @@ model TestimonialsHeader {
 model HeroSection {
   id                     String   @id @default(cuid())
   subtitle               String
-  description            String   @db.Text
+  eyebrow                String?  @db.Text
+  bigPromise             String?  @db.Text
   videoUrl               String?
   posterUrl              String?
   clientsText            String   @default("clients satisfaits")

@@ -2,7 +2,8 @@ export default defineEventHandler(async () => {
   const hero = await prisma.heroSection.findFirst({
     select: {
       subtitle: true,
-      description: true,
+      eyebrow: true,
+      bigPromise: true,
       videoUrl: true,
       posterUrl: true,
       avatars: true,
@@ -14,7 +15,8 @@ export default defineEventHandler(async () => {
   if (!hero) {
     return {
       subtitle: 'Copywriter Professionnelle',
-      description: 'Des mots qui convertissent, des messages qui résonnent.',
+      eyebrow: 'Des mots qui convertissent, des messages qui résonnent.',
+      bigPromise: null,
       videoUrl: null,
       posterUrl: null,
       avatars: [],

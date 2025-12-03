@@ -2,10 +2,12 @@ export default defineEventHandler(async () => {
   const hero = await prisma.heroSection.findFirst({
     select: {
       subtitle: true,
-      description: true,
+      eyebrow: true,
+      bigPromise: true,
       videoUrl: true,
       posterUrl: true,
       avatars: true,
+      additionalClientsCount: true,
     },
   })
 

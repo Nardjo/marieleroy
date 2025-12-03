@@ -36,7 +36,8 @@
 
   const form = reactive({
     subtitle: '',
-    description: '',
+    eyebrow: '',
+    bigPromise: '',
     videoUrl: '',
     posterUrl: '' as string | null,
     avatars: [] as Avatar[],
@@ -77,7 +78,8 @@
 
       const payload = {
         subtitle: form.subtitle,
-        description: form.description,
+        eyebrow: form.eyebrow,
+        bigPromise: form.bigPromise,
         videoUrl:
           form.videoUrl && typeof form.videoUrl === 'string' && form.videoUrl.trim() !== '' ? form.videoUrl : null,
         posterUrl:
@@ -197,8 +199,12 @@
                   <UInput v-model="form.subtitle" size="lg" placeholder="Ex: Copywriter Professionnelle" />
                 </UFormField>
 
-                <UFormField label="Description" required>
-                  <AdminRichTextEditor v-model="form.description" placeholder="Phrase d'accroche..." />
+                <UFormField label="Eyebrow" hint="Petite phrase d'accroche au-dessus du titre">
+                  <AdminRichTextEditor v-model="form.eyebrow" placeholder="Ex: Des mots qui convertissent..." />
+                </UFormField>
+
+                <UFormField label="Grande promesse" hint="Texte principal de la section hero">
+                  <AdminRichTextEditor v-model="form.bigPromise" placeholder="Votre grande promesse..." />
                 </UFormField>
               </div>
             </UCard>

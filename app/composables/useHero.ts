@@ -13,7 +13,8 @@ export const useHero = () => {
 
   const updateHero = async (data: {
     subtitle: string
-    description: string
+    eyebrow?: string | null
+    bigPromise?: string | null
     videoUrl?: string | null
     posterUrl?: string | null
     avatars?: Array<{
@@ -22,6 +23,7 @@ export const useHero = () => {
       subtitle: string
       imageUrl: string
     }>
+    additionalClientsCount?: number
   }) => {
     try {
       loading.value = true

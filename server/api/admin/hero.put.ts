@@ -14,7 +14,8 @@ export default defineEventHandler(async event => {
     where: { id: hero.id },
     data: {
       subtitle: body.subtitle,
-      description: body.description,
+      eyebrow: body.eyebrow || null,
+      bigPromise: body.bigPromise || null,
       videoUrl: body.videoUrl || null,
       posterUrl: body.posterUrl || null,
       avatars: body.avatars || [],

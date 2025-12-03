@@ -190,7 +190,7 @@
                   <UInput v-model="form.title" size="lg" placeholder="Ce qui te coûte le plus cher aujourd'hui…" />
                 </UFormField>
 
-                <UFormField label="Sous-titre" hint="Peut contenir du HTML (ex: <strong>, <br />)">
+                <UFormField label="Sous-titre">
                   <AdminRichTextEditor v-model="form.subtitle" placeholder="Sous-titre de la section..." />
                 </UFormField>
               </div>
@@ -223,7 +223,7 @@
           <div v-else-if="item.value === 'warning'" class="space-y-6 pt-6">
             <UCard>
               <div class="space-y-4">
-                <UFormField label="Titre de l'alerte" hint="Peut contenir du HTML">
+                <UFormField label="Titre de l'alerte">
                   <AdminRichTextEditor v-model="form.warningTitle" placeholder="Ne rien changer aujourd'hui = ..." />
                 </UFormField>
 
@@ -238,7 +238,7 @@
           <div v-else-if="item.value === 'solution'" class="space-y-6 pt-6">
             <UCard>
               <div class="space-y-4">
-                <UFormField label="Texte solution 1" hint="Peut contenir du HTML (<strong>)">
+                <UFormField label="Texte solution 1">
                   <AdminRichTextEditor v-model="form.solutionText1" placeholder="Avec ma méthode, tu récupères..." />
                 </UFormField>
 
@@ -246,7 +246,7 @@
                   <UInput v-model="form.solutionText2" size="lg" placeholder="… et tu casses enfin..." />
                 </UFormField>
 
-                <UFormField label="Phrase mise en avant" hint="Peut contenir du HTML (<span>)">
+                <UFormField label="Phrase mise en avant">
                   <AdminRichTextEditor
                     v-model="form.solutionHighlight"
                     placeholder="Pour un business qui tourne..." />

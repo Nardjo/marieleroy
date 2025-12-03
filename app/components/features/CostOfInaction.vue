@@ -55,11 +55,6 @@
         :initial="{ opacity: 0, y: 50 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
         class="text-center mb-10">
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 text-orange-800 text-sm font-medium mb-4">
-          <Icon name="i-lucide-alert-triangle" class="w-4 h-4" />
-          {{ section.badgeText }}
-        </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
           {{ section.title }}
         </h2>

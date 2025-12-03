@@ -186,10 +186,6 @@
           <div v-if="item.value === 'header'" class="space-y-6 pt-6">
             <UCard>
               <div class="space-y-4">
-                <UFormField label="Badge" hint="Texte affiché dans le badge orange">
-                  <UInput v-model="form.badgeText" size="lg" placeholder="Coût de ne rien faire" />
-                </UFormField>
-
                 <UFormField label="Titre" required>
                   <UInput v-model="form.title" size="lg" placeholder="Ce qui te coûte le plus cher aujourd'hui…" />
                 </UFormField>

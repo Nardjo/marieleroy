@@ -76,6 +76,8 @@ model TestimonialsHeader {
   ctaButtonText    String?
   ctaButtonUrl     String?
   ctaUseDefaultUrl Boolean  @default(true)
+  ctaUseEmail      Boolean  @default(false)
+  ctaEmailSubject  String?
   updatedAt        DateTime @updatedAt
 
   @@map("testimonials_header")
@@ -95,6 +97,8 @@ model HeroSection {
   ctaButtonText          String?
   ctaButtonUrl           String?
   ctaUseDefaultUrl       Boolean  @default(true)
+  ctaUseEmail            Boolean  @default(false)
+  ctaEmailSubject        String?
   updatedAt              DateTime @updatedAt
 
   @@map("hero_section")
@@ -123,6 +127,8 @@ model MethodHeader {
   ctaButtonText    String?
   ctaButtonUrl     String?
   ctaUseDefaultUrl Boolean  @default(true)
+  ctaUseEmail      Boolean  @default(false)
+  ctaEmailSubject  String?
   updatedAt        DateTime @updatedAt
 
   @@map("method_header")
@@ -204,6 +210,8 @@ model CostOfInactionSection {
   ctaButtonText      String?
   ctaButtonUrl       String?
   ctaUseDefaultUrl   Boolean  @default(true)
+  ctaUseEmail        Boolean  @default(false)
+  ctaEmailSubject    String?
   updatedAt          DateTime @updatedAt
 
   @@map("cost_of_inaction_section")

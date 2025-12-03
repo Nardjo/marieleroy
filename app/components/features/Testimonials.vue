@@ -26,8 +26,15 @@
   const ctaDescription = computed(() => header.value?.ctaDescription || 'Parle-moi de ton projet et on voit ensemble comment augmenter tes conversions sans t\'épuiser.')
   const ctaButtonText = computed(() => header.value?.ctaButtonText || 'Réserve ton appel offert')
   const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const contactEmail = computed(() => settings.value?.site?.email || '')
   const ctaLink = computed(() => {
     const h = testimonialsData.value?.header
+    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
+    if (h?.ctaUseEmail) {
+      const subject = h?.ctaEmailSubject || ''
+      const encodedSubject = encodeURIComponent(subject)
+      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
+    }
     // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
     if (h?.ctaUseDefaultUrl !== false) {
       return defaultCtaLink.value

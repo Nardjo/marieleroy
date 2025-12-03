@@ -10,6 +10,8 @@ export default defineEventHandler(async () => {
       ctaButtonText: true,
       ctaButtonUrl: true,
       ctaUseDefaultUrl: true,
+      ctaUseEmail: true,
+      ctaEmailSubject: true,
     },
   })
 
@@ -37,6 +39,8 @@ export default defineEventHandler(async () => {
       ctaButtonText: 'Réserve ton appel offert',
       ctaButtonUrl: null,
       ctaUseDefaultUrl: true,
+      ctaUseEmail: false,
+      ctaEmailSubject: null,
     },
     testimonials: testimonials || [],
   }

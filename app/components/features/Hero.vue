@@ -20,7 +20,14 @@
   const additionalClientsCount = computed(() => hero.value?.additionalClientsCount || 0)
   const ctaButtonText = computed(() => hero.value?.ctaButtonText || 'On discute ?')
   const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const contactEmail = computed(() => settings.value?.site?.email || '')
   const ctaLink = computed(() => {
+    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
+    if (hero.value?.ctaUseEmail) {
+      const subject = hero.value?.ctaEmailSubject || ''
+      const encodedSubject = encodeURIComponent(subject)
+      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
+    }
     // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
     if (hero.value?.ctaUseDefaultUrl !== false) {
       return defaultCtaLink.value

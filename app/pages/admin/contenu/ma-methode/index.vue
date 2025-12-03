@@ -23,6 +23,21 @@
     ctaButtonText: '',
     ctaButtonUrl: '',
     ctaUseDefaultUrl: true,
+    ctaUseEmail: false,
+    ctaEmailSubject: '',
+  })
+
+  // CTA link type for radio buttons
+  const ctaLinkType = computed({
+    get: () => {
+      if (headerForm.ctaUseEmail) return 'email'
+      if (headerForm.ctaUseDefaultUrl) return 'default'
+      return 'custom'
+    },
+    set: (value: string) => {
+      headerForm.ctaUseDefaultUrl = value === 'default'
+      headerForm.ctaUseEmail = value === 'email'
+    },
   })
 
   // Tabs
@@ -125,6 +140,8 @@
         ctaButtonText: header.ctaButtonText || '',
         ctaButtonUrl: header.ctaButtonUrl || '',
         ctaUseDefaultUrl: header.ctaUseDefaultUrl ?? true,
+        ctaUseEmail: header.ctaUseEmail ?? false,
+        ctaEmailSubject: header.ctaEmailSubject || '',
       })
     } catch (error) {
       console.error("Erreur lors du chargement de l'en-tête:", error)
@@ -347,12 +364,33 @@
                   <UInput v-model="headerForm.ctaButtonText" size="lg" placeholder="Obtenir un audit gratuit" />
                 </UFormField>
 
-                <UFormField>
-                  <UCheckbox v-model="headerForm.ctaUseDefaultUrl" label="Utiliser le lien CTA par défaut (paramètres)" />
+                <UFormField label="Type de lien">
+                  <div class="grid grid-cols-3 gap-3">
+                    <button
+                      v-for="option in [
+                        { label: 'CTA par défaut', value: 'default', icon: 'i-lucide-link' },
+                        { label: 'Email', value: 'email', icon: 'i-lucide-mail' },
+                        { label: 'URL personnalisée', value: 'custom', icon: 'i-lucide-external-link' },
+                      ]"
+                      :key="option.value"
+                      type="button"
+                      class="flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left"
+                      :class="ctaLinkType === option.value
+                        ? 'border-primary-500 bg-primary-500/10'
+                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'"
+                      @click="ctaLinkType = option.value">
+                      <Icon :name="option.icon" class="w-4 h-4 shrink-0" :class="ctaLinkType === option.value ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400'" />
+                      <span class="text-sm font-medium" :class="ctaLinkType === option.value ? 'text-primary-700 dark:text-white' : 'text-gray-600 dark:text-gray-400'">{{ option.label }}</span>
+                    </button>
+                  </div>
                 </UFormField>
 
-                <UFormField v-if="!headerForm.ctaUseDefaultUrl" label="URL personnalisée" hint="Accepte les liens classiques ou mailto:email@exemple.com">
-                  <UInput v-model="headerForm.ctaButtonUrl" size="lg" placeholder="https://... ou mailto:contact@exemple.com" />
+                <UFormField v-if="ctaLinkType === 'email'" label="Objet du mail" hint="Objet pré-rempli dans le mail">
+                  <UInput v-model="headerForm.ctaEmailSubject" size="lg" placeholder="Question pour Marie Leroy" />
+                </UFormField>
+
+                <UFormField v-if="ctaLinkType === 'custom'" label="URL personnalisée">
+                  <UInput v-model="headerForm.ctaButtonUrl" size="lg" placeholder="https://..." />
                 </UFormField>
               </div>
             </UCard>

@@ -33,7 +33,14 @@
   const ctaDescription = computed(() => header.value?.ctaDescription || 'On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions.')
   const ctaButtonText = computed(() => header.value?.ctaButtonText || 'Obtenir un audit gratuit')
   const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
+  const contactEmail = computed(() => settings.value?.site?.email || '')
   const ctaLink = computed(() => {
+    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
+    if (header.value?.ctaUseEmail) {
+      const subject = header.value?.ctaEmailSubject || ''
+      const encodedSubject = encodeURIComponent(subject)
+      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
+    }
     // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
     if (header.value?.ctaUseDefaultUrl !== false) {
       return defaultCtaLink.value

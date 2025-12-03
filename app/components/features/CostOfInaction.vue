@@ -28,19 +28,22 @@
     return []
   })
 
-  const contactEmail = computed(() => {
-    const email = settings.value?.site?.email
-    return email ? `mailto:${email}?subject=Questions pour Marie Leroy` : '#'
-  })
+  const contactEmail = computed(() => settings.value?.site?.email || '')
 
   const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
   const ctaLink = computed(() => {
+    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
+    if (section.value?.ctaUseEmail) {
+      const subject = section.value?.ctaEmailSubject || ''
+      const encodedSubject = encodeURIComponent(subject)
+      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
+    }
     // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
     if (section.value?.ctaUseDefaultUrl !== false) {
       return defaultCtaLink.value
     }
-    // Sinon utiliser l'URL personnalisée, ou le contactEmail si vide
-    return section.value?.ctaButtonUrl || contactEmail.value
+    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
+    return section.value?.ctaButtonUrl || defaultCtaLink.value
   })
 </script>
 

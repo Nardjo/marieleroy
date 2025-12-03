@@ -27,6 +27,8 @@ export default defineEventHandler(async event => {
       ctaButtonText: body.ctaButtonText || null,
       ctaButtonUrl: body.ctaButtonUrl || null,
       ctaUseDefaultUrl: body.ctaUseDefaultUrl ?? true,
+      ctaUseEmail: body.ctaUseEmail ?? false,
+      ctaEmailSubject: body.ctaEmailSubject || null,
     },
   })
 

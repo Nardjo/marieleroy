@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  const { animatedCurvePath } = useCurvedAnimation()
   const { scrollToSection } = useSmoothScroll()
   const { sanitize } = useSanitize()
   const { fixPunctuation } = useTypography()
@@ -107,7 +106,7 @@
     <!-- Curved bottom border -->
     <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
       <svg class="block w-full h-32 md:h-40" viewBox="0 0 1440 400" preserveAspectRatio="none">
-        <path :d="animatedCurvePath" fill="#FFFFFF" />
+        <path d="M0,100 Q720,350 1440,100 L1440,400 L0,400 Z" fill="#FFFFFF" />
       </svg>
     </div>
   </section>
@@ -117,13 +116,13 @@
   .mesh-gradient {
     position: absolute;
     inset: 0;
-    background-color: #fef3c7;
+    background-color: #f7fee7;
     background-image:
-      radial-gradient(at 20% 20%, #fde68a 0px, transparent 50%),
-      radial-gradient(at 80% 10%, #bfdbfe 0px, transparent 50%),
-      radial-gradient(at 60% 60%, #fed7aa 0px, transparent 50%),
-      radial-gradient(at 10% 80%, #c7d2fe 0px, transparent 50%),
-      radial-gradient(at 90% 70%, #fef08a 0px, transparent 50%);
+      radial-gradient(at 20% 20%, #d9f99d 0px, transparent 50%),
+      radial-gradient(at 80% 10%, #fef08a 0px, transparent 50%),
+      radial-gradient(at 60% 60%, #fde68a 0px, transparent 50%),
+      radial-gradient(at 10% 80%, #ecfccb 0px, transparent 50%),
+      radial-gradient(at 90% 70%, #fef3c7 0px, transparent 50%);
   }
 
   .glass-overlay {

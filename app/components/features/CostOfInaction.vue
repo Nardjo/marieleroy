@@ -37,7 +37,12 @@
         v-motion
         :initial="{ opacity: 0, y: 50 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
-        class="text-center mb-10">
+        class="text-center mb-20">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
+          <Icon name="i-lucide-alert-triangle" class="w-4 h-4" />
+          Pourquoi agir ?
+        </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
           {{ section.title }}
         </h2>
@@ -52,7 +57,7 @@
         v-motion
         :initial="{ opacity: 0, y: 30 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: 200 } }"
-        class="space-y-4 mb-10">
+        class="space-y-8 mb-20">
         <div
           v-for="(point, index) in painPoints"
           :key="index"
@@ -67,7 +72,7 @@
         v-motion
         :initial="{ opacity: 0, scale: 0.95 }"
         :visible-once="{ opacity: 1, scale: 1, transition: { duration: 600, delay: 400 } }"
-        class="border-2 border-orange-500 rounded-xl p-6 md:p-8 text-center mb-10 shadow-lg bg-orange-50">
+        class="border-2 border-orange-500 rounded-xl p-6 md:p-8 text-center mb-20 shadow-lg bg-orange-50">
         <div
           v-if="section.warningTitle"
           class="tiptap-content text-xl md:text-2xl font-bold mb-2 text-primary-900"
@@ -85,9 +90,9 @@
         class="text-center">
         <div
           v-if="section.solutionText1"
-          class="tiptap-content text-xl md:text-2xl text-primary-800 mb-4"
+          class="tiptap-content text-xl md:text-2xl text-primary-800 mb-8"
           v-html="sanitize(section.solutionText1)" />
-        <p v-if="section.solutionText2" class="text-xl md:text-2xl text-primary-800 mb-6">
+        <p v-if="section.solutionText2" class="text-xl md:text-2xl text-primary-800 mb-10">
           {{ section.solutionText2 }}
         </p>
         <div
@@ -101,7 +106,7 @@
         v-motion
         :initial="{ opacity: 0, y: 50 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: 800 } }"
-        class="mt-12">
+        class="mt-24">
         <CTASection
           :title="section.ctaTitle || 'Une question avant de te lancer ?'"
           :description="section.ctaDescription || 'N\'hésite pas à me contacter directement par mail. Je serai ravie de t\'aider !'"

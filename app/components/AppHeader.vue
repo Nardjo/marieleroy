@@ -146,9 +146,10 @@
     <!-- Logo -->
     <div class="mb-8">
       <UButton
-        class="flex items-center gap-3 text-xl font-bold text-gray-900 cursor-pointer"
-        @click="handleNavClick({ onClick: () => scrollToSection('hero') })">
-        <Logo :size="26" compact />
+        variant="ghost"
+        class="shrink-0 text-primary-800 hover:text-primary-600 transition-all duration-500 ease-in-out !p-0"
+        @click="scrollToSection('hero')">
+        <Logo :size="isScrolled ? 28 : 40" compact class="transition-transform duration-500 ease-in-out" />
       </UButton>
     </div>
 
@@ -159,6 +160,7 @@
         :key="item.label"
         variant="link"
         :class="[
+          'text-xl',
           ...getNavLinkClasses(item.label),
         ]"
         @click="handleNavClick(item)">

@@ -35,7 +35,7 @@
         <UPageCard spotlight class="shadow-lg bg-primary-100! [--spotlight-color:#8b6239] [--spotlight-size:600px]">
           <div class="flex flex-col-reverse md:flex-row gap-8 md:gap-12 items-center p-6">
             <!-- Texte à gauche -->
-            <div class="flex-1 tiptap-content text-primary-700 leading-relaxed" v-html="description" />
+            <div class="flex-1 tiptap-content text-primary-700 text-base md:text-lg leading-relaxed" v-html="description" />
 
             <!-- Avatar à droite -->
             <div v-if="imageUrl" class="flex- shrink-0">

@@ -4,6 +4,17 @@
   import TextAlign from '@tiptap/extension-text-align'
   import Underline from '@tiptap/extension-underline'
   import Link from '@tiptap/extension-link'
+  import { TextStyle } from '@tiptap/extension-text-style'
+  import { Color } from '@tiptap/extension-color'
+
+  const colorOptions = [
+    { name: 'Primary', value: '#8b6239', class: 'bg-primary-600' },
+    { name: 'Orange', value: '#ea580c', class: 'bg-orange-600' },
+    { name: 'Vert', value: '#16a34a', class: 'bg-green-600' },
+    { name: 'Bleu', value: '#2563eb', class: 'bg-blue-600' },
+    { name: 'Rouge', value: '#dc2626', class: 'bg-red-600' },
+    { name: 'Noir', value: '#1f2937', class: 'bg-gray-800' },
+  ]
 
   interface Props {
     modelValue?: string
@@ -43,6 +54,8 @@
           class: 'text-primary underline hover:text-primary-dark cursor-pointer',
         },
       }),
+      TextStyle,
+      Color,
     ],
     editorProps: {
       attributes: {
@@ -112,6 +125,16 @@
   const addLineBreak = () => {
     editor.value?.chain().focus().setHardBreak().run()
   }
+
+  const setColor = (color: string) => {
+    editor.value?.chain().focus().setColor(color).run()
+  }
+
+  const removeColor = () => {
+    editor.value?.chain().focus().unsetColor().run()
+  }
+
+  const isColorDropdownOpen = ref(false)
 </script>
 
 <template>
@@ -256,6 +279,38 @@
             <UIcon name="i-lucide-corner-down-left" class="w-5 h-5" />
           </UButton>
         </UTooltip>
+      </div>
+
+      <div class="toolbar-group">
+        <UPopover v-model:open="isColorDropdownOpen">
+          <UTooltip text="Couleur du texte">
+            <UButton variant="ghost" color="neutral" size="md" square>
+              <UIcon name="i-lucide-palette" class="w-5 h-5" />
+            </UButton>
+          </UTooltip>
+          <template #content>
+            <div class="p-2">
+              <div class="grid grid-cols-3 gap-2 mb-2">
+                <button
+                  v-for="color in colorOptions"
+                  :key="color.value"
+                  :title="color.name"
+                  class="w-8 h-8 rounded-md border-2 border-gray-200 hover:border-gray-400 transition-colors"
+                  :style="{ backgroundColor: color.value }"
+                  @click="setColor(color.value); isColorDropdownOpen = false" />
+              </div>
+              <UButton
+                variant="ghost"
+                color="neutral"
+                size="sm"
+                class="w-full"
+                @click="removeColor(); isColorDropdownOpen = false">
+                <UIcon name="i-lucide-x" class="w-4 h-4 mr-1" />
+                Supprimer la couleur
+              </UButton>
+            </div>
+          </template>
+        </UPopover>
       </div>
 
       <div class="toolbar-group">

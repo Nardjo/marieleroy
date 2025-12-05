@@ -22,9 +22,12 @@
 </script>
 
 <template>
-  <section id="hero" class="relative overflow-hidden">
-    <div class="hero-section bg-linear-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
-      <div class="container mx-auto pt-4 md:pt-8">
+  <section id="hero" class="relative overflow-hidden pt-14 lg:pt-16">
+    <!-- Mesh gradient + Glassmorphism -->
+    <div class="mesh-gradient"></div>
+    <div class="glass-overlay"></div>
+    <div class="hero-section">
+      <div class="container mx-auto pt-2 md:pt-4">
         <div>
 
           <!-- Video -->
@@ -111,10 +114,30 @@
 </template>
 
 <style scoped>
+  .mesh-gradient {
+    position: absolute;
+    inset: 0;
+    background-color: #fef3c7;
+    background-image:
+      radial-gradient(at 20% 20%, #fde68a 0px, transparent 50%),
+      radial-gradient(at 80% 10%, #bfdbfe 0px, transparent 50%),
+      radial-gradient(at 60% 60%, #fed7aa 0px, transparent 50%),
+      radial-gradient(at 10% 80%, #c7d2fe 0px, transparent 50%),
+      radial-gradient(at 90% 70%, #fef08a 0px, transparent 50%);
+  }
+
+  .glass-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
   .hero-section {
     position: relative;
+    z-index: 2;
     padding-bottom: 4rem;
-    /* Espace supplémentaire sur mobile pour éloigner la courbe des boutons */
   }
 
   @media (min-width: 768px) {

@@ -6,7 +6,6 @@
 
   // Fetch hero data
   const { data: hero } = await usePublicHero()
-  const { data: settings } = await usePublicSettings()
 
   const subtitle = computed(() => fixPunctuation(hero.value?.subtitle || 'Copywriter Professionnelle'))
   const eyebrow = computed(() =>
@@ -19,22 +18,7 @@
   const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
   const additionalClientsCount = computed(() => hero.value?.additionalClientsCount || 0)
   const ctaButtonText = computed(() => hero.value?.ctaButtonText || 'On discute ?')
-  const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
-  const contactEmail = computed(() => settings.value?.site?.email || '')
-  const ctaLink = computed(() => {
-    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
-    if (hero.value?.ctaUseEmail) {
-      const subject = hero.value?.ctaEmailSubject || ''
-      const encodedSubject = encodeURIComponent(subject)
-      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
-    }
-    // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
-    if (hero.value?.ctaUseDefaultUrl !== false) {
-      return defaultCtaLink.value
-    }
-    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
-    return hero.value?.ctaButtonUrl || defaultCtaLink.value
-  })
+  const ctaLink = computed(() => hero.value?.ctaLink || '#')
 </script>
 
 <template>
@@ -69,7 +53,7 @@
           <!-- Big Promise - en dessous de la vidéo -->
           <div
             v-if="bigPromise"
-            class="text-center tiptap-content text-2xl mt-20 md:text-4xl font-semibold text-primary-900 max-w-3xl mx-auto px-4"
+            class="text-center tiptap-content text-2xl mt-20 md:text-4xl font-semibold text-primary-700 max-w-3xl mx-auto px-4"
             v-html="bigPromise" />
 
           <!-- Hero content -->

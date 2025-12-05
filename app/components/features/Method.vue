@@ -7,7 +7,6 @@
 
   // Fetch method data
   const { data: methodData } = await usePublicMethod()
-  const { data: settings } = await usePublicSettings()
 
   const header = computed(() => methodData.value?.header || {})
   const headerTitle = computed(() => fixPunctuation(header.value.title || 'Comment je travaille'))
@@ -32,22 +31,7 @@
   const ctaTitle = computed(() => header.value?.ctaTitle || 'Besoin d\'un regard expert sur ton marketing ?')
   const ctaDescription = computed(() => header.value?.ctaDescription || 'On analyse ton copywriting ensemble et je te montre ce qui peut réellement booster tes conversions.')
   const ctaButtonText = computed(() => header.value?.ctaButtonText || 'Obtenir un audit gratuit')
-  const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
-  const contactEmail = computed(() => settings.value?.site?.email || '')
-  const ctaLink = computed(() => {
-    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
-    if (header.value?.ctaUseEmail) {
-      const subject = header.value?.ctaEmailSubject || ''
-      const encodedSubject = encodeURIComponent(subject)
-      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
-    }
-    // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
-    if (header.value?.ctaUseDefaultUrl !== false) {
-      return defaultCtaLink.value
-    }
-    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
-    return header.value?.ctaButtonUrl || defaultCtaLink.value
-  })
+  const ctaLink = computed(() => header.value?.ctaLink || '#')
 
   const lineProgress = computed(() => {
     const total = steps.value.length

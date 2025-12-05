@@ -1,10 +1,8 @@
 <script setup lang="ts">
   const { sanitize } = useSanitize()
-  const { data: settings } = await usePublicSettings()
   const { data: sectionData } = await usePublicCostOfInaction()
 
   const section = computed(() => sectionData.value || {
-    badgeText: 'Coût de ne rien faire',
     title: 'Ce qui te coûte le plus cher aujourd\'hui…',
     subtitle: 'ce n\'est pas ce que tu ne fais pas assez.<br /><strong class="text-orange-700">C\'est de continuer à tout faire toi-même, sans structure claire ni véritable stratégie.</strong>',
     painPoints: [
@@ -20,6 +18,7 @@
     ctaTitle: 'Une question avant de te lancer\u00a0?',
     ctaDescription: 'N\'hésite pas à me contacter directement par mail. Je serai ravie de t\'aider !',
     ctaButtonText: 'Envoyer un message',
+    ctaLink: '#',
   })
 
   const painPoints = computed(() => {
@@ -28,23 +27,7 @@
     return []
   })
 
-  const contactEmail = computed(() => settings.value?.site?.email || '')
-
-  const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
-  const ctaLink = computed(() => {
-    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
-    if (section.value?.ctaUseEmail) {
-      const subject = section.value?.ctaEmailSubject || ''
-      const encodedSubject = encodeURIComponent(subject)
-      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
-    }
-    // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
-    if (section.value?.ctaUseDefaultUrl !== false) {
-      return defaultCtaLink.value
-    }
-    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
-    return section.value?.ctaButtonUrl || defaultCtaLink.value
-  })
+  const ctaLink = computed(() => section.value?.ctaLink || '#')
 </script>
 
 <template>

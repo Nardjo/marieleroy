@@ -79,8 +79,8 @@
           :class="isScrolled ? 'gap-6 px-3' : 'gap-8 px-2'">
           <!-- Logo -->
           <UButton
-            variant="ghost"
-            class="shrink-0 text-primary-800 hover:text-primary-600 transition-all duration-500 ease-in-out !p-0"
+            variant="link"
+            class="shrink-0 text-primary-800 hover:text-primary-600 transition-all duration-500 ease-in-out cursor-pointer !p-0"
             @click="scrollToSection('hero')">
             <Logo :size="isScrolled ? 28 : 40" compact class="transition-transform duration-500 ease-in-out" />
           </UButton>
@@ -90,7 +90,7 @@
             <UButton
               v-for="item in items"
               :key="item.label"
-              variant="ghost"
+              variant="link"
               class="rounded-full whitespace-nowrap cursor-pointer transition-all duration-500 ease-in-out"
               :class="[
                 isScrolled ? 'py-1.5 px-3 text-sm' : 'py-2 px-4 text-[0.9375rem]',
@@ -146,7 +146,7 @@
     <!-- Logo -->
     <div class="mb-8">
       <UButton
-        variant="ghost"
+        variant="link"
         class="shrink-0 text-primary-800 hover:text-primary-600 transition-all duration-500 ease-in-out !p-0"
         @click="scrollToSection('hero')">
         <Logo :size="isScrolled ? 28 : 40" compact class="transition-transform duration-500 ease-in-out" />
@@ -159,10 +159,7 @@
         v-for="item in items"
         :key="item.label"
         variant="link"
-        :class="[
-          'text-xl',
-          ...getNavLinkClasses(item.label),
-        ]"
+        :class="['text-xl', ...getNavLinkClasses(item.label)]"
         @click="handleNavClick(item)">
         {{ item.label }}
       </UButton>

@@ -127,7 +127,7 @@
                 <h3 class="text-xl font-bold text-primary-900 mb-3">
                   {{ step.title }}
                 </h3>
-                <div class="tiptap-content text-primary-700 leading-relaxed" v-html="step.text" />
+                <div class="tiptap-content text-primary-700 text-base md:text-lg leading-relaxed" v-html="step.text" />
               </div>
             </UCard>
           </div>

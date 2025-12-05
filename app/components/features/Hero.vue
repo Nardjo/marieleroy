@@ -31,7 +31,7 @@
         <div>
 
           <!-- Video -->
-          <div class="max-w-5xl mx-auto px-4 md:px-0 mt-2">
+          <div class="max-w-5xl mx-auto px-4 md:px-0 mt-10">
             <!-- Eyebrow - au dessus de la vidéo -->
             <div
               v-if="eyebrow"

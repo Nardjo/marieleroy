@@ -116,13 +116,13 @@
   .mesh-gradient {
     position: absolute;
     inset: 0;
-    background-color: #f7fee7;
+    background-color: #fef7f0;
     background-image:
-      radial-gradient(at 20% 20%, #d9f99d 0px, transparent 50%),
-      radial-gradient(at 80% 10%, #fef08a 0px, transparent 50%),
-      radial-gradient(at 60% 60%, #fde68a 0px, transparent 50%),
-      radial-gradient(at 10% 80%, #ecfccb 0px, transparent 50%),
-      radial-gradient(at 90% 70%, #fef3c7 0px, transparent 50%);
+      radial-gradient(at 20% 20%, #fed7aa 0px, transparent 50%),
+      radial-gradient(at 80% 10%, #ecfccb 0px, transparent 50%),
+      radial-gradient(at 60% 60%, #fecaca 0px, transparent 45%),
+      radial-gradient(at 10% 80%, #d9f99d 0px, transparent 45%),
+      radial-gradient(at 90% 70%, #ffedd5 0px, transparent 50%);
   }
 
   .glass-overlay {

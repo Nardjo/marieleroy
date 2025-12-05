@@ -1,10 +1,8 @@
 <script setup lang="ts">
   const { sanitize } = useSanitize()
-  const { data: settings } = await usePublicSettings()
   const { data: sectionData } = await usePublicCostOfInaction()
 
   const section = computed(() => sectionData.value || {
-    badgeText: 'Coût de ne rien faire',
     title: 'Ce qui te coûte le plus cher aujourd\'hui…',
     subtitle: 'ce n\'est pas ce que tu ne fais pas assez.<br /><strong class="text-orange-700">C\'est de continuer à tout faire toi-même, sans structure claire ni véritable stratégie.</strong>',
     painPoints: [
@@ -20,6 +18,7 @@
     ctaTitle: 'Une question avant de te lancer\u00a0?',
     ctaDescription: 'N\'hésite pas à me contacter directement par mail. Je serai ravie de t\'aider !',
     ctaButtonText: 'Envoyer un message',
+    ctaLink: '#',
   })
 
   const painPoints = computed(() => {
@@ -28,23 +27,7 @@
     return []
   })
 
-  const contactEmail = computed(() => settings.value?.site?.email || '')
-
-  const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
-  const ctaLink = computed(() => {
-    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
-    if (section.value?.ctaUseEmail) {
-      const subject = section.value?.ctaEmailSubject || ''
-      const encodedSubject = encodeURIComponent(subject)
-      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
-    }
-    // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
-    if (section.value?.ctaUseDefaultUrl !== false) {
-      return defaultCtaLink.value
-    }
-    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
-    return section.value?.ctaButtonUrl || defaultCtaLink.value
-  })
+  const ctaLink = computed(() => section.value?.ctaLink || '#')
 </script>
 
 <template>
@@ -54,7 +37,12 @@
         v-motion
         :initial="{ opacity: 0, y: 50 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
-        class="text-center mb-10">
+        class="text-center mb-20">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-medium mb-4">
+          <Icon name="i-lucide-alert-triangle" class="w-4 h-4" />
+          Pourquoi agir ?
+        </div>
         <h2 class="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
           {{ section.title }}
         </h2>
@@ -69,7 +57,7 @@
         v-motion
         :initial="{ opacity: 0, y: 30 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: 200 } }"
-        class="space-y-4 mb-10">
+        class="space-y-8 mb-20">
         <div
           v-for="(point, index) in painPoints"
           :key="index"
@@ -84,7 +72,7 @@
         v-motion
         :initial="{ opacity: 0, scale: 0.95 }"
         :visible-once="{ opacity: 1, scale: 1, transition: { duration: 600, delay: 400 } }"
-        class="border-2 border-orange-500 rounded-xl p-6 md:p-8 text-center mb-10 shadow-lg bg-orange-50">
+        class="border-2 border-orange-500 rounded-xl p-6 md:p-8 text-center mb-20 shadow-lg bg-orange-50">
         <div
           v-if="section.warningTitle"
           class="tiptap-content text-xl md:text-2xl font-bold mb-2 text-primary-900"
@@ -102,9 +90,9 @@
         class="text-center">
         <div
           v-if="section.solutionText1"
-          class="tiptap-content text-xl md:text-2xl text-primary-800 mb-4"
+          class="tiptap-content text-xl md:text-2xl text-primary-800 mb-8"
           v-html="sanitize(section.solutionText1)" />
-        <p v-if="section.solutionText2" class="text-xl md:text-2xl text-primary-800 mb-6">
+        <p v-if="section.solutionText2" class="text-xl md:text-2xl text-primary-800 mb-10">
           {{ section.solutionText2 }}
         </p>
         <div
@@ -118,7 +106,7 @@
         v-motion
         :initial="{ opacity: 0, y: 50 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: 800 } }"
-        class="mt-12">
+        class="mt-24">
         <CTASection
           :title="section.ctaTitle || 'Une question avant de te lancer ?'"
           :description="section.ctaDescription || 'N\'hésite pas à me contacter directement par mail. Je serai ravie de t\'aider !'"

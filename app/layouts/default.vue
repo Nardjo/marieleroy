@@ -32,7 +32,6 @@
   const getSocialIcon = (platform: string) => {
     return socialIconMap[platform.toLowerCase()] || 'i-lucide-link'
   }
-  const ctaLink = computed(() => settings.value?.site?.ctaLink || undefined)
 
   useHead({
     htmlAttrs: {
@@ -107,89 +106,20 @@
     ],
   })
 
-  const showHeader = ref(true)
-  const lastScrollY = ref(0)
-  const scrollThreshold = 5 // Pixels à scroller avant de déclencher le changement
-  let ticking = false
-
-  const handleScroll = () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY
-        const scrollDifference = Math.abs(currentScrollY - lastScrollY.value)
-
-        // Ne rien faire si le scroll est trop petit
-        if (scrollDifference < scrollThreshold) {
-          ticking = false
-          return
-        }
-
-        // Toujours afficher le header si on est proche du haut de la page
-        // On utilise la hauteur du hero (environ 400-500px) comme seuil
-        if (currentScrollY < 400) {
-          showHeader.value = true
-        } else if (currentScrollY > lastScrollY.value && currentScrollY > 400) {
-          // Scroll vers le bas - cacher le header (seulement si on a dépassé le hero)
-          showHeader.value = false
-        } else if (currentScrollY < lastScrollY.value) {
-          // Scroll vers le haut - afficher le header
-          showHeader.value = true
-        }
-
-        lastScrollY.value = currentScrollY
-        ticking = false
-      })
-      ticking = true
-    }
-  }
-
   onMounted(() => {
     // Forcer le mode light après le montage pour éviter les problèmes d'hydration
     nextTick(() => {
       colorMode.preference = 'light'
       document.documentElement.classList.remove('dark')
     })
-    window.addEventListener('scroll', handleScroll, { passive: true })
-  })
-
-  onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
   })
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-gradient-to-b from-primary-300/60 to-primary-200/80 overflow-hidden">
-    <UHeader
-      class="fixed w-full z-50 backdrop-blur-lg border bg-primary-300 border-primary-200/30 md:px-3 md:py-1 lg:px-3 transition-all duration-500"
-      :style="{ transform: showHeader ? 'translateY(0)' : 'translateY(-100%)', opacity: showHeader ? 1 : 0 }"
-      mode="slideover">
-      <template #left>
-        <NuxtLink
-          class="flex items-center gap-2 hover:text-primary-500 text-xl transition-all duration-200 cursor-pointer"
-          @click="scrollToSection('hero')">
-          <Logo :size="32" :minimal="true" :compact="true" />
-        </NuxtLink>
-      </template>
+  <div class="min-h-screen flex flex-col overflow-hidden">
+    <AppHeader />
 
-      <UNavigationMenu :items="items" class="hidden lg:flex" />
-
-      <template #body>
-        <UNavigationMenu :items="items" variant="link" orientation="vertical" color="primary" />
-      </template>
-
-      <template #right>
-        <div class="flex items-center gap-3">
-          <UButton
-            label="Me contacter"
-            size="xl"
-            class="rounded-full !px-4 hidden lg:flex bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:shadow-lg transition-all"
-            :to="ctaLink || '#'"
-            target="_blank" />
-        </div>
-      </template>
-    </UHeader>
-
-    <main class="flex-1 pt-16">
+    <main class="flex-1">
       <slot />
     </main>
 

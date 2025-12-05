@@ -1,12 +1,10 @@
 <script setup lang="ts">
-  const { animatedCurvePath } = useCurvedAnimation()
   const { scrollToSection } = useSmoothScroll()
   const { sanitize } = useSanitize()
   const { fixPunctuation } = useTypography()
 
   // Fetch hero data
   const { data: hero } = await usePublicHero()
-  const { data: settings } = await usePublicSettings()
 
   const subtitle = computed(() => fixPunctuation(hero.value?.subtitle || 'Copywriter Professionnelle'))
   const eyebrow = computed(() =>
@@ -19,32 +17,20 @@
   const clientsText = computed(() => hero.value?.clientsText || 'clients satisfaits')
   const additionalClientsCount = computed(() => hero.value?.additionalClientsCount || 0)
   const ctaButtonText = computed(() => hero.value?.ctaButtonText || 'On discute ?')
-  const defaultCtaLink = computed(() => settings.value?.site?.ctaLink || '#')
-  const contactEmail = computed(() => settings.value?.site?.email || '')
-  const ctaLink = computed(() => {
-    // Si ctaUseEmail est true, construire un mailto avec l'email des settings
-    if (hero.value?.ctaUseEmail) {
-      const subject = hero.value?.ctaEmailSubject || ''
-      const encodedSubject = encodeURIComponent(subject)
-      return contactEmail.value ? `mailto:${contactEmail.value}${subject ? `?subject=${encodedSubject}` : ''}` : '#'
-    }
-    // Si useDefaultUrl est true ou pas défini, utiliser le lien par défaut
-    if (hero.value?.ctaUseDefaultUrl !== false) {
-      return defaultCtaLink.value
-    }
-    // Sinon utiliser l'URL personnalisée, ou le lien par défaut si vide
-    return hero.value?.ctaButtonUrl || defaultCtaLink.value
-  })
+  const ctaLink = computed(() => hero.value?.ctaLink || '#')
 </script>
 
 <template>
-  <section id="hero" class="relative overflow-hidden">
-    <div class="hero-section bg-linear-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
-      <div class="container mx-auto pt-4 md:pt-8">
+  <section id="hero" class="relative overflow-hidden pt-14 lg:pt-16">
+    <!-- Mesh gradient + Glassmorphism -->
+    <div class="mesh-gradient"></div>
+    <div class="glass-overlay"></div>
+    <div class="hero-section">
+      <div class="container mx-auto pt-2 md:pt-4">
         <div>
 
           <!-- Video -->
-          <div class="max-w-5xl mx-auto px-4 md:px-0 mt-2">
+          <div class="max-w-5xl mx-auto px-4 md:px-0 mt-10">
             <!-- Eyebrow - au dessus de la vidéo -->
             <div
               v-if="eyebrow"
@@ -69,7 +55,7 @@
           <!-- Big Promise - en dessous de la vidéo -->
           <div
             v-if="bigPromise"
-            class="text-center tiptap-content text-2xl mt-20 md:text-4xl font-semibold text-primary-900 max-w-3xl mx-auto px-4"
+            class="text-center tiptap-content text-2xl mt-20 md:text-4xl font-semibold text-primary-700 max-w-3xl mx-auto px-4"
             v-html="bigPromise" />
 
           <!-- Hero content -->
@@ -120,17 +106,37 @@
     <!-- Curved bottom border -->
     <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
       <svg class="block w-full h-32 md:h-40" viewBox="0 0 1440 400" preserveAspectRatio="none">
-        <path :d="animatedCurvePath" fill="#FFFFFF" />
+        <path d="M0,100 Q720,350 1440,100 L1440,400 L0,400 Z" fill="#FFFFFF" />
       </svg>
     </div>
   </section>
 </template>
 
 <style scoped>
+  .mesh-gradient {
+    position: absolute;
+    inset: 0;
+    background-color: #fef7f0;
+    background-image:
+      radial-gradient(at 20% 20%, #fed7aa 0px, transparent 50%),
+      radial-gradient(at 80% 10%, #ecfccb 0px, transparent 50%),
+      radial-gradient(at 60% 60%, #fecaca 0px, transparent 45%),
+      radial-gradient(at 10% 80%, #d9f99d 0px, transparent 45%),
+      radial-gradient(at 90% 70%, #ffedd5 0px, transparent 50%);
+  }
+
+  .glass-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
   .hero-section {
     position: relative;
+    z-index: 2;
     padding-bottom: 4rem;
-    /* Espace supplémentaire sur mobile pour éloigner la courbe des boutons */
   }
 
   @media (min-width: 768px) {

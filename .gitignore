@@ -31,3 +31,6 @@ logs
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Sync scripts (contain server IPs and credentials)
+scripts/sync-*.sh

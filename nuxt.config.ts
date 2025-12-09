@@ -167,6 +167,10 @@ export default defineNuxtConfig({
       brotli: true,
     },
     minify: true, // Minify server output
+    // Inclure formidable dans le bundle serveur pour la production
+    externals: {
+      inline: ['formidable'],
+    },
   },
 
   experimental: {

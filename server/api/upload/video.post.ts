@@ -1,59 +1,71 @@
-import { uploadToLocal } from '../../utils/local-storage'
-import { Readable } from 'stream'
+import { promises as fs } from 'fs'
+import { join } from 'path'
+import formidable from 'formidable'
+
+const getUploadDir = (): string => {
+  return process.env.UPLOAD_DIR || join(process.cwd(), 'uploads')
+}
 
 export default defineEventHandler(async event => {
+  const uploadDir = getUploadDir()
+  const videosDir = join(uploadDir, 'videos')
+
+  // S'assurer que le répertoire existe
+  await fs.mkdir(videosDir, { recursive: true })
+
+  const form = formidable({
+    uploadDir: videosDir,
+    keepExtensions: true,
+    maxFileSize: 500 * 1024 * 1024, // 500MB
+    filter: ({ mimetype }) => {
+      const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime']
+      return mimetype ? allowedTypes.includes(mimetype) : false
+    },
+  })
+
   try {
-    const form = await readMultipartFormData(event)
+    const [, files] = await form.parse(event.node.req)
 
-    if (!form || form.length === 0) {
+    const videoFiles = files.video
+    if (!videoFiles || videoFiles.length === 0) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Aucune vidéo fournie',
       })
     }
 
-    const file = form.find(f => f.name === 'video')
+    const file = videoFiles[0]
 
-    if (!file) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Aucune vidéo fournie',
-      })
-    }
-
-    // Valider le type de fichier
-    const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime']
-    if (file.type && !allowedTypes.includes(file.type)) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Type de fichier non autorisé. Utilisez MP4, WebM, OGG ou MOV.',
-      })
-    }
-
-    // Créer un nom de fichier unique
+    // Renommer le fichier avec un timestamp
     const timestamp = Date.now()
-    const filename = `${timestamp}-${file.filename || 'video'}`
-    const key = `videos/${filename}`
+    const newFilename = `${timestamp}-${file.originalFilename || 'video.mp4'}`
+    const newPath = join(videosDir, newFilename)
 
-    // Convertir les données en stream
-    const stream = Readable.from(file.data)
-
-    // Upload le fichier
-    const result = await uploadToLocal(key, stream, file.type, file.data.length)
+    await fs.rename(file.filepath, newPath)
 
     return {
-      url: result.url,
-      filename: result.key,
+      url: `/uploads/videos/${newFilename}`,
+      filename: `videos/${newFilename}`,
       success: true,
     }
   } catch (error: any) {
+    console.error('Erreur video.post:', error)
+
     if (error.statusCode) {
       throw error
     }
 
+    // Erreur formidable pour fichier trop gros
+    if (error.code === 'LIMIT_FILE_SIZE' || error.message?.includes('maxFileSize')) {
+      throw createError({
+        statusCode: 413,
+        statusMessage: 'Fichier trop volumineux. Maximum 500MB.',
+      })
+    }
+
     throw createError({
       statusCode: 500,
-      statusMessage: "Erreur lors de l'upload de la vidéo",
+      statusMessage: `Erreur lors de l'upload de la vidéo: ${error.message || String(error)}`,
     })
   }
 })

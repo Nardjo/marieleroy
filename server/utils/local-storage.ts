@@ -36,10 +36,11 @@ export const uploadToLocal = async (key: string, stream: Readable, contentType?:
       size,
       contentType,
     }
-  } catch {
+  } catch (error) {
+    console.error('Erreur uploadToLocal:', error)
     throw createError({
       statusCode: 500,
-      statusMessage: `Impossible d'uploader le fichier`,
+      statusMessage: `Impossible d'uploader le fichier: ${error instanceof Error ? error.message : String(error)}`,
     })
   }
 }

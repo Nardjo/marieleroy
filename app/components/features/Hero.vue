@@ -21,20 +21,16 @@
 </script>
 
 <template>
-  <section id="hero" class="relative overflow-hidden pt-14 lg:pt-16">
-    <!-- Mesh gradient + Glassmorphism -->
-    <div class="mesh-gradient"></div>
-    <div class="glass-overlay"></div>
-    <div class="hero-section">
-      <div class="container mx-auto pt-2 md:pt-4">
+  <section id="hero" class="relative overflow-hidden">
+    <div class="hero-section bg-linear-to-br from-primary-300 via-primary-200 to-amber-800/50 backdrop-blur-sm">
+      <div class="container mx-auto pt-4 md:pt-8">
         <div>
-
           <!-- Video -->
-          <div class="max-w-5xl mx-auto px-4 md:px-0 mt-10">
+          <div class="max-w-5xl mx-auto px-4 md:px-0 mt-30 md:mt-30">
             <!-- Eyebrow - au dessus de la vidéo -->
             <div
               v-if="eyebrow"
-              class="text-center tiptap-content text-3xl md:text-5xl italic  bg-linear-to-r from-primary-600 to-orange-600 bg-clip-text text-transparent px-4 mb-20"
+              class="text-center tiptap-content text-3xl md:text-5xl italic bg-linear-to-r from-primary-600 to-orange-600 bg-clip-text text-transparent px-4 mb-20"
               v-html="eyebrow" />
             <div
               v-if="videoUrl"
@@ -113,29 +109,8 @@
 </template>
 
 <style scoped>
-  .mesh-gradient {
-    position: absolute;
-    inset: 0;
-    background-color: #fef7f0;
-    background-image:
-      radial-gradient(at 20% 20%, #fed7aa 0px, transparent 50%),
-      radial-gradient(at 80% 10%, #ecfccb 0px, transparent 50%),
-      radial-gradient(at 60% 60%, #fecaca 0px, transparent 45%),
-      radial-gradient(at 10% 80%, #d9f99d 0px, transparent 45%),
-      radial-gradient(at 90% 70%, #ffedd5 0px, transparent 50%);
-  }
-
-  .glass-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
   .hero-section {
     position: relative;
-    z-index: 2;
     padding-bottom: 4rem;
   }
 

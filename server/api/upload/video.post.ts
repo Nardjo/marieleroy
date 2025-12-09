@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs'
-import { join } from 'path'
+import { join, basename } from 'path'
 import formidable from 'formidable'
+import { compressVideo, isFFmpegAvailable } from '../../utils/video-compress'
 
 const getUploadDir = (): string => {
   return process.env.UPLOAD_DIR || join(process.cwd(), 'uploads')
@@ -43,9 +44,35 @@ export default defineEventHandler(async event => {
 
     await fs.rename(file.filepath, newPath)
 
+    // Compresser la vidéo si FFmpeg est disponible
+    let finalPath = newPath
+    let compressed = false
+
+    const ffmpegAvailable = await isFFmpegAvailable()
+    if (ffmpegAvailable) {
+      try {
+        console.log(`Compression vidéo: ${newFilename}`)
+        finalPath = await compressVideo(newPath, {
+          crf: 28, // Bonne qualité avec compression significative
+          preset: 'fast',
+          maxWidth: 1280,
+        })
+        compressed = true
+        console.log(`Vidéo compressée: ${basename(finalPath)}`)
+      } catch (compressError) {
+        console.error('Erreur compression (vidéo originale conservée):', compressError)
+        // En cas d'erreur, on garde l'original
+      }
+    } else {
+      console.warn('FFmpeg non disponible - vidéo non compressée')
+    }
+
+    const finalFilename = basename(finalPath)
+
     return {
-      url: `/uploads/videos/${newFilename}`,
-      filename: `videos/${newFilename}`,
+      url: `/uploads/videos/${finalFilename}`,
+      filename: `videos/${finalFilename}`,
+      compressed,
       success: true,
     }
   } catch (error: any) {

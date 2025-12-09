@@ -34,3 +34,6 @@ logs
 
 # Sync scripts (contain server IPs and credentials)
 scripts/sync-*.sh
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat

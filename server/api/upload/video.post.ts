@@ -1,7 +1,6 @@
 import { promises as fs } from 'fs'
-import { join, basename } from 'path'
+import { join } from 'path'
 import formidable from 'formidable'
-import { compressVideo, isFFmpegAvailable } from '../../utils/video-compress'
 
 const getUploadDir = (): string => {
   return process.env.UPLOAD_DIR || join(process.cwd(), 'uploads')
@@ -17,7 +16,7 @@ export default defineEventHandler(async event => {
   const form = formidable({
     uploadDir: videosDir,
     keepExtensions: true,
-    maxFileSize: 500 * 1024 * 1024, // 500MB
+    maxFileSize: 70 * 1024 * 1024, // 70MB
     filter: ({ mimetype }) => {
       const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime']
       return mimetype ? allowedTypes.includes(mimetype) : false
@@ -44,35 +43,12 @@ export default defineEventHandler(async event => {
 
     await fs.rename(file.filepath, newPath)
 
-    // Compresser la vidéo si FFmpeg est disponible
-    let finalPath = newPath
-    let compressed = false
-
-    const ffmpegAvailable = await isFFmpegAvailable()
-    if (ffmpegAvailable) {
-      try {
-        console.log(`Compression vidéo: ${newFilename}`)
-        finalPath = await compressVideo(newPath, {
-          crf: 28, // Bonne qualité avec compression significative
-          preset: 'fast',
-          maxWidth: 1280,
-        })
-        compressed = true
-        console.log(`Vidéo compressée: ${basename(finalPath)}`)
-      } catch (compressError) {
-        console.error('Erreur compression (vidéo originale conservée):', compressError)
-        // En cas d'erreur, on garde l'original
-      }
-    } else {
-      console.warn('FFmpeg non disponible - vidéo non compressée')
-    }
-
-    const finalFilename = basename(finalPath)
+    // Note: La compression est faite côté client avant l'upload
+    // pour réduire le temps de transfert et la charge serveur
 
     return {
-      url: `/uploads/videos/${finalFilename}`,
-      filename: `videos/${finalFilename}`,
-      compressed,
+      url: `/uploads/videos/${newFilename}`,
+      filename: `videos/${newFilename}`,
       success: true,
     }
   } catch (error: any) {
@@ -86,7 +62,7 @@ export default defineEventHandler(async event => {
     if (error.code === 'LIMIT_FILE_SIZE' || error.message?.includes('maxFileSize')) {
       throw createError({
         statusCode: 413,
-        statusMessage: 'Fichier trop volumineux. Maximum 500MB.',
+        statusMessage: 'Fichier trop volumineux. Maximum 70MB. Compressez votre vidéo avant upload.',
       })
     }
 

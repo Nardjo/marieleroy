@@ -32,8 +32,8 @@ RUN pnpm build
 # Production stage - minimal Node.js image
 FROM node:20-alpine AS runner
 
-# Install curl, pnpm and ffmpeg for video compression
-RUN apk add --no-cache curl ffmpeg && npm install -g pnpm
+# Install curl and pnpm
+RUN apk add --no-cache curl && npm install -g pnpm
 
 # Set working directory
 WORKDIR /app

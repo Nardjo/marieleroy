@@ -17,7 +17,7 @@
     name: 'video',
     required: false,
     accept: 'video/*',
-    maxSize: 50 * 1024 * 1024, // 50MB
+    maxSize: 70 * 1024 * 1024, // 70MB
     endpoint: '/api/upload/video',
     placeholder: 'https://exemple.com/video.mp4',
     error: false,
@@ -33,6 +33,12 @@
   // Garder l'ancienne valeur pendant l'upload pour éviter les erreurs de validation
   const previousValue = ref<string | null>(null)
 
+  const formatSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} B`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  }
+
   const onFileChange = async (event: Event) => {
     const target = event.target as HTMLInputElement
 
@@ -43,9 +49,29 @@
     const file = target.files[0]
 
     if (file) {
+      // Vérifier la taille du fichier
+      if (file.size > props.maxSize) {
+        useToast().add({
+          title: 'Fichier trop volumineux',
+          description: `La vidéo fait ${formatSize(file.size)}. Maximum autorisé : ${formatSize(props.maxSize)}. Compressez votre vidéo avec HandBrake avant de l'uploader.`,
+          color: 'error',
+          icon: 'i-lucide-alert-triangle',
+          duration: 8000,
+        })
+        target.value = ''
+        return
+      }
+
       try {
         // Sauvegarder l'ancienne valeur avant l'upload
         previousValue.value = props.modelValue || null
+
+        useToast().add({
+          title: 'Upload en cours',
+          description: `Envoi de la vidéo (${formatSize(file.size)})...`,
+          color: 'info',
+          icon: 'i-lucide-upload',
+        })
 
         const response = await uploadVideo(file, props.endpoint)
         if (response && response.url) {
@@ -53,7 +79,7 @@
           previousValue.value = null // Reset après succès
           useToast().add({
             title: 'Vidéo uploadée',
-            description: "La vidéo a été uploadée avec succès",
+            description: 'La vidéo a été uploadée avec succès',
             color: 'success',
             icon: 'i-lucide-check',
           })
@@ -73,6 +99,9 @@
         })
       }
     }
+
+    // Reset l'input pour permettre de re-sélectionner le même fichier
+    target.value = ''
   }
 
   const removeVideo = async () => {
@@ -112,15 +141,27 @@
 <template>
   <UFormField :label="label" :name="name" :error="error" class="w-full">
     <div class="space-y-3">
+      <!-- État sans vidéo -->
       <div
         v-if="!modelValue"
-        class="flex items-center gap-3 p-3 border rounded-lg transition-colors duration-200"
+        class="flex flex-col gap-3 p-3 border rounded-lg transition-colors duration-200"
         :class="
           error
             ? 'border-red-500 dark:border-red-400 ring-1 ring-red-500/20 dark:ring-red-400/20 bg-red-50 dark:bg-red-900/10'
             : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800'
         ">
-        <div class="flex-1">
+        <!-- Barre de progression -->
+        <div v-if="isUploading" class="w-full">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm text-gray-600 dark:text-gray-400">Upload en cours...</span>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div class="bg-primary h-2 rounded-full animate-pulse w-full" />
+          </div>
+        </div>
+
+        <!-- Bouton de sélection -->
+        <div v-else class="flex-1">
           <UInput
             :id="`file-upload-${name}`"
             type="file"
@@ -134,7 +175,7 @@
             :class="{ 'opacity-50 cursor-not-allowed': isUploading }">
             <UIcon name="i-lucide-video" class="w-4 h-4" :class="error ? 'text-red-500' : 'text-gray-500'" />
             <span :class="error ? 'text-red-700 dark:text-red-400' : 'text-gray-700 dark:text-gray-300'">
-              {{ isUploading ? 'Upload en cours...' : 'Choisir une vidéo' }}
+              Choisir une vidéo
             </span>
           </label>
           <p v-if="error && !modelValue" class="text-xs text-red-500 mt-1">
@@ -143,6 +184,7 @@
         </div>
       </div>
 
+      <!-- État avec vidéo -->
       <div
         v-if="modelValue"
         class="flex flex-col gap-3 p-3 border rounded-lg"

@@ -113,14 +113,14 @@
   const userMenuItems = [
     [
       {
-        label: 'Voir le site',
-        icon: 'i-lucide-external-link',
-        slot: 'voir-site' as const,
-      },
-      {
         label: 'Mode sombre',
         icon: 'i-lucide-palette',
         slot: 'color-mode' as const,
+      },
+      {
+        label: 'Voir le site',
+        icon: 'i-lucide-external-link',
+        slot: 'voir-site' as const,
       },
       {
         label: 'Mon compte',
